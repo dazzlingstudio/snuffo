@@ -1,0 +1,47 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Uvendia.Domain.Cart
+@{
+    Layout = "masterShopTop.cshtml";
+    var authModel = new AuthenticateModel(Model);
+    authModel.ReturnUrl = Request.QueryString["returnUrl"];
+
+    bool authenticated = CurrentUser.IsAuthenticated;
+    if (!authenticated)
+    {
+        var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
+        var order = currentCart.GetOrder();
+
+        if (order.InvoiceAddressId.HasValue)
+        {
+            Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/cart/checkout-address/"));
+        }
+    }
+}
+
+@if (!authenticated)
+{
+    Html.RenderPartial("~/views/partials/account/_Login.cshtml", authModel);
+
+    <div class="col-md-6">
+        <div class="padding-top-3x hidden-md-up"></div>
+        <h3 class="margin-bottom-1x">No Account? Register</h3>
+        <p>Registration takes less than a minute but gives you full control over your orders.</p>
+
+        <div class="text-center text-sm-right">
+            <a class="btn btn-primary margin-bottom-none" href="/@CurrentUser.LanguageCode/account/login-register/">Register</a>
+        </div>
+        <br />
+        <br />
+        <hr style="border: 1px solid #e1e7ec">
+        <br />
+        <br />
+        <p>
+            Do you prefer to checkout without registration?
+        </p>
+        <div class="text-center text-sm-right">
+            <a class="btn margin-bottom-none" href="/@CurrentUser.LanguageCode/cart/checkout-address/">Checkout without registration</a>
+        </div>
+    </div>
+
+}
+

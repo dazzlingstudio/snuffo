@@ -1,0 +1,63 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountAddressModel>
+@{
+
+}
+
+@using (Html.BeginUmbracoForm<CheckoutController>("UpdateOrderCheckoutAddress", FormMethod.Post, htmlAttributes: new { @class = "row" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="breaker"></div>
+
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.SubscribedToNewsletter)
+
+    <div class="breaker"></div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-fn">First Name</label>
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", id = "account-fn", required = "required", maxlength = 75 })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-ln">Last Name</label>
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", id = "account-ln", required = "required", maxlength = 75 })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-email">E-mail Address</label>
+            @if (CurrentUser.IsAuthenticated)
+            {
+                if (Model.UserId.StartsWith("auth0"))
+                {
+                    <span>(<a href="/@CurrentUser.LanguageCode/account/change-e-mail-address/" class="link">change</a>)</span>
+                }
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", id = "account-email", @readonly = "readonly", maxlength = 70 })
+            }
+            else
+            {
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", id = "account-email", maxlength = 70 })
+            }
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-phone">Phone Number</label>
+            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "account-phone", required = "required", maxlength = 50 })
+        </div>
+    </div>
+
+    Html.RenderPartial("~/Views/Partials/_CustomerAddresses.cshtml", Model);
+
+
+    <div class="checkout-footer">
+        <div class="column"><a class="btn btn-outline-secondary" href="/@CurrentUser.LanguageCode/cart"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back To Cart</span></a></div>
+        <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
+    </div>
+}

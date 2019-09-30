@@ -1,0 +1,54 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.CategoriesModel
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+@Html.CreateAuthorizedActionHtml("Create Category", ActionType.Create, new Dictionary<string, string> { { "id", "createCategory" }, { "data-store-id", Model.StoreId.ToString() }, { "data-category-id", "0" }, { "class", "btn btn-primary action-link linkCategory" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.Categories.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model.Categories)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkCategory id-field" data-category-id="@category.Id">@category.Id</a></td>
+                    <td><a class="linkCategory" data-category-id="@category.Id">@category.Name</a></td>
+                    <td>@category.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@category.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@category.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {category.Name} ({category.Id})" }, { "data-rowid", rowId }, { "data-id", category.Id.ToString() }, { "data-controller", "Category" }, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkCategory').click(function () {
+            UmbClientMgr.contentFrame('Backoffice/Uvendia/Category/CreateEdit/?id=' + $(this).data("category-id") + '&storeId=' + $(this).data("store-id") + '&parentCategoryId=&treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+    </script>
+}

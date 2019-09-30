@@ -1,0 +1,36 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.Models.ContentModel>
+
+@{
+    var active = ViewBag.AccountActive as string;
+}
+<div class="col-lg-4">
+    <aside class="user-info-wrapper">
+        <div class="user-cover" style="background-image: url(/content/img/account/user-cover-img.jpg);">
+
+        </div>
+        <div class="user-info">
+            <div class="user-avatar"><a class="edit-avatar" href="#"></a><img src="@CurrentUser.GetClaim("picture")" alt="User"></div>
+            <div class="user-data">
+                <h4>@CurrentUser.FullName</h4><span>Joined @(CurrentUser.CreatedAt.ConvertToLongDateTimeString())</span>
+            </div>
+        </div>
+    </aside>
+    <nav class="list-group">
+        <a class="list-group-item with-badge @(active == "orders" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/account-orders/">
+            <i class="icon-bag"></i>Orders
+            <span id="totalOrders" class="badge badge-primary badge-pill">0</span>
+        </a>
+        @*<a class="list-group-item with-badge @(active == "wishlist" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/account-wishlist/">
+            <i class="icon-heart"></i>Wishlist<span class="badge badge-primary badge-pill">0</span>
+        </a>*@
+        <a class="list-group-item @(active == "profile" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/my-profile/"><i class="icon-head"></i>Profile</a>
+        <a class="list-group-item @(active == "address" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/account-address/"><i class="icon-map"></i>Addresses</a>
+        @if (CurrentUser.UserId.StartsWith("auth0"))
+        {
+        <a class="list-group-item @(active == "email" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/change-e-mail-address/"><i class="icon-mail"></i>Change E-mail Address</a>
+        <a class="list-group-item @(active == "password" ? "active" : "")" href="/@(CurrentUser.LanguageCode)/account/change-password/"><i class="icon-lock"></i>Change Password</a>
+        <a class="list-group-item @(active == "delete" ? "active active-delete" : "")" href="/@(CurrentUser.LanguageCode)/account/delete-account/"><i class="icon-lock"></i>Delete Account</a>
+        }
+        
+    </nav>
+</div>

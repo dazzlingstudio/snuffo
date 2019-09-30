@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Event>
+@using Uvendia.Domain
+@{
+    bool isSearch = Convert.ToBoolean(ViewData["IsSearch"] ?? 0);
+    bool enableSelect = Convert.ToBoolean(ViewData["EnableSelect"] ?? 0);
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+@if (!Model.IsNullOrEmpty())
+{
+    <table class="table table-hover @(isSearch || enableSelect ? "smaller-fontsize" : "")">
+        <thead>
+            <tr>
+                @if (enableSelect)
+                {
+                    <th>&nbsp;</th>
+                }
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.StartTime))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.EndTime))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.EventType))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Event>(x => x.CreatedBy))</th>
+                @if (!enableSelect)
+                {
+                    <th>&nbsp;</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var e in Model)
+    {
+        var rowId = Guid.NewGuid().ToString("D");
+        <tr @(!enableSelect ? "id=" + rowId : "") class="@(enableSelect ? "clickable" : "")" @(enableSelect ? (e.IsTicketSaleEnabled ? "data-toggle=collapse data-target=.row" + e.Id + " id=row" + e.Id : "") : "")>
+            @if (enableSelect)
+            {
+                if (e.IsTicketSaleEnabled)
+                {
+                <td><i class="collapsable-event glyphicon glyphicon-plus" data-id="@e.Id"></i></td>
+                }
+                else
+                {
+                <td><i class="glyphicon glyphicon-ban-circle" data-id="@e.Id"></i></td>
+                }
+            }
+            <td>
+                @if (!enableSelect)
+                {
+                    <a class="linkEvent id-field" data-event-id="@e.Id">@e.Id</a>
+                }
+                else
+                {
+                    <span>@e.Name</span>
+                }
+            </td>
+            <td>
+                @if (!enableSelect)
+                {
+                    <a class="linkEvent" data-event-id="@e.Id">@e.Name</a>
+                }
+                else
+                {
+                    <span>@e.Name</span>
+                }
+            </td>
+            <td>@e.StartTime.ConvertToLongDateTimeString()</td>
+            <td>@e.EndTime.ConvertToLongDateTimeString()</td>
+            <td>@e.EventType.Name</td>
+            <td>@e.CreatedOn.ConvertToLongDateTimeString()</td>
+            <td>@e.CreatedBy</td>
+            @if (!enableSelect)
+            {
+            <td>                
+                @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {e.Name} ({e.Id})" }, { "data-rowid", rowId }, { "data-id", e.Id.ToString() }, { "data-controller", "Event" }, { "class", "delete" } }, authorized)
+            </td>
+            }
+        </tr>
+        if (enableSelect && e.IsTicketSaleEnabled)
+        {
+            foreach (var ts in e.TicketsSale)
+            {
+                <tr aria-expanded="true" class="collapse row@(e.Id)">
+                    <td><input type="checkbox" class="event-select" data-name="@e.Name" data-id="@ts.Id" data-type="event" /></td>
+                    <td>
+                        @ts.TicketType.Get().Name
+                    
+                    </td>
+                    <td @(e.HasCancellationInsurance ? "" : "colspan=6")>@(!ts.HasTicketPrice() ? "(0)" : "(" + ts.TicketPrice.Definition.Currency + " " + Math.Round(ts.TicketPrice.Value.GetValueOrDefault(), 2) + ")")</td>
+                    @if (e.HasCancellationInsurance)
+                    {
+                    <td colspan="5">
+                        <div class="cancellation-insurance-label"><input type="checkbox" class="cancellation-insurance-select" /> With cancellation insurance</div>
+                    </td>
+                    }
+                </tr>
+            }
+        }
+    }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}

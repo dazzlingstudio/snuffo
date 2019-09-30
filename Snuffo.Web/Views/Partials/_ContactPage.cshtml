@@ -1,0 +1,47 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContactPageModel>
+
+@using (Html.BeginUmbracoForm<ContactPageController>("HandleContactUs", FormMethod.Post, htmlAttributes: new { @class = "contact col-12" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "col-form-label" })
+
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", required = "required", maxlength = "255" })
+
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmailAddress, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.EmailAddress, new { type = "email", @class = "form-control", required = "required", maxlength = "255", placeholder = "email@example.com" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group row">
+            @Html.LabelFor(model => model.Subject, new { @class = "col-form-label" })
+            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", required = "required", maxlength = "255" })
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group row">
+            @Html.LabelFor(model => model.Message, new { @class = "col-form-label" })
+            @Html.TextAreaFor(model => model.Message, 5, 20, new { @class = "form-control", required = "required", maxlength = 2010 })
+        </div>
+    </div>
+    <div class="form-group text-center">
+        <!-- Render recaptcha control with default properties. -->
+        @reCaptcha.ReCaptcha.GetHtml(publicKey: DataUtils.GetConfig("reCaptcha:SiteKey"), callback: "enableSubmitBtn")
+    </div>
+
+    <div class="form-group text-center">
+        <button class="btn btn-primary margin-bottom-none" id="btnSubmit" name="btnSubmit" type="submit" disabled>Submit</button>
+    </div>
+}

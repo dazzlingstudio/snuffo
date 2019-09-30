@@ -1,0 +1,70 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Uvendia.Domain.Cart
+
+@{
+    Layout = "masterShopCheckout.cshtml";
+    ViewBag.CurrentCheckoutStepNr = 1;
+
+    var model = new AccountAddressModel(Model);
+    if (CurrentUser.IsAuthenticated)
+    {
+        var auth0Helper = new Auth0Helper();
+        var user = auth0Helper.GetAuth0User(CurrentUser.UserId);
+        model.UserId = user.UserId;
+        model.FirstName = user.FirstName;
+        model.LastName = user.LastName;
+        model.Phone = user.UserMetadata != null ? user.UserMetadata.Phone : "";
+        model.EmailAddress = user.Email;
+
+        var addresess = UvendiaContext.Addresses.AllByUserId(CurrentUser.UserId);
+        var shipAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.ShipAddress);
+        if (shipAddress == null)
+        {
+            model.ShippingAddress = new Address();
+            model.HasSameAddress = true;
+        }
+        else
+        {
+            model.HasSameAddress = false;
+            model.ShippingAddress = shipAddress;
+        }
+
+        model.ContactAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.Default) ?? new Address();
+    }
+    else
+    {
+        var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
+        var order = currentCart.GetOrder();
+
+        if (order.InvoiceAddress != null)
+        {
+            model.FirstName = order.InvoiceAddress.FirstName;
+            model.LastName = order.InvoiceAddress.LastName;
+            model.Phone = order.InvoiceAddress.Phone;
+            model.EmailAddress = order.InvoiceAddress.Email;
+
+            model.ContactAddress = order.InvoiceAddress;
+        }
+        else
+        {
+            model.ContactAddress = new Address();
+        }
+
+        if (order.ShipAddress == null)
+        {
+            model.ShippingAddress = new Address();
+            model.HasSameAddress = true;
+        }
+        else
+        {
+            model.HasSameAddress = false;
+            model.ShippingAddress = order.ShipAddress;
+        }
+
+    }
+
+}
+
+@{Html.RenderPartial("~/Views/Partials/Checkout/_CheckoutAddress.cshtml", model);}
+
+

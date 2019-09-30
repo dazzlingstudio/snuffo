@@ -1,0 +1,19 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+	Layout = null;
+}
+
+@if (Model != null)
+{
+  <h4>@Model.Exception.GetType().Name</h4>
+  <pre>
+      @Model.Exception.ToString()
+  </pre>
+  <p>
+      Thrown in @Model.ControllerName @Model.ActionName
+  </p>
+  <p>
+      URL: @Model.Exception.HelpLink
+  </p>
+}

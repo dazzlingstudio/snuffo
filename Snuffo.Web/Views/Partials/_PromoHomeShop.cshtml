@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+
+}
+
+@if (Model.Value<bool>("showPromo"))
+{
+    <!-- Promo-->
+    <section class="fw-section" style="background-image: url(@Model.Value("backgroundImage"));">
+        <span class="overlay" style="background-color: #374250; opacity: .55;"></span>
+        <div class="container text-center padding-top-4x padding-bottom-4x">
+            <h3 class="display-4 text-normal text-white text-shadow mb-1">@Model.Value("textTop")</h3>
+            <h2 class="display-2 text-bold text-white text-shadow">@Model.Value("textBold")</h2>
+            <h4 class="d-inline-block h2 text-normal text-white text-shadow border-default border-left-0 border-right-0 mb-4">@Model.Value("textBottom")</h4>
+            <br>
+            <a class="btn btn-primary" href="@Model.Value("link")">@Model.Value("linkText")</a>
+        </div>
+    </section>
+}

@@ -1,0 +1,178 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.InvoiceSettingModel
+@{
+
+}
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+<div id="tabs">
+    <p>
+        On this settings page you can translate your invoice (pdf) accordingly. Please use the text boxes below to translate your invoice headers and labels.
+    </p>
+    <br />
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        @foreach (var lang in Model.Languages)
+        {
+            <li><a data-toggle="tab" href="#tabs-@(lang.CultureName)">@lang.NativeName</a></li>
+        }
+
+    </ul>
+    @using (Html.BeginForm("Invoice", "Settings", FormMethod.Post, htmlAttributes: new { id = "frmInvoiceSetting", @class = "form-group" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.TreeSelectedNodePath)
+
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.LogoId, htmlAttributes: new { @class = "control-label" })                
+                @Html.Raw(Model.Logo.RenderControl())
+            </div>            
+            
+        </div>
+
+        for (int i = 0; i < Model.InvoiceSetting.Details.Count(); i++)
+        {            
+
+        <div id="tabs-@Model.Languages[i].CultureName" style="display:none;">
+            @Html.HiddenFor(model => model.InvoiceSetting.Details[i].LanguageCultureName)
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Title, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Title, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].InvoiceAddress, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].InvoiceAddress, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].ShippingAddress, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].ShippingAddress, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].OrderNumber, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].OrderNumber, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].OrderDetails, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].OrderDetails, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Date, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Date, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].OrderDate, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].OrderDate, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].CustomerNumber, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].CustomerNumber, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Sku, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Sku, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Product, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Product, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].ProductInformation, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].ProductInformation, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Price, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Price, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Quantity, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Quantity, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Total, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Total, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].SubTotal, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].SubTotal, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].ShippingCost, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].ShippingCost, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].ServiceCost, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].ServiceCost, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Discount, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Discount, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Tax, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Tax, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].OrderedItemsText, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].OrderedItemsText, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].RetouredItemsText, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].RetouredItemsText, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Note, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Note, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.InvoiceSetting.Details[i].Footer, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.InvoiceSetting.Details[i].Footer, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+        </div>
+        }
+
+        <div class="form-group">
+            <div class="btn-toolbar">
+                @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+
+    </script>
+}
+
+
+
+

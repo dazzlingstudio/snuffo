@@ -1,0 +1,26 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.DeleteModel
+@{
+    ViewData["Overlay"] = true;
+}
+
+<div>
+    Are you sure you want to delete this item?
+</div>
+
+<div class="break"></div>
+<div class="form-group">
+    <div class="btn-toolbar">
+        <button type="button" class="btn btn-danger pull-left delete-and-close action-link" data-id="@Model.Id" data-rowid="@Model.RowId" data-contr="@Model.Controller" data-method="@Model.Method" data-index="@Model.Index">
+            Delete &amp; Close <i class="glyphicon glyphicon-trash"></i>
+        </button>
+        <button type="button" class="btn btn-default pull-left closemodal action-link">
+            Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+        </button>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+    </script>
+}

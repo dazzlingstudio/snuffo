@@ -1,0 +1,17 @@
+﻿@model AccountProfileModel
+
+@{
+    Layout = "~/Views/Mailing/MasterSimpleMail.cshtml";
+    string url = string.Concat(Html.GetApplicationUrlPath(),"en/account/email-verification/?u=", Model.UserId);
+}
+@section header
+{
+	Confirm your E-mail address
+}
+<div style="font-family: 'Roboto Condensed', sans-serif;">
+	<p>Dear customer,</p>
+	<p>We have received your registration.</p>
+	<p><a href='@url'>Click here</a> to confirm your e-mail address.</p>
+	<p>If the link above doesn't work please copy and paste this link your browser address-bar: <br /><a href="@url">@url</a></p><br /><br />
+	<p>Yours sincerely.</p>
+</div>

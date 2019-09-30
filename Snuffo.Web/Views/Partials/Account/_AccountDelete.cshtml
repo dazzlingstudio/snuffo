@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.Models.ContentModel>
+
+@using (Html.BeginUmbracoForm<AccountController>("DeleteAccount", FormMethod.Post, htmlAttributes: new { @class = "card" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card-body">
+        @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-danger" type="submit">Delete Account</button>
+    </div>
+}
+
+

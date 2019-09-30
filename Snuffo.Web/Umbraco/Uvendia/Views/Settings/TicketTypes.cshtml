@@ -1,0 +1,54 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.TicketTypesModel
+@using Uvendia.Domain.Settings
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+@Html.CreateAuthorizedActionHtml("Create Ticket Type", ActionType.Create, new Dictionary<string, string> { { "id", "createtickettype" }, { "data-tickettype-id", "0" }, { "class", "btn btn-primary action-link linkTicketType" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.TicketTypes.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<TicketType>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<TicketType>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<TicketType>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<TicketType>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<TicketType>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tt in Model.TicketTypes)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkTicketType id-field" data-tickettype-id="@tt.Id">@tt.Id</a></td>
+                    <td><a class="linkTicketType" data-tickettype-id="@tt.Id">@tt.Name</a></td>
+                    <td>@tt.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@tt.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@tt.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {tt.Name} ({tt.Id})" }, { "data-rowid", rowId }, { "data-id", tt.Id.ToString() }, { "data-controller", "Settings" }, { "data-method", "DeleteTicketType"}, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(m => m.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkTicketType').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/Settings/TicketType/' + $(this).data("tickettype-id") + '/?treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

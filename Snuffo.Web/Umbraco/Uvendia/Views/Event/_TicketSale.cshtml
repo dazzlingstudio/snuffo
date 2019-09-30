@@ -1,0 +1,203 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.EventModel
+@{
+    if (Model.Event.TicketsSale.IsNullOrEmpty()) { Model.Event.TicketsSale = new List<TicketSale>() { new TicketSale() }; }
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+<div id="tabs-ticket" style="display:none;">
+    <div class="row">
+        @Html.HiddenFor(model => model.DownloadCookeValue, new { id = "hdnDownloadCookieValue" })
+        <div class="col-xs-2 non-padding">
+            @Html.LabelFor(model => model.Event.IsTicketSaleEnabled, htmlAttributes: new { @class = "control-label", style = "margin-right: 15px;" })
+        </div>
+        <div class="col-xs-2 non-padding">
+            <label class="switch">
+                @Html.EditorFor(model => model.Event.IsTicketSaleEnabled, new { htmlAttributes = new { id = "chbIsTicketSaleEnabled", @class = "" } })
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+    </div>
+    <div class="break"></div>
+    <br />
+    <div id="container-ticket-sale">
+        <div class="row">
+            <div class="col-xs-2 non-padding">
+                @Html.LabelFor(model => model.Event.TotalTicketsAvailable, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-xs-2 non-padding">
+                @Html.TextBoxFor(m => m.Event.TotalTicketsAvailable, "{0}", new { @class = "form-control input-sm", type = "number", @maxlength = "9", min = "0" })
+            </div>
+        </div>
+        <table id="tblTicketTypes" class="table table-hover smaller-fontsize">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th style="width:15%">@(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.TicketTypeId))</th>
+                    <th style="width:23%">@(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.AvailabilityEndDate))</th>
+                    <th style="width:10%">@(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.QuantityAvailable))</th>
+                    <th style="width:22%">Price <br /> Price definition: @(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.TicketPrice))</th>
+                    <th style="width:18%">@(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.Description))</th>
+                    <th style="width:10%">@(PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.Enabled))</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Event.TicketsSale.Count; i++)
+                {
+                    var rowId = Guid.NewGuid().ToString("D");
+                    <tr id="@rowId" data-index="@i">
+                        <td class="deleteRow">
+                            @if (i > 0)
+                            {                                
+                                @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete ticket type  ({Model.Event.TicketsSale[i].Id})" }, { "data-rowid", rowId }, { "data-id", Model.Event.TicketsSale[i].Id.ToString() }, { "data-controller", "TicketSale" }, { "class", "deleteTicketSale" } }, authorized)
+                            }
+                            &nbsp;
+                        </td>
+                        <td>
+                            @Html.Hidden("Event.TicketsSale.Index", i, new Dictionary<string, object> { { "data-readonlyname", "true" }, { "data-clearable", "false" } })
+                            @Html.HiddenFor(model => model.Event.TicketsSale[i].Id, new Dictionary<string, object> { { "data-number", "true" } })
+                            @Html.HiddenFor(model => model.Event.TicketsSale[i].EventId, new Dictionary<string, object> { { "data-clearable", "false" } })
+                            @Html.DropDownListFor(model => model.Event.TicketsSale[i].TicketTypeId, 
+                                new SelectList(Model.TicketTypes, "Id", "Name", Model.Event.TicketsSale[i].TicketTypeId), 
+                                new { @class = "form-control input-sm smaller-fontsize" })
+                        </td>
+
+                        <td>
+                            <div class='input-group date datetimepicker'>
+                                @Html.TextBoxFor(model => model.Event.TicketsSale[i].AvailabilityEndDate, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm smaller-fontsize" })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            @Html.TextBoxFor(m => m.Event.TicketsSale[i].QuantityAvailable, "{0}", new { @class = "form-control input-sm smaller-fontsize", type = "number", @maxlength = "9" })
+                        </td>
+
+                        <td>
+                            <div class="col-xs-7 non-padding">
+                                @Html.HiddenFor(model => model.Event.TicketsSale[i].TicketPriceId, new Dictionary<string, object> { { "data-number", "true" } })
+                                @Html.HiddenFor(model => model.Event.TicketsSale[i].TicketPrice.Id, new Dictionary<string, object> { { "data-number", "true" } })
+                                @Html.DropDownListFor(model => model.Event.TicketsSale[i].TicketPrice.PriceDefinitionId,
+                                    new SelectList(Model.PriceDefinitions, "Id", "Name", Model.Event.TicketsSale[i].TicketPrice.PriceDefinitionId),
+                                    new { id = "ddlPriceDefinitions", @class = "form-control input-sm smaller-fontsize" })
+                            </div>
+                            <div class="col-xs-5 non-padding">
+                                @Html.TextBoxFor(model => model.Event.TicketsSale[i].TicketPrice.Value, "{0:f2}", new { @class = "form-control input-sm smaller-fontsize", type = "number", @maxlength = "15" })
+                            </div>
+                        </td>
+
+                        <td>
+                            @Html.TextBoxFor(model => model.Event.TicketsSale[i].Description, new { @class = "form-control input-sm smaller-fontsize", @maxlength = "30", placeholder = PropertyUtils.GetPropertyNameDisplayName<TicketSale>(x => x.Description) })
+                        </td>
+
+                        <td data-clearable="false" class="text-center-align">
+                            @Html.CheckBoxFor(m => m.Event.TicketsSale[i].Enabled, new Dictionary<string, object> { { "data-clearable", "false" } })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="text-right-align">
+                        <a id="btnAddNewTicketType" class="btn btn-default btn-sm smaller-fontsize action-link">
+                            Add new ticket type <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <fieldset class="uvendia-fieldset">
+            <legend>Cancellation Insurance</legend>
+            <div class="row non-padding padding-right">
+                @Html.LabelFor(model => model.Event.HasCancellationInsurance, htmlAttributes: new { @class = "control-label", style = "margin-right: 15px;" })
+                @Html.EditorFor(model => model.Event.HasCancellationInsurance, new { htmlAttributes = new { id = "chbHasCancellationInsurance", @class = "" } })
+            </div>
+
+            <div class="break"></div>
+            <div id="cancellation-container" class="row">
+                <table class="table table-hover smaller-fontsize">
+                    <thead>
+                        <tr>
+                            <th>Price definition</th>
+                            <th>Cancellation Insurrance Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CancellationInsurancePriceCollection.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].CreatedOn)
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].CreatedBy)
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].PriceDefinitionId)
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].Id)
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].Definition.Name)
+                                    @Html.HiddenFor(model => model.CancellationInsurancePriceCollection[i].Definition.Currency)
+
+                                    @Model.CancellationInsurancePriceCollection[i].Definition.Name (@Model.CancellationInsurancePriceCollection[i].Definition.Currency)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CancellationInsurancePriceCollection[i].Value, "{0:f2}", new { @class = "form-control input-sm smaller-fontsize", type = "number", @maxlength = "9" })                                    
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+
+        <br class="break" />
+        <div class="row">
+            <div class="action-buttons">
+                <button type="submit" id="btnGenerateReportSoldTickets" value="GenerateReportSoldTickets" name="submit" class="btn btn-default btn-sm pull-left action-link"
+                        @(Model.Event.Id == 0 ? "disabled" : "")>
+                    Generate Report Sold Tickets <i class="glyphicon glyphicon-download-alt"></i>
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" id="btnCodeReadrCSV" value="GenerateCodeReadrCSV" name="submit" class="btn btn-sm pull-left action-link" style="background-color:#f5e0bf;"
+                        @(Model.Event.Id == 0 ? "disabled" : "")>
+                    Generate CodeREADr CSV <i class="glyphicon glyphicon-download-alt"></i>
+                </button>
+            </div>
+            <div class="action-buttons">
+                <input id="txtQuantityTickets" value="1" type="number" name="txtQuantityTickets" class="col-xs-2 input-sm smaller-fontsize" />
+                <div class="btn-group" style="margin-left:-10px">
+                    <button type="button"
+                            id="btnGenerateTicket"
+                            value="GenerateTicket"
+                            name="submit"
+                            class="btn btn-sm dropdown-toggle generatePdf action-link"
+                            style="margin-left:12px;background-color:#83b08f"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                             @(Model.Event.Id == 0 ? "disabled" : "")>
+                        Generate Ticket <i class="glyphicon glyphicon-download-alt"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" style="width:190%">
+                        <ul>
+                            @foreach (var l in Model.Languages)
+                            {
+                                foreach (var ts in Model.Event.TicketsSale)
+                                {
+                                    <li>
+                                        <button name="submit" value="GenerateTicket|@l.CultureName|@ts.Id" type="submit" class="dropdown-item smaller-fontsize">
+                                            @ts.ToString() | @(ts.TicketPrice.Definition.Currency) (@l.NativeName)
+                                        </button>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+    </div>
+
+</div>
+<div class="break"></div>
+

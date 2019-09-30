@@ -1,0 +1,156 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.EventModel
+@{
+
+}
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+<div id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-address">Event's Address</a></li>
+        @foreach (var trans in Model.Translations)
+        {
+            <li><a data-toggle="tab" href="#tabs-@(trans.CultureName)">@trans.NativeName</a></li>
+        }
+        <li><a data-toggle="tab" href="#tabs-ticket">Event's Ticket(s)</a></li>
+    </ul>
+    @using (Html.BeginForm("CreateEdit", "Event", FormMethod.Post, htmlAttributes: new { id = "frmEvent", @class = "form-group", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Event.Id)
+        @Html.HiddenFor(model => model.Event.AddressId)
+        @Html.HiddenFor(model => model.Event.CreatedOn)
+        @Html.HiddenFor(model => model.Event.CreatedBy)
+        @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.ImageFolders, new { id = "ImageFolders" })
+
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                @Html.LabelFor(model => model.Event.Name, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Event.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.Organizer, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Event.Organizer, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.Published, htmlAttributes: new { @class = "control-label" })
+                <label class="switch">
+                    @Html.CheckBoxFor(model => model.Event.Published, new { @class = "checkbox-middle" })
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.EventTypeId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Event.EventTypeId, Model.EventTypes, new { @class = "form-control" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.EventStatusId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Event.EventStatusId, Model.AllEventStatus, new { @class = "form-control" })
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 non-padding padding-right">
+                    @Html.LabelFor(model => model.Event.StartTime, htmlAttributes: new { @class = "control-label" })
+                    <div class='input-group date datetimepicker'>
+                        @Html.TextBoxFor(model => model.Event.StartTime, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm clsDatePicker" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-6 non-padding padding-right">
+                    @Html.LabelFor(model => model.Event.EndTime, htmlAttributes: new { @class = "control-label" })
+                    <div class='input-group date datetimepicker'>
+                        @Html.TextBoxFor(model => model.Event.EndTime, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+                @Html.LabelFor(model => model.Event.DefinitionId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Event.DefinitionId, Model.Definitions, "Select a definition...", new { id = "ddlDefinitions", @class = "form-control" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.YoutubeVideoUrl, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Event.YoutubeVideoUrl, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Event.OrderNr, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.Event.OrderNr, new { @class = "form-control input-sm", type = "number", @maxlength = "9" })
+            </div>
+
+            <div id="extended" data-item-id="@Model.Event.Id" data-prefix="Event.Properties" data-section="Event">
+                @Html.Raw(HtmlControlFactory.Create(Model.Event.Definition, Model.Event.Properties, "Event.Properties").RenderExtendedProperties())
+            </div>
+        </div>
+        <div id="tabs-address" style="display:none;">
+            <div class="row non-padding padding-right">
+                @Html.LabelFor(model => model.HasAddress, htmlAttributes: new { @class = "control-label", style = "margin-right: 15px;" })
+                @Html.EditorFor(model => model.HasAddress, new { htmlAttributes = new { id = "chbHasAddress", @class = "" } })
+            </div>
+            <div class="break"></div>
+            @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Address.cshtml", Model.Event.Address, new ViewDataDictionary { { "HtmlFieldPrefix", "Event.Address" }, { "Countries", Model.AllCountries }, { "ShowBirthDate", false }, { "ShowAddresseeTitle", false } });}
+        </div>
+        Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Translations.cshtml", Model);
+        Html.RenderPartial("~/Umbraco/Uvendia/Views/Event/_TicketSale.cshtml", Model);
+        <div class="break"></div>
+        <div class="form-group">
+            <div class="btn-toolbar">
+                @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+
+            Uvendia.Event.showOrHideTicketSale();
+            $('#chbIsTicketSaleEnabled').change(function () {
+                Uvendia.Event.showOrHideTicketSale();
+            });
+            Uvendia.Event.showOrHideCancellation();
+            $('#chbHasCancellationInsurance').change(function () {
+                Uvendia.Event.showOrHideCancellation();
+            });
+            $('#txtQuantityTickets').change(function () {
+                if (($(this).val() === '' || $(this).val() === null) || parseInt($(this).val()) < 1) {
+                    $('#btnGenerateTicket').attr("disabled", "disabled");
+                }
+                else {
+                    $('#btnGenerateTicket').removeAttr('disabled');
+                }
+            });
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+
+        ; (function ($) {
+            Uvendia.Event = {
+                showOrHideTicketSale: function () {
+                    if ($('#chbIsTicketSaleEnabled').prop('checked') == false) {
+                        $('#container-ticket-sale').hide();
+                    }
+                    else
+                        $('#container-ticket-sale').show();
+                },
+                showOrHideCancellation: function () {
+                    if ($('#chbHasCancellationInsurance').prop('checked') == false) {
+                        $('#cancellation-container').hide();
+                    }
+                    else
+                        $('#cancellation-container').show();
+                }            
+            }
+        })(jQuery);
+    </script>
+}

@@ -1,0 +1,42 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ProductModel
+@{
+    ViewData["Overlay"] = true;
+    ViewData.TemplateInfo.HtmlFieldPrefix = string.Concat("Variants[", Model.Index, "]");
+}
+<div id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" data-target="#tabs-prices">Price(s)</a></li>
+    </ul>
+    @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Prices.cshtml", Model);}
+</div>
+
+<div class="break"></div>
+<div class="form-group">
+    <div class="btn-toolbar">
+        <button type="button" class="btn btn-success pull-left save-and-close-prices action-link" data-index="@Model.Index">
+            Save &amp; Close <i class="glyphicon glyphicon-floppy-saved"></i>
+        </button>
+        <button type="button" class="btn btn-default pull-left closemodal action-link">
+            Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+        </button>
+    </div>
+</div>
+
+@section scripts{
+<script>
+    $(function () {
+       $("#tabs").tabs();
+
+        // Bind the buffered data on the parent iframe
+        var els = $('#tabs').find("input[type='number']");
+        els.each(function () {
+            
+            var savedHiddenInput = $(window.parent.frames[0].document.getElementById($(this).attr('id')));
+            
+            if (savedHiddenInput.length) {
+                $(this).val(savedHiddenInput.val());
+            }
+        });
+    });
+</script>
+}

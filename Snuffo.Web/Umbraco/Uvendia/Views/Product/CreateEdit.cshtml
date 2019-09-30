@@ -1,0 +1,169 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ProductModel
+@{
+
+}
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+<div id="tabs">
+
+    @using (Html.BeginForm("CreateEdit", "Product", FormMethod.Post, htmlAttributes: new { id = "frmProduct", @class = "form-group", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        Html.EnableClientValidation(false);
+        @Html.HiddenFor(model => model.Product.Id)
+        @Html.HiddenFor(model => model.Product.CreatedOn)
+        @Html.HiddenFor(model => model.Product.CreatedBy)
+        @Html.HiddenFor(model => model.Product.ModifiedBy)
+        @Html.HiddenFor(model => model.TreePath)
+        @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.SelectedCategoryId)
+        @Html.HiddenFor(model => model.SelectedCategoryName, new { id = "ImageFolders" })
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+            @if (Model.Product.HasVariantProperties())
+            {
+                <li><a data-toggle="tab" href="#tabs-variants">Variants</a></li>
+            }
+            else
+            {
+                <li><a data-toggle="tab" href="#tabs-stock">Stock</a></li>
+            }
+            <li><a data-toggle="tab" href="#tabs-prices">Price(s)</a></li>
+            @foreach (var trans in Model.Translations)
+            {
+                <li><a data-toggle="tab" href="#tabs-@(trans.CultureName)">@trans.NativeName</a></li>
+            }
+            <li><a data-toggle="tab" href="#tabs-categories">Categories</a></li>
+        </ul>
+
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                @Html.LabelFor(model => model.Product.Sku, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Product.Sku, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Product.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.Product.Weight, "{0:f3}", new { @class = "form-control input-sm", type = "number", @maxlength = "15" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.DiscountPercentage, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.TextBoxFor(model => model.Product.DiscountPercentage, new { @class = "form-control input-sm", type = "number", @maxlength = "15" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.Tags, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.TextAreaFor(model => model.Product.Tags, 2, 6, new { @class = "form-control tagsInput", autocomplete = "false" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.Published, htmlAttributes: new { @class = "control-label" })
+                <label class="switch">
+                    @Html.EditorFor(model => model.Product.Published, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.PublishedOn, htmlAttributes: new { @class = "control-label" })
+                <div class='input-group date datetimepicker'>
+                    @Html.TextBoxFor(model => model.Product.PublishedOn, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm clsDatePicker" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.IsAvailable, htmlAttributes: new { @class = "control-label" })
+                <label class="switch">
+                    @Html.EditorFor(model => model.Product.IsAvailable, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.OrderNr, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.Product.OrderNr, new { @class = "form-control input-sm", type = "number", @maxlength = "9" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Product.DefinitionId, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.DropDownListFor(model => model.Product.DefinitionId, Model.Definitions, "Select a definition...", new { id = "ddlDefinitions", @class = "form-control" })
+            </div>
+
+            <div id="extended" data-item-id="@Model.Product.Id" data-prefix="Product.Properties" data-section="Product">
+                @Html.Raw(HtmlControlFactory.Create(Model.Product.Definition, Model.Product.Properties, "Product.Properties").RenderExtendedProperties())
+            </div>
+        </div>
+
+        Html.RenderPartial("~/Umbraco/Uvendia/Views/Product/_Variants.cshtml", Model);
+        Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Prices.cshtml", Model);
+        Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Translations.cshtml", Model);
+
+        <div id="tabs-categories" style="display:none;">
+            @Html.HiddenFor(m => m.SelectedCategories)
+            <p>Select the categories that this product belongs to:</p>
+            <br />
+            <div id="jstree">
+                @Html.Raw(Model.GenerateCategoriesHtmlList())
+            </div>
+            <br />
+            <br />
+        </div>
+        if (!Model.Product.HasVariantProperties())
+        {
+            Html.RenderPartial("~/Umbraco/Uvendia/Views/Product/_Inventory.cshtml", Model);
+        }
+
+        <div class="break"></div>
+        <div class="form-group">
+            <div class="btn-toolbar">
+                @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+
+            $("#tabs").tabs();
+
+            $("#jstree").jstree({
+                "checkbox": {
+                    "keep_selected_style": false,
+                    "three_state": false
+                },
+                "plugins": ["checkbox"]
+            });
+
+            $("#jstree").on('ready.jstree', function () {
+                $("#jstree").jstree('open_all');
+            })
+
+            $('#jstree').on("changed.jstree", function (e, data) {
+                $('#SelectedCategories').val(data.selected);
+                //console.log(data.selected);
+                //console.log($('#SelectedCategories').val());
+            });
+
+            var selectedCategories = $('#SelectedCategories').val().trim();
+            if (selectedCategories != null) {
+                // Transform the selected categories to a string array.
+                var arr = selectedCategories.split(',');
+                for (i = 0; i < arr.length; i++) {
+                    $('#jstree').jstree('select_node', '#' + arr[i], true);
+                }
+            }
+            
+        });
+    </script>
+}

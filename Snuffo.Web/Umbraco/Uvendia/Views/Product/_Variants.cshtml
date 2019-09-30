@@ -1,0 +1,103 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ProductModel
+@{
+
+}
+
+@if (Model.Product.HasVariantProperties())
+{
+
+    <div id="tabs-variants" style="display:none;">
+        <div class="row">
+        <div class="col-xs-2 variants-actions">
+            &nbsp;
+        </div>
+        <div class="col-xs-2">
+            <label class="control-label">@(PropertyUtils.GetPropertyNameDisplayName<Product>(x => x.VariantSku))</label>
+        </div>
+        <div class="col-xs-2">
+            <label class="control-label">@(PropertyUtils.GetPropertyNameDisplayName<Product>(x => x.Name))</label>
+        </div>
+
+        @if (Model.Product.HasVariantProperties())
+        {
+            foreach (var prop in Model.Product.Definition.Properties.Where(p => p.IsVariant).OrderBy(p => p.Name))
+            {
+                <div class="col-xs-2">
+                    <label class="control-label">@prop.Name</label>
+                </div>
+            }
+        }
+        </div>
+        <div class="break"></div>
+        <div id="container_variants">
+            @for (int i = 0; i < Model.Variants.Count; i++)
+            {
+                <div class="row variants" data-index="@i">
+                    @Html.Hidden("Variants.Index", i, new Dictionary<string, object> { { "data-clearable", "false" } })
+                    @Html.HiddenFor(model => model.Variants[i].Product.Id)
+                    @Html.HiddenFor(model => model.Variants[i].Product.Sku, new Dictionary<string, object> { { "data-clearable", "false" } })
+                    @Html.HiddenFor(model => model.Variants[i].Product.CreatedOn)
+
+                    <div class="col-xs-2 variants-actions">
+                        <a data-id="@Model.Variants[i].Product.Id" data-index="@i" class="openVariantDescription" title="Stocks & Description" data-modifiedon="@(DateTime.Now.ToString("yyyyMMddHHmmssfff"))"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <a data-id="@Model.Variants[i].Product.Id" data-index="@i" class="openVariantPrices" title="Price" data-modifiedon="@(Model.Variants[i].Product.ModifiedOn.ToString("yyyyMMddHHmmss"))"><i class="glyphicon glyphicon-piggy-bank"></i></a>
+                        <a title="Delete @Model.Variants[i].Product.Name (@Model.Variants[i].Product.Id)" data-id="@Model.Variants[i].Product.Id" data-index="@i" class="deleteVariant"><i class="glyphicon glyphicon-trash"></i></a>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.Variants[i].Product.VariantSku, new { @class = "form-control", title = Model.Variants[i].Product.VariantSku })
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.Variants[i].Product.Name, new { @class = "form-control", title = Model.Variants[i].Product.Name })
+                    </div>
+                    @if (Model.Product.HasVariantProperties())
+                    {
+                        @Html.Raw(Model.Variants[i].Product.CreateHtmlControlFactory("col-xs-2", false, string.Concat("Variants[", i, "].Product.Properties")).RenderExtendedProperties(true))
+                    }
+                    <div class="break"></div>
+
+                    @for (int j = 0; j < Model.Variants[i].Translations.Count; j++)
+                    {
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].Id)
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].CultureName, new Dictionary<string, object> { { "data-clearable", "false" } })
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].NativeName, new Dictionary<string, object> { { "data-clearable", "false" } })
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].CreatedOn)
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].CreatedBy)
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].DisplayName)
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].ShortDescription)
+                        @Html.HiddenFor(model => model.Variants[i].Translations[j].LongDescription)
+                    }
+
+
+                    @for (int j = 0; j < Model.Variants[i].PriceCollection.Count; j++)
+                    {
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].Id)
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].PriceDefinitionId, new Dictionary<string, object> { { "data-clearable", "false" } })
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].Enabled)
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].Value)
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].CreatedOn)
+                        @Html.HiddenFor(model => model.Variants[i].PriceCollection[j].CreatedBy)
+                    }
+
+                </div>
+
+                @Html.HiddenFor(model => model.Variants[i].Product.HasStockIndication)
+                @Html.HiddenFor(model => model.Variants[i].NewStockHtml)
+                @Html.HiddenFor(model => model.Variants[i].DeletedStockRowId)
+                for (int j = 0; j < Model.Variants[i].Inventories.Count; j++)
+                {
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].Id)
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].Stock)
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].CreatedOn)
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].CreatedBy)
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].ModifiedOn)
+                    @Html.HiddenFor(model => model.Variants[i].Inventories[j].ModifiedBy)
+                }
+            }
+        </div>
+        <br />
+        <button type="button" id="btnAddNewVariant" class="btn btn-default btn-xs pull-left action-link">
+            Add new variant <i class="glyphicon glyphicon-plus"></i>
+        </button>
+    </div>
+    <br />
+}

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ProductOrderDetail>
+@using Dazzling.Studio.Utils.Media
+@using Uvendia.Domain.Enums
+@{
+    var culture = ViewData["Culture"] as System.Globalization.CultureInfo;
+}
+@helper RenderImage(Product product)
+{
+    if (product.Properties.IsNullOrEmpty())
+    {
+        product.LazyLoadProperties();
+    }
+    PropertyValue prop = product.Properties?.FirstOrDefault(p => p.Property.DataTypeId == Uvendia.Domain.Enums.DataType.CloudinaryImage.Id && p.Value != null);
+    if (prop != null)
+    {
+        <img src="@CloudinaryService.GetCloudinaryUrl(prop.Value.ToString(), 70, 105, CropType.Lpad)" title="@product.DisplayName()" />
+    }
+    else if (product.IsVariant())
+    {
+        var parent = product.Parent.Get();
+        parent.LazyLoadProperties();
+        prop = parent.Properties?.FirstOrDefault(p => p.Property.DataTypeId == Uvendia.Domain.Enums.DataType.CloudinaryImage.Id && p.Value != null);
+        if (prop != null)
+        {
+            <img src="@CloudinaryService.GetCloudinaryUrl(prop.Value.ToString(), 70, 105, CropType.Lpad)" title="@product.DisplayName()" />
+        }
+    }
+    else
+    {
+        <span>@product.DisplayName()</span>
+    }
+}
+
+<table border="0" cellspacing="0" cellpadding="0">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <!-- margin height 5px -->
+            <td height="5" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+        </tr>
+        <!-- article -->
+        <tr>
+            <!-- image -->
+            <td width="70" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;" align="center" valign="middle">
+                <!-- default article -->
+                @RenderImage(item.Product)
+            </td>
+            <!-- information -->
+            <td width="580" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">
+                <!-- default article -->
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <!-- margin width 20px -->
+                        <td width="20" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                        <!-- style name and style number -->
+                        <td align="center" width="185" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@(item.Product.Sku.IsNullOrEmpty() ? item.Product.VariantSku : item.Product.Sku)</td>
+                        <td align="left" width="185" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@item.Product.DisplayName()</td>
+                        <!-- price per unit sale/default -->
+                        <td align="right" width="90" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            <div>@item.UnitPrice.Value.GetValueOrDefault().ToString("N2", culture)</div>
+                        </td>
+                        <!-- quantity -->
+                        <td align="center" width="55" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@item.Quantity</td>
+                        <td align="center" width="55" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@item.Discount.ToString("N2", culture)</td>
+                        <!-- sum storno/soldout/deafult -->
+                        <td align="right" width="60" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            <!-- default -->
+                            @(item.CalculateTotalWithoutVAT().ToString("N2", culture))
+                        </td>
+                        <!-- margin width 10px -->
+                        <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- margin height 5px -->
+        <tr>
+            <td height="5" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+        </tr>
+    }
+</table>

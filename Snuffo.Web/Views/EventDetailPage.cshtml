@@ -1,0 +1,80 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "masterShopTop.cshtml";
+
+    if (!long.TryParse(Request.QueryString["e"], out long id))
+    {
+        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/page-not-found"));
+    }
+    var evnt = UvendiaContext.Events.Single(id);
+    var imageUrl = CloudinaryService.GetCloudinaryUrl(evnt["Image 1"].ConvertTo<string>(), 886, 575, CropType.Fit, gravityType: GravityType.None, effect: Effect.Incognito);
+}
+
+<div class="about-section">
+    <div class="festival-content">
+        <div class="container-fluid no-padding">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="about-image before-right">
+                        <img class="img-responsive" src="@imageUrl" alt="@evnt.DisplayName()">
+                        <div class="image-overlay">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="festival-info">
+                        <h1>@evnt.DisplayName()</h1>
+                        <p>
+                            @Html.Raw(evnt.GetShortDescription())
+                        </p>
+                        <ul class="about-time">
+                            @if (evnt.StartTime.HasValue)
+                            {
+                                <li><i class="fa fa-clock-o"></i>Start: @evnt.StartTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
+                            }
+                            @if (evnt.EndTime.HasValue)
+                            {
+                                <li><i class="fa fa-clock-o"></i>End: @evnt.EndTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
+                            }
+                            @if (evnt.Address != null)
+                            {
+                                <li><i class="fa fa-map"></i>@evnt.Address.ToString()</li>
+                            }
+                        </ul>
+                        @if (evnt.IsTicketSaleEnabled)
+                        {
+                            <a href="#tickets" class="btn btn-primary">Get a Ticket</a>
+                        }
+                    </div>
+                </div>
+            </div><!-- row -->
+        </div><!-- container fluid -->
+    </div><!-- festival content -->
+</div><!-- about section -->
+@{Html.RenderPartial("~/views/partials/event/_TicketForm.cshtml", new EventDetailModel { Event = evnt }); }
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            activateButton();
+            $('select.ticketType').change(function () {
+                activateButton();
+            });
+        });
+        function activateButton() {
+            var disable = true;
+            $('select.ticketType').each(function () {
+                if (parseInt($(this).val()) > 0) {
+                    disable = false;
+                }
+            });
+
+            if (disable)
+                $('#btnBuyTickets').attr('disabled', 'disabled');
+            else
+                $('#btnBuyTickets').removeAttr('disabled');
+        }
+
+    </script>
+}

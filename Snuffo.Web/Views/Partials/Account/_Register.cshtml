@@ -1,0 +1,77 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<RegisterModel>
+@{
+
+}
+
+<div class="col-md-6">
+    <div class="padding-top-3x hidden-md-up"></div>
+    <h3 class="margin-bottom-1x">No Account? Register</h3>
+    <p>Registration takes less than a minute but gives you full control over your orders.</p>
+    @using (Html.BeginUmbracoForm<AccountController>("Register", FormMethod.Post, htmlAttributes: new { @class = "row" }))
+    {
+        <div class="col-sm-12">
+            @Html.AntiForgeryToken()
+            @if (Request.Form.AllKeys.Contains("btnSubmitRegister"))
+            {
+                @Html.ValidationSummary()
+            }
+        </div>
+        
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-fn">First Name</label>
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", id = "reg-fn", required = "required", maxlength = "500" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-ln">Last Name</label>
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", id = "reg-ln", required = "required", maxlength = "500" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-email">E-mail Address</label>
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", type = "email", id = "reg-email", required = "required", maxlength = "500" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-phone">Phone Number</label>
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", id = "reg-phone", required = "required", maxlength = "50" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-pass">
+                    Password
+                </label>
+                <div class="fa fa-question-circle field-tip">
+                    <ul class="tip-content">
+                        <li>At least 8 characters in length</li>
+                        <li>Contains lower case letters (a-z)</li>
+                        <li>Contains upper case letters (A-Z)</li>
+                        <li>Contains special characters (e.g. !@@#$%^&*)</li>
+                        <li>Contains a number</li>
+                    </ul>
+                </div>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "reg-pass", required = "required", maxlength = "50" })
+                <meter max="4" id="password-strength-meter"></meter>
+                <p id="password-strength-text" style="display:none;"></p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="reg-pass-confirm">Confirm Password</label>
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", id = "reg-pass-confirm", required = "required", maxlength = "500" })
+            </div>
+        </div> 
+        <div class="col-sm-6">
+            <!-- Render recaptcha control with default properties. -->
+            @reCaptcha.ReCaptcha.GetHtml(publicKey: DataUtils.GetConfig("reCaptcha:SiteKey"), callback: "enableBtn")
+        </div>
+        <div class="col-sm-6 text-center text-sm-right">
+            <button class="btn btn-primary margin-bottom-none" id="btnSubmitRegister" name="btnSubmitRegister" type="submit">Register</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,57 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.PropertiesModel
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+@Html.CreateAuthorizedActionHtml("Create property", ActionType.Create, new Dictionary<string, string> { { "id", "createproperty" }, { "data-property-id", "0" }, { "class", "btn btn-primary action-link linkProp" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.Properties.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.DataTypeId))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Uvendia.Domain.Property>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Properties)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkProp id-field" data-property-id="@p.Id">@p.Id</a></td>
+                    <td><a class="linkProp" data-property-id="@p.Id">@p.Name</a></td>
+                    <td>@p.DataType.Name</td>
+                    <td>@p.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@p.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@p.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {p.Name} ({p.Id})" }, { "data-rowid", rowId }, { "data-id", p.Id.ToString() }, { "data-controller", "Property" }, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(m => m.TreeSelectedNodePath)
+@Html.HiddenFor(m => m.DefinitionType)
+@Html.HiddenFor(m => m.DefinitionId)
+@section scripts {
+    <script>
+        $('.linkProp').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/Property/CreateEdit/' + $(this).data("property-id") + '?definitionType=' + $('#DefinitionType').val() + '&definitionId=' + $('#DefinitionId').val() + '&treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

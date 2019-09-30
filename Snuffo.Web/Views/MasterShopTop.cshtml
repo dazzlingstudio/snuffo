@@ -1,0 +1,48 @@
+﻿@inherits  UmbracoViewPage
+@{
+    Layout = "MasterShop.cshtml";
+
+    var site = Model.Root();
+    var ancestors = Model.Ancestors().Where(x => x.IsVisible()).Reverse();
+}
+
+@section header {
+    @RenderSection("header", false)
+}
+
+<!-- Page Title-->
+<div class="page-title">
+    <div class="container">
+        <div class="column">
+            <h1>@Model.Value("PageTitle")</h1>
+        </div>
+        <div class="column">
+            <ul class="breadcrumbs">
+                @foreach (var s in ancestors)
+                {
+                    <li>
+                        <a href="@s.Url">@s.Name</a>
+                    </li>
+                    <li class="separator">&nbsp;</li>
+                }
+                <li>
+                    <a>@Model.Name</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Page Content-->
+<div class="container padding-bottom-3x mb-1">
+    <div class="row @ViewBag.ExtraBodyCss">
+        @RenderBody()
+    </div>
+</div>
+
+@section footer{
+    @RenderSection("footer", false)
+}
+
+@section scripts {
+    @RenderSection("scripts", required: false)
+}

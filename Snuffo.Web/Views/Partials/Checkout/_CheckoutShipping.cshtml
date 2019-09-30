@@ -1,0 +1,60 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<CheckoutShippingModel>
+@{
+
+}
+
+<h4>Choose Shipping Method</h4>
+<hr class="padding-bottom-1x" />
+
+@using (Html.BeginUmbracoForm<CheckoutController>("UpdateOrderCheckoutShipping", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="breaker"></div>
+
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-default">
+                <tr>
+                    <th></th>
+                    <th>Shipping method</th>
+                    <th style="white-space:nowrap">Delivery time</th>
+                    <th style="white-space:nowrap">Handling fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                {
+                    bool enabled = Model.ShippingMethods[i].PriceCollection.Single(x => x.Definition.Currency == SnuffoSettings.GetCurrency()).Enabled;
+                    var radioButtonHtmlAttr = new Dictionary<string, object> { { "id", "shipping" + i.ToString() }, { "class", "custom-control-input" } };
+                    if (!enabled)
+                    {
+                        radioButtonHtmlAttr.Add("disabled", "disabled");
+                    }
+
+                    <tr>
+                        <td class="align-middle">
+                            <div class="custom-control custom-radio mb-0">
+                                @Html.RadioButtonFor(m => m.SelectedShippingMethodId, Model.ShippingMethods[i].Id, radioButtonHtmlAttr)
+                                <label class="custom-control-label" for="shipping@(i)"></label>
+                            </div>
+                        </td>
+                        <td class="align-middle"><span class="text-medium">@Model.ShippingMethods[i].Name</span><br><span class="text-muted text-sm">@Model.ShippingMethods[i].Description</span></td>
+                        <td class="align-middle">@Model.ShippingMethods[i].DeliveryTime</td>
+                        <td class="align-middle">@SnuffoSettings.ConvertMoney(Model.ShippingMethods[i].GetPrice(SnuffoSettings.GetCurrency()))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="checkout-footer">
+        <div class="column"><a class="btn btn-outline-secondary" href="/cart/checkout-address"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
+        <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
+    </div>
+}

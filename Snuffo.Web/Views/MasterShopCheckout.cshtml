@@ -1,0 +1,98 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "masterShopTop.cshtml";
+
+    Response.AppendHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+    Response.AppendHeader("Pragma", "no-cache"); // HTTP 1.0.
+    Response.AppendHeader("Expires", "0"); // Proxies.
+
+    short currentStepNr = Convert.ToInt16(ViewBag.CurrentCheckoutStepNr);
+    var currentCart = Uvendia.Domain.Cart.CurrentCart.Create(SnuffoSettings.STORE_NAME);
+    var order = currentCart.GetOrder();
+
+    if (!order.HasOrderDetails())
+    {
+        currentCart.ClearCart();
+        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/shop"));
+    }
+}
+@section header {
+    @RenderSection("header", false)
+}
+<!-- Checkout Adress-->
+<div class="col-xl-9 col-lg-8">
+    <div class="checkout-steps">
+
+        <a @(currentStepNr == 4 ? "class=active" : "") href="/@CurrentUser.LanguageCode/cart/checkout-review">4. Review</a>
+        <a @(currentStepNr == 3 ? "class=active" : "") @(currentStepNr > 3 ? "class=completed" : "") href="/@CurrentUser.LanguageCode/cart/checkout-payment">
+            <span class="angle"></span>
+            @if (currentStepNr > 3)
+            {
+                <span class="step-indicator icon-circle-check"></span>
+            }
+            3. Payment
+        </a>
+        @if (order.HasOrderProductDetails())
+        {
+            <a @(currentStepNr == 2 ? "class=active" : "") @(currentStepNr > 2 ? "class=completed" : "") href="/@CurrentUser.LanguageCode/cart/checkout-shipping">
+                <span class="angle"></span>
+                @if (currentStepNr > 2)
+                {
+                    <span class="step-indicator icon-circle-check"></span>
+                }
+                2. Shipping
+            </a>
+        }
+        <a @(currentStepNr == 1 ? "class=active" : "") @(currentStepNr > 1 ? "class=completed" : "") href="/@CurrentUser.LanguageCode/cart/checkout-address">
+            <span class="angle"></span>
+            @if (currentStepNr > 1)
+            {
+                <span class="step-indicator icon-circle-check"></span>
+            }
+            1. Address
+        </a>
+    </div>
+    @RenderBody()
+
+</div>
+
+<!-- Sidebar          -->
+<div class="col-xl-3 col-lg-4">
+    <aside class="sidebar">
+        <div class="padding-top-2x hidden-lg-up"></div>
+        <!-- Order Summary Widget-->
+        <section class="widget widget-order-summary">
+            <h3 class="widget-title">Order Summary</h3>
+            <table class="table">
+                <tr>
+                    <td>Cart Subtotal:</td>
+                    <td class="text-medium">@SnuffoSettings.ConvertMoney(order.CalculateSubTotal())</td>
+                </tr>
+                <tr>
+                    <td>Shipping:</td>
+                    <td class="text-medium">@SnuffoSettings.ConvertMoney(order.CalculateShippingFee())</td>
+                </tr>
+                <tr>
+                    <td>Payment fee:</td>
+                    <td class="text-medium">@SnuffoSettings.ConvertMoney(order.CalculatePaymentFee())</td>
+                </tr>
+                <tr>
+                    <td>Estimated tax:</td>
+                    <td class="text-medium">@SnuffoSettings.ConvertMoney(order.CalculateVAT())</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-lg text-medium">@SnuffoSettings.ConvertMoney(order.CalculateTotal())</td>
+                </tr>
+            </table>
+        </section>
+
+    </aside>
+</div>
+
+
+@section scripts {
+
+    @RenderSection("scripts", required: false)
+}
+

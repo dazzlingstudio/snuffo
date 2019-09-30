@@ -1,0 +1,81 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<IEnumerable<Order>>
+@using Uvendia.Domain.Enums
+@{
+
+}
+
+<div class="table-responsive">
+    @using (Html.BeginUmbracoForm<AccountController>("DownloadPDF", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <table class="table table-hover margin-bottom-none">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date Purchased</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.IsNullOrEmpty())
+                {
+
+                    foreach (var o in Model)
+                    {
+                        bool disabled = IsInvoiceDisabled(o.OrderStatusId);
+                        <tr>
+                            <td><a class="text-medium navi-link openOrderDetails" data-order-id="@o.Id" data-order-title="Order No. @o.OrderNumber">@o.OrderNumber</a></td>
+                            <td>@o.OrderDate.ToString("MMMM dd, yyyy HH:mm")</td>
+                            <td>
+                                <span class="@GetStatusCssClass(o)">@o.OrderStatus.Description</span>
+                            </td>
+                            <td><span class="text-medium">@SnuffoSettings.ConvertMoney(o.CalculateTotal(), o.GetOrderCurrency())</span></td>
+                            <td>
+                                <button type="submit" name="invoice" value="@o.Id" class="@(disabled ? "btn-link-danger" : "btn-link-primary") download-invoice" @(disabled ? "disabled" : "")><i class="icon-download"></i>&nbsp;Invoice</button>
+                                @if (o.HasOrderTicketDetails())
+                                {
+                                    <span>|</span> <button type="submit" name="tickets" value="@o.Id" class="@(disabled ? "btn-link-danger" : "btn-link-primary") download-invoice" @(disabled ? "disabled" : "")><i class="icon-download"></i>&nbsp;Ticket(s)</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No orders found</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+</div>
+
+
+
+@functions{
+    string GetStatusCssClass(Order o)
+    {
+        if (o.OrderStatus == OrderStatus.InProgress || o.OrderStatus == OrderStatus.NewOrder || o.OrderStatus == OrderStatus.None || o.OrderStatus == OrderStatus.Started)
+        {
+            return "text-info";
+        }
+        else if (o.OrderStatus == OrderStatus.Cancelled)
+        {
+            return "text-danger";
+        }
+        else
+        {
+            return "text-success";
+        }
+    }
+
+    bool IsInvoiceDisabled(short orderStatusId)
+    {
+        short[] disabledStatus = new[] { OrderStatus.NewOrder.Id, OrderStatus.Cancelled.Id, OrderStatus.None.Id };
+        return (disabledStatus.Contains(orderStatusId));
+    }
+}

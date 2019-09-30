@@ -1,0 +1,296 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    /* So 100% means 100% */
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+
+}
+body {
+    
+    min-height: 100%;   
+}
+.offcanvas-wrapper {
+    min-height: calc(100vh - 124px);
+    display: flex;
+    flex-direction: column;
+}
+
+main {    
+    flex: 1 0 auto;
+}
+
+.site-footer {
+    flex-shrink: 0;
+}
+main > div.container {
+    padding-left: 30px;
+}
+.site-logo {
+    padding: 0 0 0 25px;
+}
+
+.site-logo img {
+    height: 75px;
+}
+
+.breaker {
+    clear: both;
+}
+a {
+    cursor: pointer;
+}
+.validation-summary-errors {
+    color: red;
+    margin-bottom: 20px;
+}
+
+
+/* Hover tooltips */
+.field-tip {
+    position: relative;
+    cursor: help;
+}
+
+.field-tip .tip-content {
+    position: absolute;
+    top: -65px; /* - top padding */
+    right: 9999px;
+    margin-right: -220px; /* width + left/right padding */
+    width: 300px;
+    padding: 10px 10px 10px 20px;
+    color: #fff;
+    background: #333;
+    -webkit-box-shadow: 2px 2px 5px #aaa;
+    -moz-box-shadow: 2px 2px 5px #aaa;
+    box-shadow: 2px 2px 5px #aaa;
+    opacity: 0;
+    -webkit-transition: opacity 250ms ease-out;
+    -moz-transition: opacity 250ms ease-out;
+    -ms-transition: opacity 250ms ease-out;
+    -o-transition: opacity 250ms ease-out;
+    transition: opacity 250ms ease-out;
+    z-index: 99999;
+}
+/* <http://css-tricks.com/snippets/css/css-triangle/> */
+.field-tip .tip-content:before {
+    content: ' '; /* Must have content to display */
+    position: absolute;
+    top: 50%;
+    left: -16px; /* 2 x border width */
+    width: 0;
+    height: 0;
+    margin-top: -8px; /* - border width */
+    border: 8px solid transparent;
+    border-right-color: #333;
+}
+
+.field-tip:hover .tip-content {
+    right: -95px;
+    opacity: 1;
+}
+
+meter {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /*margin: 0 auto 1em;*/
+    width: 100%;
+    height: .001em;
+    /* Applicable only to Firefox */
+    background: none;
+    /*background-color: rgba(0,0,0,0.1);*/
+}
+
+meter::-webkit-meter-bar {
+    background: none;
+    background-color: rgba(0,0,0,0.1);
+}
+
+meter[value="1"]::-webkit-meter-optimum-value {
+    background: red;
+}
+
+meter[value="2"]::-webkit-meter-optimum-value {
+    background: yellow;
+}
+
+meter[value="3"]::-webkit-meter-optimum-value {
+    background: orange;
+}
+
+meter[value="4"]::-webkit-meter-optimum-value {
+    background: green;
+}
+
+meter[value="1"]::-moz-meter-bar {
+    background: red;
+}
+
+meter[value="2"]::-moz-meter-bar {
+    background: yellow;
+}
+
+meter[value="3"]::-moz-meter-bar {
+    background: orange;
+}
+
+meter[value="4"]::-moz-meter-bar {
+    background: green;
+}
+
+.feedback {
+    color: #9ab;
+    font-size: 90%;
+    padding: 0 .25em;
+    font-family: Courgette, cursive;
+    margin-top: 1em;
+}
+
+.umb-grid {
+    width: 100%
+}
+
+.jq-toast-wrap {
+    z-index: 99999 !important;
+}
+
+.jq-toast-wrap {
+    width: 450px;
+}
+
+a.link {
+    transition: color .3s;
+    color: #374250;
+    text-decoration: none;
+}
+
+a.link:hover {
+    color: #0da9ef;
+}
+.product-card .product-title {
+    height: 30px;
+}
+.list-group-item.active-delete {
+    border-color: #ff5252;
+    background-color: #ff5252;
+}
+nav.pagination .column { width:100%; }
+nav.pagination .column .next-page-item {
+    float: right
+}
+nav.pagination .column .prev-page-item {
+    width: 50px;
+}
+.comment-author-ava {
+    padding: 10px;
+}
+.product-gallery { margin-left: 10px;}
+.download-invoice {
+    border:none;
+    cursor:pointer;
+    background-color: transparent;
+}
+a.search-link {
+    text-decoration: none;
+}
+a.search-link .media:hover{
+    background-color: #f9f9f9;
+}
+
+.contact .g-recaptcha {
+    margin: auto;
+    width: 304px;
+}
+
+.section-title, .festival-content {
+    max-width: unset !important;
+}
+.no-padding {
+    padding: 0;
+}
+
+.about-image {
+    position: relative;
+    max-height: 570px;
+    overflow: hidden;
+}
+
+.about-image img {
+    width: 100%;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*background-color: rgba(157, 152, 160, 0.6);*/
+}
+
+.festival-info .about-time {
+    /* font-size: 14px; */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.festival-info .about-time i {
+    margin-right: 10px;
+}
+
+.events-info {
+    position: absolute;
+    top: 50%;
+    margin-top: -60px;
+    color: #fff;
+    padding: 0 65px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.before-right:before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    margin-top: -10px;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #fff;
+    z-index: 1;
+}
+.tickets-section {
+    padding-bottom: 10px;
+}
+.tickets-container {
+    margin-top: 30px;
+}
+.padding-left-30x {
+    padding-left: 30px !important;
+}
+button[disabled], a[disabled] {
+    cursor: not-allowed;
+}
+.jq-toast-heading {
+    text-transform: uppercase;
+    font-size: 11px !important;
+    margin: 0 0 2px 0 !important;
+}
+
+@media (max-width: 768px) {
+    .padding-bottom-3x {
+        padding-left: 30px;
+        padding-right: 10px;
+    }
+}

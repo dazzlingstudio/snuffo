@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountAddressModel>
+
+
+@{Html.RenderPartial("~/Views/Partials/_Address.cshtml", Model.ContactAddress, new ViewDataDictionary { { "AllCountries", Model.Countries }, { "HtmlFieldPrefix", "ContactAddress" } }); }
+
+<div class="col-12 padding-top-1x">
+    <h4>Shipping Address</h4>
+    <hr class="padding-bottom-1x">
+    <div class="custom-control custom-checkbox d-block">
+        @Html.CheckBoxFor(m => m.HasSameAddress, new { id = "same_address", @class = "custom-control-input" })
+        <label class="custom-control-label" for="same_address">Same as Contact Address</label>
+    </div>
+    <hr class="margin-top-1x margin-bottom-1x">
+
+    <section id="container-shippingAddress" class="row" style="display:none;">
+        @{Html.RenderPartial("~/Views/Partials/_Address.cshtml", Model.ShippingAddress, new ViewDataDictionary { { "AllCountries", Model.Countries }, { "HtmlFieldPrefix", "ShippingAddress" } });}
+    </section>
+
+</div>

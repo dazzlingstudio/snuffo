@@ -1,0 +1,70 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<CheckoutPaymentModel>
+@{
+
+}
+
+<h4>Choose Payment Method</h4>
+<hr class="padding-bottom-1x" />
+
+@using (Html.BeginUmbracoForm<CheckoutController>("UpdateOrderCheckoutPayment", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="breaker"></div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-default">
+                <tr>
+                    <th></th>
+                    <th>Payment method</th>
+                    <th>&nbsp;</th>
+                    <th>Service fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                {
+                    bool enabled = Model.PaymentMethods[i].PriceCollection.Single(x => x.Definition.Currency == SnuffoSettings.GetCurrency()).Enabled;
+                    var radioButtonHtmlAttr = new Dictionary<string, object> { { "id", "payment" + i.ToString() }, { "class", "custom-control-input" } };
+                    if (!enabled)
+                    {
+                        radioButtonHtmlAttr.Add("disabled", "disabled");
+                    }
+
+                    <tr data-payment-method-id="@Model.PaymentMethods[i].Id">
+                        <td class="align-middle">
+                            <div class="custom-control custom-radio mb-0">
+                                @Html.RadioButtonFor(m => m.SelectedPaymentMethodId, Model.PaymentMethods[i].Id, radioButtonHtmlAttr)
+                                <label class="custom-control-label" for="payment@(i)"></label>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span class="text-medium">@Model.PaymentMethods[i].Name</span><br><span class="text-muted text-sm">@Model.PaymentMethods[i].Description</span>
+                        </td>
+                        <td>
+                            @if (Model.PaymentMethods[i].Name.ToLower() == "ideal")
+                            {
+                                @Html.DropDownListFor(m => m.iDealIssuerId, Model.iDealIssuerList, "-- Choose your bank --", new { id = "iDealIssuerList", @class = "iDealIssuerList form-control" })
+                            }
+                            else
+                            {
+                                <span>&nbsp;</span>
+                            }
+                        </td>
+                        <td class="align-middle">@SnuffoSettings.ConvertMoney(Model.PaymentMethods[i].GetPrice(SnuffoSettings.GetCurrency()))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="checkout-footer">
+        <div class="column"><a class="btn btn-outline-secondary" href="/@CurrentUser.LanguageCode/cart/checkout-shipping"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
+        <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
+    </div>
+}

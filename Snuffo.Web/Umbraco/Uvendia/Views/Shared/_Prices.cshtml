@@ -1,0 +1,23 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.IPriceModel
+@{
+
+}
+<div class="tab-content">
+    <div id="tabs-prices" class="tab-pane active">
+        @for (int i = 0; i < Model.PriceCollection.Count(); i++)
+        {
+
+            @Html.HiddenFor(model => model.PriceCollection[i].Id)
+            @Html.HiddenFor(model => model.PriceCollection[i].CreatedOn)
+            @Html.HiddenFor(model => model.PriceCollection[i].CreatedBy)
+            @Html.HiddenFor(model => model.PriceCollection[i].PriceDefinitionId)
+            @Html.HiddenFor(model => model.PriceCollection[i].Definition.Name)
+            @Html.HiddenFor(model => model.PriceCollection[i].Definition.Currency)
+
+            <div class="col-md-12">
+                <label class="control-label">@Model.PriceCollection[i].Definition.Name (@Model.PriceCollection[i].Definition.Currency)</label>
+                @Html.TextBoxFor(model => model.PriceCollection[i].Value, "{0:f2}", new { @class = "form-control input-sm", type = "number", @maxlength = "9" })
+            </div>
+        }
+    </div>
+</div>

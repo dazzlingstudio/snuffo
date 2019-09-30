@@ -1,0 +1,42 @@
+﻿@model CartShopModel
+@{
+
+}
+
+
+<a href="/@CurrentUser.LanguageCode/cart/"></a><i class="icon-bag"></i><span class="count">@Model.CurrentCart.ItemsCount</span><span class="subtotal">@SnuffoSettings.ConvertMoney(Model.Subtotal)</span>
+<div class="toolbar-dropdown">
+    @foreach (var ci in Model.CartItems)
+    {
+        if (ci.ProductId.HasValue)
+        {
+            <div class="dropdown-product-item">
+                @*<span class="dropdown-product-remove"><i class="icon-cross"></i></span>*@
+                <a class="dropdown-product-thumb" href="/@CurrentUser.LanguageCode/shop/product?p=@ci.ProductId">
+                    <img src="@CloudinaryService.GetCloudinaryUrl(ci.MetaData, 110, 110)" alt="@ci.Name">
+                </a>
+                <div class="dropdown-product-info">
+                    <a class="dropdown-product-title" href="/@CurrentUser.LanguageCode/shop/product?p=@ci.ProductId">@ci.Name</a>
+                    <span class="dropdown-product-details">@ci.Quantity x @SnuffoSettings.ConvertMoney(ci.UnitPrice)</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="dropdown-product-item">
+                @*<span class="dropdown-product-remove"><i class="icon-cross"></i></span>*@
+                <a class="dropdown-product-thumb" href="/@CurrentUser.LanguageCode/events/event?e=@ci.TicketSale.Get().EventId">
+                    <img src="@CloudinaryService.GetCloudinaryUrl(ci.MetaData, 110, 110)" alt="@ci.Name (@ci.Description)">
+                </a>
+                <div class="dropdown-product-info">
+                    <a class="dropdown-product-title" href="/@CurrentUser.LanguageCode/events/event?d=@ci.TicketSale.Get().EventId">@ci.Name</a>
+                    <span class="dropdown-product-details">@ci.Quantity x @SnuffoSettings.ConvertMoney(ci.UnitPrice)</span>
+                </div>
+            </div>
+        }
+    }
+    <div class="toolbar-dropdown-group">
+        <div class="column"><a class="btn btn-sm btn-block btn-secondary" href="/@CurrentUser.LanguageCode/cart">View Cart</a></div>
+        <div class="column"><a class="btn btn-sm btn-block btn-success" href="@Model.CheckoutUrl">Checkout</a></div>
+    </div>
+</div>

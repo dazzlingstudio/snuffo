@@ -1,0 +1,71 @@
+﻿@model Address
+@using Uvendia.Domain.Enums
+
+@{
+    var countries = ViewData["Countries"] as IList<SelectListItem>;
+    ViewData.TemplateInfo.HtmlFieldPrefix = ViewData["HtmlFieldPrefix"].ToString();
+    bool showBirthDate = Convert.ToBoolean(ViewData["ShowBirthDate"] ?? 1);
+    bool showAddresseeTitle = Convert.ToBoolean(ViewData["ShowAddresseeTitle"] ?? 1);
+}
+<div class="break"></div>
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CreatedOn)
+@Html.HiddenFor(model => model.CreatedBy)
+
+<div class="row">
+    <div class="col-sm-6 non-padding padding-right">
+        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", placeholder = "First name", autocomplete = "off" })
+    </div>
+    <div class="col-sm-6 non-padding">
+        @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", placeholder = "Last name", autocomplete = "off" })
+    </div>
+</div>
+
+<div class="row">
+    @Html.TextBoxFor(model => model.AddresseeName, new { @class = "form-control input-sm", placeholder = "Company / addressee name", autocomplete = "off" })
+</div>
+
+@if (showBirthDate)
+{
+    <div class="row">
+        <div class='input-group date datetime' style="margin-bottom: 10px;">
+            @Html.TextBoxFor(model => model.BirthDate, "{0:dd MMMM yyyy}", new Dictionary<string, object> { { "class", "form-control input-sm" }, { "placeholder", "Birth date (optional)" } })
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <div class="break"></div>
+}
+
+<div class="row">
+    @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm", placeholder = "E-mail address", autocomplete = "off" })
+</div>
+<div class="row">
+    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control input-sm", placeholder = "Phone" })
+</div>
+<div class="row">
+    @Html.TextBoxFor(model => model.AddressLine1, new { @class = "form-control input-sm", placeholder = "Address Line 1", autocomplete = "off" })
+</div>
+<div class="row">
+    @Html.TextBoxFor(model => model.AddressLine2, new { @class = "form-control input-sm", placeholder = "Address Line 2", autocomplete = "off" })
+</div>
+@*<div class="row">
+        <div class="col-sm-6 non-padding padding-right">
+            @Html.TextBoxFor(model => model.Housenumber, new { @class = "form-control input-sm", placeholder = "House number", type="number", autocomplete = "off" })
+        </div>
+        <div class="col-sm-6 non-padding">
+            @Html.TextBoxFor(model => model.HousenumberExtension, new { @class = "form-control input-sm", placeholder = "Addition", autocomplete="off"})
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-sm-3 non-padding padding-right">
+        @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control input-sm", placeholder = "Zip code" })
+    </div>
+    <div class="col-sm-5 non-padding padding-right">
+        @Html.TextBoxFor(model => model.City, new { @class = "form-control input-sm", placeholder = "City" })
+    </div>
+    <div class="col-sm-4 non-padding">
+        @Html.DropDownListFor(model => model.CountryCode, countries, new { @class = "form-control input-sm" })
+    </div>
+</div>

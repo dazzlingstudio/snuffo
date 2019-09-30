@@ -1,0 +1,74 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.SearchOrderModel
+@{
+
+}
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+@using (Html.BeginForm("Search", "Order", FormMethod.Post, htmlAttributes: new { id = "frmSearchOrder", @class = "form-group" }))
+{
+    @Html.HiddenFor(model => model.TreeSelectedNodePath)
+    @Html.HiddenFor(m => m.Title)
+    <div>
+        <div class="row">
+            @Html.LabelFor(model => model.OrderNumber, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.OrderNumber, new { @class = "form-control input-sm", @maxlength = "50" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.AddressLine, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.AddressLine, new { @class = "form-control input-sm", placeholder = "Address line", autocomplete = "off" })
+        </div>
+        <div class="row">
+            <div class="col-sm-6 non-padding padding-right">
+                @Html.TextBoxFor(model => model.Housenumber, new { @class = "form-control input-sm", placeholder = "House number", type = "number", autocomplete = "off" })
+            </div>
+            <div class="col-sm-6 non-padding">
+                @Html.TextBoxFor(model => model.HousenumberExtension, new { @class = "form-control input-sm", placeholder = "Addition", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 non-padding padding-right">
+                @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control input-sm", placeholder = "Zip code" })
+            </div>
+            <div class="col-sm-5 non-padding padding-right">
+                @Html.TextBoxFor(model => model.City, new { @class = "form-control input-sm", placeholder = "City" })
+            </div>
+            <div class="col-sm-4 non-padding">
+                @Html.DropDownListFor(model => Model.CountryCode,
+                    new SelectList(Model.AllAvailableInCountries, "Code", "Name", Model.CountryCode), "Select a country...",
+                    new { @class = "form-control input-sm" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="btn-toolbar">
+                <button type="submit" class="btn btn-success pull-left action-link">
+                    Search <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        @if (Model.Results != null && Model.Results.Any())
+        {
+            Html.RenderPartial("~/Umbraco/Uvendia/Views/Order/_Orders.cshtml", Model.Results, new ViewDataDictionary { { "IsSearch", true } });
+        }
+        else if (Model.Results != null)
+        {   
+            <br />
+            <br />
+            <p><i>No records found</i></p>
+        }
+
+    </div>
+}
+
+@Html.HiddenFor(m => m.TreePath)
+@section scripts {
+    <script>
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+
+        $(function () {
+
+        });
+    </script>
+}

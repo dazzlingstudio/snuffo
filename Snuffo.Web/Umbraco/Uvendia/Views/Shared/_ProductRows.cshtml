@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Product>
+@{
+    bool enableSelect = Convert.ToBoolean(ViewData["EnableSelect"] ?? 0);
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+
+@foreach (var p in Model)
+{
+    var rowId = Guid.NewGuid().ToString("D");
+    long toLinkProdId = !p.VariantSku.IsNullOrEmpty() ? p.Parent.Get().Id : p.Id;
+
+    <tr @(!enableSelect ? "id=" + rowId : "") class="@(enableSelect ? (p.HasVariant ? "clickable" : "in collapse row" + toLinkProdId) : "")" @(enableSelect ? (p.HasVariant ? "aria-expanded=true" : "") : "" ) @(enableSelect ? (p.HasVariant ? "data-toggle=collapse data-target=.row"+p.Id+" id=row" + p.Id  : "") : "")>
+        @if (enableSelect)
+        {
+            if (!p.HasVariant)
+            {
+            <td><input type="checkbox" class="product-select" data-id="@p.Id" data-name="@p.Name" data-type="product" /></td>
+            }
+            else
+            {
+            <td><i class="collapsable-product glyphicon glyphicon-plus" data-id="@p.Id" data-enableselect="@enableSelect"></i></td>
+            }
+        }        
+        <td><a class="linkProduct id-field" data-product-id="@toLinkProdId" data-category-id="@ViewData["CategoryId"]">@p.Id</a></td>
+        <td><a class="linkProduct" data-product-id="@toLinkProdId" data-category-id="@ViewData["CategoryId"]">@p.Name</a></td>
+        <td>@p.Sku</td>
+        <td>@p.VariantSku</td>
+        <td>@p.Published</td>
+        <td>@p.ModifiedBy</td>
+        <td>@p.ModifiedOn.ConvertToLongDateTimeString()</td>
+        @if (!enableSelect)
+        {
+        <td>            
+            @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {p.Name} ({p.Id})" }, { "data-rowid", rowId }, { "data-id", p.Id.ToString() }, { "data-controller", "Product" }, { "class", "delete" } }, authorized)
+        </td>
+        }
+        else if (!p.HasVariant)
+        {
+            <td>
+                <label class="switch_small">
+                    <input type="checkbox" class="retoured-select" data-id="@p.Id" data-name="@p.Name" data-type="product">
+                    <span class="slider_small round"></span>
+                </label>
+            </td>
+        }
+        else
+        {
+            <td>&nbsp;</td>
+        }
+    </tr>
+    if (p.HasVariant) { 
+    <tr id="subrow@(p.Id)" class="collapse row@(p.Id)">
+        <td class="smaller-fontsize" colspan="9"><i>Please, one moment...fetching variants...</i></td>
+    </tr>
+    }
+}

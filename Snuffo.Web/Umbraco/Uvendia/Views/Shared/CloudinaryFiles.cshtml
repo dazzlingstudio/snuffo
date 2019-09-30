@@ -1,0 +1,81 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.CloudinaryFileModel
+@{
+    ViewData["Overlay"] = true;
+    var type = Model.FileType.ToString().ToLower();
+}
+
+<div id="tabs" class="media-container" data-cloudinary-type="@type">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" data-target="#tabs-select">Select your @type</a></li>
+        <li><a data-toggle="tab" data-target="#tabs-upload">Upload your @type</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="tabs-select" class="tab-pane active">
+            <div id="container-cloudinary-files" class="row">
+                @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_CloudinaryFileBlock.cshtml", Model); }
+            </div>
+            <div class="row">
+                @Html.HiddenFor(m => m.PageIndex)
+                @Html.HiddenFor(m => m.PageSize)
+                @Html.HiddenFor(m => m.TotalRows)
+                <button id="btnLoadMoreCloudinaryFiles" class="btn btn-info action-link" data-filetype="@Model.FileType">
+                    Load more... <i class="glyphicon glyphicon-cloud-download"></i>
+                </button>
+            </div>
+        </div>
+        <div id="tabs-upload" class="tab-pane ">
+            <div class="image-folders">
+                @Html.HiddenFor(m => m.PropertyValueReference)
+                @Html.LabelFor(m => m.Folders, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.TextBoxFor(m => m.Folders, new { @class = "form-control input-xm" })
+            </div>
+            <div class="media-holder addImage-body">
+                <div id="select-fileupload-container">
+                    <span class="drag-and-drop-text">Drag an @type here</span><br />
+                    <span>or if you want to...</span>
+                    <br />
+                    <span class="btn btn-primary btn-xs fileinput-button">
+                        <span class="select-text">Select @type from you computer</span>
+                        <input class="fileupload" type="file" name="files[]" accept="@Model.FileAccepts">
+                    </span>
+                    <br>
+                    <br>
+                </div>
+                <img id="image_upload_preview" alt="Your @(type)" src="~/Umbraco/Uvendia/Content/images/loading.gif" style="display:none;" />
+                <!-- The global progress bar -->
+                <div id="progress" class="progress" style="display:none;">
+                    <div class="progress-bar progress-bar-success"></div>
+                </div>
+                <!-- The container for the uploaded files -->
+                <div id="files" class="files"></div>
+
+                <span id="wait" class="text-danger" style="display:none">
+                    Please wait...
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="btn-toolbar">
+        <button type="submit" class="btn btn-success pull-left saveCloseCloudinaryModal action-link" disabled>
+            Save &amp; Close <i class="glyphicon glyphicon-floppy-remove"></i>
+        </button>
+        <button type="submit" class="btn btn-default pull-left closemodal action-link">
+            Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+        </button>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+            var uploadUrl = '/Umbraco/Backoffice/Uvendia/Base/UploadToCloudinary';
+            $('.fileupload').fileupload('option', 'url', uploadUrl);
+
+        });
+    </script>
+}

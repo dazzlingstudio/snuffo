@@ -1,0 +1,32 @@
+﻿{
+  //you can define multiple editors
+  "propertyEditors": [
+    {
+      /*this must be a unique alias*/
+      "alias": "Uvendia.ProductTreePicker",
+      /*the name*/
+      "name": "Uvendia ProductTreePicker",
+      /*the html file we will load for the editor*/
+      "editor": {
+        "view": "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.html"
+      }
+    },
+    {
+      /*this must be a unique alias*/
+      "alias": "Uvendia.ProductSelector",
+      /*the name*/
+      "name": "Uvendia ProductSelector",
+      /*the html file we will load for the editor*/
+      "editor": {
+        "view": "~/App_Plugins/Uvendia/UvendiaProductSelector/productselector.html"
+      }
+    }
+  ],
+
+  //array of files we want to inject into the application on app_start
+  "javascript": [
+    "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.controller.js",
+    "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.resource.js",
+    "~/App_Plugins/Uvendia/UvendiaProductSelector/productselector.controller.js"
+  ]
+}

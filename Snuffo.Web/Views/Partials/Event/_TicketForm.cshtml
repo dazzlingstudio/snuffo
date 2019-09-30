@@ -1,0 +1,77 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<EventDetailModel>
+@{
+
+}
+
+@if (Model.Event.IsTicketSaleEnabled)
+{
+    using (Html.BeginUmbracoForm<TicketController>("BuyTickets", FormMethod.Post, htmlAttributes: new { @class = "col-12" }))
+    {
+        @Html.AntiForgeryToken()
+        <a name="tickets"></a>
+        @Html.HiddenFor(m => m.Event.Id)
+        @Html.Hidden("imageId", Model.Event["Image 1"])
+        <div class="tickets-section">
+            <br />
+            <br />
+            <h4>Tickets</h4>
+
+            <div class="tickets-container">
+
+                <table class="table table-hover margin-bottom-none">
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Price</th>
+                            <th>Availability</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Event.TicketsSale.Count(); i++)
+                        {
+                            if (Model.Event.TicketsSale[i].TicketPrice.Definition.Currency == SnuffoSettings.GetCurrency() && Model.Event.TicketsSale[i].Enabled)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.HiddenFor(m => m.Event.TicketsSale[i].Id)
+                                    @Html.HiddenFor(m => m.Event.TicketsSale[i].Enabled)
+                                    @Model.Event.TicketsSale[i].ToString()
+                                </td>
+                                <td nowrap>@SnuffoSettings.ConvertMoney(Model.Event.TicketsSale[i].TicketPrice.Value.GetValueOrDefault())</td>
+                                @if (Model.GetMaxTicketsForSale(Model.Event.TicketsSale[i]) <= 0)
+                                {
+                                    <td colspan="2">Sold out</td>
+                                }
+                                else if (Model.Event.TicketsSale[i].AvailabilityEndDate.HasValue && Model.Event.TicketsSale[i].AvailabilityEndDate.Value < DateTime.Now)
+                                {
+                                    <td colspan="2">Not available</td>
+                                }
+                                else
+                                {
+                                    <td>@(Model.Event.TicketsSale[i].AvailabilityEndDate.ConvertToShortDateTimeString() ?? "n/a")</td>
+                                    <td>@Html.DropDownList(string.Concat("TicketType", i), new SelectList(Enumerable.Range(1, Model.GetMaxTicketsForSale(Model.Event.TicketsSale[i]))), "0", new { @class = "ticketType" })</td>
+                                }
+                            </tr>
+                            }
+                            else
+                            {
+                                <tr style="display:none">
+                                    <td colspan="4">
+                                        @Html.HiddenFor(m => m.Event.TicketsSale[i].Id)
+                                        @Html.HiddenFor(m => m.Event.TicketsSale[i].Enabled)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div class="form-group text-center">
+                    <br />
+                    <button id="btnBuyTickets" type="submit" class="btn btn-primary" disabled>Add to cart</button>
+                </div>
+            </div>
+        </div><!-- schedule section -->
+    }
+}
+

@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AuthenticateModel>
+@{
+
+}
+<div class="col-md-6">
+    @using (Html.BeginUmbracoForm<AccountController>("Authenticate", FormMethod.Post, htmlAttributes: new { @class = "login-box" }))
+    {
+        @Html.AntiForgeryToken()
+        if (Request.Form.AllKeys.Contains("btnSubmitLogin"))
+        {
+            @Html.ValidationSummary()
+        }
+        @Html.Hidden("Login")
+        <div class="row margin-bottom-1x">
+            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block facebook-btn" href="@Model.FacebookAuthUrl"><i class="socicon-facebook"></i>&nbsp;Facebook login</a></div>
+            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block twitter-btn" href="@Model.TwitterAuthUrl"><i class="socicon-twitter"></i>&nbsp;Twitter login</a></div>
+            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block google-btn" href="@Model.GoogleAuthUrl"><i class="socicon-googleplus"></i>&nbsp;Google+ login</a></div>
+        </div>
+        <h4 class="margin-bottom-1x">Or using form below</h4>
+        <div class="form-group input-group">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Email", required = "required" })
+            <span class="input-group-addon"><i class="icon-mail"></i></span>
+        </div>
+        <div class="form-group input-group">
+            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", type = "password", placeholder = "Password", required = "required" })
+            <span class="input-group-addon"><i class="icon-lock"></i></span>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between padding-bottom-1x">
+            <div class="custom-control custom-checkbox">
+                @Html.CheckBoxFor(m => m.RememberMe, new { id = "remember_me", @class = "custom-control-input" })
+                <label class="custom-control-label" for="remember_me">Remember me</label>
+            </div><a class="navi-link" href="/@CurrentUser.LanguageCode/account/password-recovery/">Forgot password?</a>
+        </div>
+        <div class="text-center text-sm-right">
+            <button class="btn btn-primary margin-bottom-none" id="btnSubmitLogin" name="btnSubmitLogin" type="submit">Login</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,52 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountProfileModel>
+
+@using (Html.BeginUmbracoForm<AccountController>("AccountProfile", FormMethod.Post, htmlAttributes: new { @class = "row" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-md-12">
+        @Html.ValidationSummary()
+    </div>
+    @Html.HiddenFor(m => m.UserId)
+
+    <div class="breaker"></div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-fn">First Name</label>
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", id = "account-fn", required = "required", maxlength = 75 })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-ln">Last Name</label>
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", id = "account-ln", required = "required", maxlength = 75 })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-email">E-mail Address</label>
+            @if (Model.UserId.StartsWith("auth0"))
+            { 
+            <span>(<a href="/@CurrentUser.LanguageCode/account/change-e-mail-address/" class="link">change</a>)</span>
+            }
+            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", id = "account-email", @readonly = "readonly", maxlength = 70 })
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-phone">Phone Number</label>
+            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "account-phone", required = "required", maxlength=50 })
+        </div>
+    </div>
+
+    <div class="col-12">
+        <hr class="mt-2 mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div class="custom-control custom-checkbox d-block">
+                @Html.CheckBoxFor(m => m.SubscribedToNewsletter, new { @class = "custom-control-input", id = "subscribe_me" })
+                <label class="custom-control-label" for="subscribe_me">Subscribe me to Newsletter</label>
+            </div>
+            <button class="btn btn-primary margin-right-none" type="submit">Update Profile</button>
+        </div>
+    </div>
+}

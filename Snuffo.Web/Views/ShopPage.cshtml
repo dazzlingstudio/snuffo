@@ -1,0 +1,78 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ShopPageModel>
+@{
+    Layout = "masterShopTop.cshtml";
+}
+
+<!-- Products-->
+<div class="col-xl-9 col-lg-8 order-lg-2">
+    <!-- Shop Toolbar-->
+    <div class="shop-toolbar padding-bottom-1x mb-2">
+        <div class="column">
+            @{Html.RenderPartial("~/views/partials/_ShopSorting.cshtml", Model);}
+        </div>
+        <div class="column">
+            <div class="shop-view"></div>
+        </div>
+    </div>
+    <!-- Products Grid-->
+    <div class="isotope-grid cols-3 mb-2">
+        <div class="gutter-sizer"></div>
+        <div class="grid-sizer"></div>
+
+        @foreach (var p in Model.Products)
+        {
+            Html.RenderPartial("~/views/partials/Product/_ProductItem.cshtml", p);
+        }
+
+    </div>
+    <!-- Pagination-->
+    <nav class="pagination">
+        <div class="column">
+            @Html.Raw(Dazzling.Studio.Utils.Web.PagerHelper.CreatePaging(Model.TotalRows, Model.TotalPages, Model.PageIndex, "pages", previousLabel: "<<", previousCssClass: "prev-page-item", nextLabel: ">>", nextCssClass: "next-page-item"))
+        </div>
+    </nav>
+</div>
+<!-- Sidebar-->
+<div class="col-xl-3 col-lg-4 order-lg-1">
+    <button class="sidebar-toggle position-left" data-toggle="modal" data-target="#modalShopFilters"><i class="icon-layout"></i></button>
+    <aside class="sidebar sidebar-offcanvas">
+        <!-- Widget Categories-->
+        <section class="widget widget-categories">
+            <h3 class="widget-title">Shop Categories</h3>
+            @renderCategoryMenu(Model.Categories, true)
+        </section>
+    </aside>
+</div>
+
+@helper renderCategoryMenu(IEnumerable<Category> categories, bool topCategory)
+{
+    <ul>
+        @foreach (var cat in categories)
+        {
+            if (cat.SubCategories.Any())
+            {
+                <a href="shop/?c=@cat.Id">@cat.DisplayName()</a>
+                <span>(@(cat.Products.Count()))</span>
+                <li @(topCategory ? "class=\"has-children expanded\"" : "class=\"has-children\"")>
+                    @renderCategoryMenu(cat.SubCategories, false)
+                </li>
+            }
+            else
+            {
+                <li><a href="/@CurrentUser.LanguageCode/shop/?c=@cat.Id">@cat.DisplayName()</a><span>(@(cat.Products.Count()))</span></li>
+            }
+        }
+
+    </ul>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#ddlSorting').change(function () {
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,63 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.StoresModel
+@using Uvendia.Domain
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+<div>
+    @Html.HiddenFor(model => model.TreeSelectedNodePath)    
+    @Html.CreateAuthorizedActionHtml("Create Store", ActionType.Create, new Dictionary<string, string> { { "id", "createstore" }, { "data-store-id", "0" }, { "class", "btn btn-primary action-link linkStore" }, { "role", "button" }}, authorized)
+    <br />
+    @if (Model.Items.Any())
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<Store>(x => x.Id))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Store>(x => x.Name))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Store>(x => x.ModifiedOn))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Store>(x => x.CreatedOn))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Store>(x => x.CreatedBy))</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var store in Model.Items)
+                {
+                    var rowId = Guid.NewGuid().ToString("D");
+                    <tr id="@rowId">
+                        <td><a class="linkStore id-field" data-store-id="@store.Id">@store.Id</a></td>
+                        <td><a class="linkStore" data-store-id="@store.Id">@store.Name</a></td>
+                        <td>@store.ModifiedOn.ConvertToLongDateTimeString()</td>
+                        <td>@store.CreatedOn.ConvertToLongDateTimeString()</td>
+                        <td>@store.CreatedBy</td>
+                        <td>
+                            @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {store.Name} ({store.Id})" }, { "data-rowid", rowId }, { "data-id", store.Id.ToString() }, { "data-controller", "Store" }, { "class", "delete" } }, authorized)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Raw(Dazzling.Studio.Utils.Web.PagerHelper.CreatePaging(Model.TotalRows, Model.TotalPages, Model.PageIndex))
+    }
+    else
+    {
+        <br />
+        <br />
+        <p><i>No records found</i></p>
+    }
+    @Html.HiddenFor(m => m.TreePath)
+    @Html.HiddenFor(model => model.TreeSelectedNodePath)
+</div>
+@section scripts {
+    <script>
+
+        $('.linkStore').click(function () {
+            var id = $(this).data('store-id');
+            var url = 'Backoffice/Uvendia/Store/CreateEdit/' + id + '?treePath=' + $('#TreePath').val();
+            UmbClientMgr.contentFrame(url);
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+
+    </script>
+}

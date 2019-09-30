@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Order>
+@using Uvendia.Domain
+@{
+    bool isSearch = Convert.ToBoolean(ViewData["IsSearch"] ?? 0);
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+<table class="table table-hover @(isSearch ? "smaller-fontsize" : "")">
+    <thead>
+      <tr>
+        <th>@(PropertyUtils.GetPropertyNameDisplayName<Order>(x => x.OrderNumber))</th>
+        <th>@(PropertyUtils.GetPropertyNameDisplayName<Order>(x => x.OrderStatus))</th>
+        <th>@(PropertyUtils.GetPropertyNameDisplayName<Order>(x => x.ModifiedOn))</th>
+        <th>@(PropertyUtils.GetPropertyNameDisplayName<Order>(x => x.CreatedOn))</th>
+        <th>@(PropertyUtils.GetPropertyNameDisplayName<Order>(x => x.CreatedBy))</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+@foreach (var order in Model)
+{
+    var rowId = Guid.NewGuid().ToString("D");
+    <tr id="@rowId">
+        <td><a class="linkOrder" data-order-id="@order.Id">@order.OrderNumber</a></td>
+        <td>@order.OrderStatus.Description</td>
+        <td>@order.ModifiedOn.ConvertToLongDateTimeString()</td>
+        <td>@order.CreatedOn.ConvertToLongDateTimeString()</td>
+        <td>@order.CreatedBy</td>
+        <td>            
+            @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {order.OrderStatus.Description} ({order.Id})" }, { "data-rowid", rowId }, { "data-id", order.Id.ToString() }, { "data-controller", "Order" }, { "class", "delete" } }, authorized)
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

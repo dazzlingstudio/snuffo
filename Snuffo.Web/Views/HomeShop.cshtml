@@ -1,0 +1,164 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Home>
+@{
+    Layout = "MasterShop.cshtml";
+
+    var settings = SnuffoSettings.Create(Model);
+    var categories = UvendiaContext.Categories.GetByStoreId(settings.StoreId);
+    string featuredProductIds = Model.FeaturedProducts as string;
+    IEnumerable<Product> featuredProducts = null;
+    if (featuredProductIds != null)
+    {
+        featuredProducts = UvendiaContext.Products.All(featuredProductIds.Split(',').Select(f => long.Parse(f)).ToArray());
+    }
+}
+
+<!-- Page Content-->
+<!-- Category-->
+<div class="container-fluid px-0">
+    @if (!categories.IsNullOrEmpty())
+    {
+        int counter = 0;
+        int cCounter = 0;
+        while (cCounter < categories.Count())
+        {
+            var cats = categories.Skip(counter).Take(2);
+            <div class="row mx-0">
+                <!-- Category-->
+                @foreach (var c in cats)
+                {
+                    <div class="category-card col-md-6 col-sm-12 fw-section padding-top-7x padding-bottom-7x" style="background-image: url(@CloudinaryService.GetCloudinaryUrl(c["Hero Image"].ConvertTo<string>(), 950));">
+                        <span class="overlay" style="background-color: #000; opacity: .5;"></span>
+                        <div class="d-flex justify-content-center">
+                            <div class="px-3 text-center">
+                                <h2 class="display-4 text-white text-shadow">@c.DisplayName()</h2>
+                                <h5 class="text-white text-normal mb-3 opacity-60 text-shadow">@Html.Raw(c.GetShortDescription())</h5>
+                                <div class="view-button"><a class="btn btn-primary" href="/@CurrentUser.LanguageCode/shop/?c=@c.Id">View Collection</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    cCounter++;
+                }
+                @{counter = counter + 2;}
+            </div>
+        }
+    }
+</div>
+<!-- Featured Products (Grid)-->
+<section class="container padding-top-3x padding-bottom-3x">
+    <h3 class="text-center mb-30">Featured Products</h3>
+    <div class="isotope-grid cols-4 mb-2">
+        <div class="gutter-sizer"></div>
+        <div class="grid-sizer"></div>
+
+        @if (featuredProducts != null)
+        {
+            foreach (var p in featuredProducts)
+            {
+                Html.RenderPartial("~/views/partials/Product/_ProductItem.cshtml", p);
+            }
+        }
+
+    </div>
+    <div class="text-center"><a class="btn btn-outline-secondary margin-top-none" href="/@CurrentUser.LanguageCode/shop/">View All Products</a></div>
+</section>
+@{Html.RenderPartial("~/views/partials/_PromoHomeShop.cshtml", Model);}
+
+<!-- Product Widgets-->
+<section class="container padding-top-3x padding-bottom-2x">
+    <h3 class="text-center mb-30">Staff Picks</h3>
+    <div class="row pt-1">
+        <div class="col-md-4 col-sm-6">
+            <div id="load-top-sellers" class="widget widget-featured-products">
+                <h3 class="widget-title">Top Sellers</h3>                
+                <img class="loader" src="~/content/img/loading.gif" />                
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div id="load-new-arrivals" class="widget widget-featured-products">
+                <h3 class="widget-title">New Arrivals</h3>                
+                 <img class="loader" src="~/content/img/loading.gif" />                
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div id="load-best-rated" class="widget widget-featured-products">
+                <h3 class="widget-title">Best Rated</h3>                
+                <img class="loader" src="~/content/img/loading.gif" />                
+            </div>
+        </div>
+    </div>
+</section>
+
+@{Html.RenderPartial("~/views/partials/_BrandsHomeShop.cshtml", Model);}
+
+<!-- Services-->
+<section class="container padding-top-3x padding-bottom-2x">
+    <div class="row">        
+        <div class="col-md-4 col-sm-8 text-center mb-30">
+            <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="~/content/img/services/02.png" alt="Money Back">
+            <h6>Money Back Guarantee</h6>
+            <p class="text-muted margin-bottom-none">We return money within 30 days</p>
+        </div>
+        <div class="col-md-4 col-sm-8 text-center mb-30">
+            <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="~/content/img/services/03.png" alt="Support">
+            <h6>Customer Support</h6>
+            <p class="text-muted margin-bottom-none">Friendly customer support</p>
+        </div>
+        <div class="col-md-4 col-sm-8 text-center mb-30">
+            <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="~/content/img/services/04.png" alt="Payment">
+            <h6>Secure Online Payment</h6>
+            <p class="text-muted margin-bottom-none">We posess SSL / Secure Certificate</p>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                cache: false,
+                url: '/umbraco/surface/service/GetTopSellers',
+                dataType: 'html',
+                type: 'GET',
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#load-top-sellers').append(errorThrown);
+                },
+                success: function (data, textStatus, XMLHttpRequest) {                    
+                    $('#load-top-sellers').append(data);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $('#load-top-sellers').find('img.loader').remove();
+                }
+            });
+            $.ajax({
+                cache: false,
+                url: '/umbraco/surface/service/GetNewProducts',
+                dataType: 'html',
+                type: 'GET',
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#load-new-arrivals').append(errorThrown);
+                },
+                success: function (data, textStatus, XMLHttpRequest) {
+                    $('#load-new-arrivals').append(data);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $('#load-new-arrivals').find('img.loader').remove();
+                }
+            });
+            $.ajax({
+                cache: false,
+                url: '/umbraco/surface/service/GetTopRatedProducts',
+                dataType: 'html',
+                type: 'GET',
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#load-best-rated').append(errorThrown);
+                },
+                success: function (data, textStatus, XMLHttpRequest) {
+                    $('#load-best-rated').append(data);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $('#load-best-rated').find('img.loader').remove();
+                }
+            });
+        }); 
+    </script>
+}

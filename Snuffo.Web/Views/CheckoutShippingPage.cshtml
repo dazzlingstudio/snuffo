@@ -1,0 +1,20 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Uvendia.Domain.Cart
+@{
+    Layout = "masterShopCheckout.cshtml";
+    ViewBag.CurrentCheckoutStepNr = 2;
+
+    var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
+    var order = currentCart.GetOrder();
+    if (!order.InvoiceAddressId.HasValue)
+    {
+        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/cart/checkout-address"));
+    }
+
+    var model = new CheckoutShippingModel();
+    model.ShippingMethods = UvendiaContext.ShippingMethods.All().Where(s => s.Enabled).ToList();
+
+    model.SelectedShippingMethodId = order.ShippingMethodId;
+}
+
+@{Html.RenderPartial("~/Views/Partials/Checkout/_CheckoutShipping.cshtml", model);}

@@ -1,0 +1,81 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ProductModel
+@{
+    if (Model.Product.Inventories.IsNullOrEmpty())
+    {
+        Model.Inventories = new List<Inventory> { new Inventory { ProductId = Model.Product.Id } };
+    }
+}
+
+<div id="tabs-stock" class="tab-pane active">
+    <div class="col-md-12">
+        @Html.LabelFor(model => model.Product.HasStockIndication, htmlAttributes: new { @class = "control-label col-md-3" })
+        <label class="switch">
+            @Html.EditorFor(model => model.Product.HasStockIndication, new { htmlAttributes = new { Id = "chbHasStockIndication" } })
+            <span class="slider round"></span>
+        </label>
+
+    </div>
+    <div class="break"></div>
+
+    <div id="container-stocks">
+        @Html.HiddenFor(model => model.NewStockHtml,  new { @class = "new-stock" })
+        @Html.HiddenFor(model => model.DeletedStockRowId, new { @class = "deleted-stocks" })
+        <table id="tblStocks" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Inventory>(x => x.Stock))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.ModifiedOn))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.CreatedOn))</th>
+                    <th>@(PropertyUtils.GetPropertyNameDisplayName<Category>(x => x.CreatedBy))</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Inventories.Count; i++)
+                {
+                    var rowId = Guid.NewGuid().ToString("D");
+                    <tr data-index="@i" class="inventory-row" id="@(rowId)">
+                        <td data-clearable="false">
+                            @Html.Hidden("Inventories.Index", i, new Dictionary<string, object> { { "data-readonlyname", "true" }, { "data-copyable", "false" }, { "data-clearable", "false" } })
+                            @Html.HiddenFor(m => m.Inventories[i].Id, new Dictionary<string, object> { { "data-number", "true" } })
+                            @Html.HiddenFor(m => m.Inventories[i].ModifiedBy, new Dictionary<string, object> { { "data-clearable", "false" } })
+                            @Html.HiddenFor(m => m.Inventories[i].ModifiedOn, new Dictionary<string, object> { { "data-clearable", "false" } })
+                            @Html.HiddenFor(m => m.Inventories[i].CreatedBy, new Dictionary<string, object> { { "data-clearable", "false" } })
+                            @Html.HiddenFor(m => m.Inventories[i].CreatedOn, new Dictionary<string, object> { { "data-clearable", "false" } })
+                            @Html.TextBoxFor(m => m.Inventories[i].Stock, new { @class = "form-control input-sm stock", type = "number", @maxlength = "15" })
+                        </td>
+                        <td data-clearable="true">
+                            @Model.Inventories[i].ModifiedOn.ConvertToLongDateTimeString()
+                        </td>
+                        <td data-clearable="true">
+                            @Model.Inventories[i].CreatedOn.ConvertToLongDateTimeString()
+                        </td>
+                        <td data-clearable="true">
+                            @Model.Inventories[i].CreatedBy
+                        </td>
+                        <td class="deleteRow" data-clearable="false">
+                            @if (i > 0)
+                            {
+                                <a title="Delete Inventory (@Model.Inventories[i].Id)" data-rowid="@rowId" data-index="@i" data-id="@Model.Inventories[i].Id" data-controller="Product" class="deleteInventory"><i class="glyphicon glyphicon-trash"></i></a>
+                            }
+                            else
+                            {
+                                <span>&nbsp;</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <button type="button" id="btnAddNewStock" class="btn btn-default btn-xs pull-left action-link">
+                            Add new stock <i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+</div>

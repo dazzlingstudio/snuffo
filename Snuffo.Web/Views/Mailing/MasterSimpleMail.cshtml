@@ -1,0 +1,44 @@
+﻿@{
+	Layout = "~/Views/Mailing/MasterMail.cshtml";
+}
+@section header
+{
+	@RenderSection("header", required: false)
+}
+
+<table>
+	<tr>
+		<!-- margin width 40px -->
+		<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+		<!-- content -->
+		<td width="650">
+			<!-- content with articlelist -->
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>					
+					<!-- content above articlelist -->
+					<td style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; letter-spacing: 0.6px; color: #000000;">
+						<table cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<!-- margin width 15px -->
+								<td width="15" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+								<!-- plain text -->
+								<td width="650" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; letter-spacing: 0.6px; color: #000000;">
+									<br />
+									@RenderBody()
+									<br />
+									<p>
+										
+										<br />
+										Snuffo Team
+									</p>
+								</td>
+							</tr>
+						</table>
+					</td>					
+				</tr>
+			</table>			
+		</td>
+		<!-- margin width 40px -->
+		<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+	</tr>
+</table>

@@ -1,0 +1,33 @@
+﻿@model Order
+@using System.Linq;
+@{
+    Layout = "~/Views/Mailing/MasterSimpleMail.cshtml";
+    string url = string.Concat(Html.GetApplicationUrlPath(), "nl/events/download-tickets/?id=", Model.ExternalId);
+}
+
+@section header
+{
+	Snuffo E-ticket
+}
+
+<div style="font-family: 'Roboto Condensed', sans-serif;">
+	<p>
+		LET OP: Dit e-mail bericht bevat een <a href="@url">link</a> om je ticket(s) te downloaden. Print je ticket(s) ajb. en neem het mee.
+	</p>
+	<br />
+	<p>
+		Beste @Model.GetCustomerName(),
+	</p>
+	<p>
+		Hartelijk dank voor je bestelling en het in ons gestelde vertrouwen. Middels de link hierboven vind je de door jouw bestelde tickets:
+	</p>
+	<p>
+		Aantal: @Model.TicketOrderDetails.Sum(x => x.Quantity)
+	</p>	
+	<p>
+		Ordernummer: @Model.OrderNumber
+	</p>
+
+	<p>
+		Je kunt je ticket(s) DOWNLOADEN door op deze link te klikken: <br /><a href="@url">@url</a></p>
+</div>

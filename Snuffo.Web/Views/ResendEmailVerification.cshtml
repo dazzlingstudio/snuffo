@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "MasterShopTop.cshtml";
+}
+
+@Html.GetGridHtml(Model, "bodyText", "bootstrap3-fluid")
+
+
+@using (Html.BeginUmbracoForm<AccountController>("ResendEmailVerification", FormMethod.Post, htmlAttributes: new { @class = "row" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="width:100%">
+        <button class="btn btn-primary margin-bottom-none" id="btnSubmit" name="btnSubmit" type="submit">Resend Verification E-mail</button>
+    </div>
+}

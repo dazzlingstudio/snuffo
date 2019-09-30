@@ -1,0 +1,213 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Umbraco.Web;
+@{
+    var site = Model.Root();
+    var selection = site.Children.Where(x => x.IsVisible());
+    var settings = SnuffoSettings.Create(Model);
+    var categories = UvendiaContext.Categories.GetByStoreId(settings.StoreId).Where(c => c.Published);
+
+}
+
+<!-- Off-Canvas Category Menu-->
+<div class="offcanvas-container" id="shop-categories">
+    <div class="offcanvas-header">
+        <h3 class="offcanvas-title">Shop Categories</h3>
+    </div>
+    <nav class="offcanvas-menu">
+        <ul class="menu">
+            @foreach (var cat in categories)
+            {
+                <li class="@(cat.SubCategories.Any() ? "has-children" : "")">
+                    <span>
+                        <a href="/@CurrentUser.LanguageCode/shop/?c=@cat.Id">@cat.DisplayName()</a>
+                        @if (cat.SubCategories.Any())
+                        {
+                            <span class="sub-menu-toggle"></span>
+                        }
+                    </span>
+                    @renderSubCategories(cat)
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+<!-- Off-Canvas Mobile Menu-->
+<div class="offcanvas-container" id="mobile-menu">
+    @if (CurrentUser.IsAuthenticated)
+    {
+        <a class="account-link" href="@CurrentUser.LanguageCode/account/my-profile/">
+            <div class="user-ava">
+                <img src="@CurrentUser.GetClaim("picture")" alt="@CurrentUser.FullName">
+            </div>
+            <div class="user-info">
+                <h6 class="user-name">@CurrentUser.FullName</h6>
+            </div>
+        </a>
+    }
+    <nav class="offcanvas-menu">
+        <ul class="menu">
+            <li class="@(Model.Url == "/" ? "active" : null)">
+                <span><a href="@site.Url"><span>Home</span></a><span class="sub-menu-toggle"></span></span>
+            </li>
+            @foreach (var item in selection)
+            {
+                bool hasChildren = item.Children.Any(x => x.IsVisible());
+                <li class="@(hasChildren ? "has-children" : "")">
+                    <span>
+                        <a href="@item.Url"><span>@item.Name</span></a>
+                        @if (hasChildren)
+                        {
+                            <span class="sub-menu-toggle"></span>
+                        }
+                    </span>
+                    @renderSubMenu(item, "offcanvas-submenu")
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+<!-- Topbar-->
+<div class="topbar">
+    <div class="topbar-column">
+        <a class="hidden-md-down" href="mailto:@(settings.StoreEmail)">
+            <i class="icon-mail"></i>&nbsp; @settings.StoreEmail
+        </a>
+        @*<a class="hidden-md-down" href="tel:@settings.Phone">
+                <i class="icon-bell"></i>&nbsp; @settings.Phone
+            </a>*@
+        <a class="social-button sb-facebook shape-none sb-dark" href="@settings.FacebookUrl" target="_blank">
+            <i class="socicon-facebook"></i>
+        </a>
+        <a class="social-button sb-twitter shape-none sb-dark" href="@settings.TwitterUrl" target="_blank">
+            <i class="socicon-twitter"></i>
+        </a>
+        <a class="social-button sb-instagram shape-none sb-dark" href="@settings.InstagramUrl" target="_blank">
+            <i class="socicon-instagram"></i>
+        </a>
+    </div>
+    @{Html.RenderPartial("~/views/partials/_LanguageCurrencySelectShop.cshtml", new LanguageCurrencySelectModel(Model)); }
+</div>
+
+<!-- Navbar-->
+<!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+<header class="navbar navbar-sticky">
+    <!-- Search-->
+    <form class="site-search" action="/@CurrentUser.LanguageCode/search/" method="get">
+        <input type="text" name="q" value="@Request.QueryString["q"]" placeholder="Type to search...">
+        <div class="search-tools"><span class="clear-search">Clear</span><span class="close-search"><i class="icon-cross"></i></span></div>
+    </form>
+    <div class="site-branding">
+        <div class="inner">
+            <!-- Off-Canvas Toggle (#shop-categories)--><a class="offcanvas-toggle cats-toggle" href="#shop-categories" data-toggle="offcanvas"></a>
+            <!-- Off-Canvas Toggle (#mobile-menu)--><a class="offcanvas-toggle menu-toggle" href="#mobile-menu" data-toggle="offcanvas"></a>
+            <!-- Site Logo-->
+            <a class="site-logo" href="@site.Url">
+                @*<img src="~/content/img/" alt="@settings.ApplicationName">*@
+                [Snuffo]
+            </a>
+        </div>
+    </div>
+    <!-- Main Navigation-->
+    <nav class="site-menu">
+        <ul>
+            <li class="@(Model.Url == "/" ? "active" : null)"><a href="@site.Url"><span>Home</span></a></li>
+            @foreach (var item in selection)
+            {
+                <li class="@(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                    <a href="@item.Url"><span>@item.Name</span></a>
+                    @renderSubMenu(item)
+                </li>
+
+            }
+        </ul>
+    </nav>
+
+    <!-- Toolbar-->
+    <div class="toolbar">
+        <div class="inner">
+            <div class="tools">
+                <div class="search"><i class="icon-search"></i></div>
+                <div class="account">
+                    <a href="/@(CurrentUser.LanguageCode)/account/account-orders/"></a><i class="icon-head"></i>
+                    <ul class="toolbar-dropdown">
+                        @if (CurrentUser.IsAuthenticated)
+                        {
+                            var pict = CurrentUser.GetClaim("picture");
+                            <li class="sub-menu-user">
+                                @if (!pict.IsNullOrEmpty())
+                                {
+                                    <div class="user-ava">
+                                        <img src="@pict" alt="@CurrentUser.FullName">
+                                    </div>
+                                }
+                                <div class="user-info">
+                                    <h6 class="user-name">@CurrentUser.FullName</h6>
+                                </div>
+                            </li>
+                        }
+                        <li><a href="/@CurrentUser.LanguageCode/account/my-profile/">My Profile</a></li>
+                        <li><a href="/@(CurrentUser.LanguageCode)/account/account-orders/">Orders List</a></li>
+                        <li><a href="/@(CurrentUser.LanguageCode)/account/account-wishlist/">Wishlist</a></li>
+                        <li class="sub-menu-separator"></li>
+                        <li>
+                            @if (CurrentUser.IsAuthenticated)
+                            {
+                                <a href="/@(CurrentUser.LanguageCode)/account/logout/">
+                                    <i class="icon-unlock"></i>Logout
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/@(CurrentUser.LanguageCode)/account/login-register/">
+                                    <i class="icon-unlock"></i>Login
+                                </a>
+                            }
+                        </li>
+                    </ul>
+                </div>
+                <div id="cartShop" class="cart">
+                    @{Html.RenderPartial("~/views/partials/_CartShop.cshtml", new CartShopModel()); }
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+@helper renderSubMenu(IPublishedContent item, string cssClass = "sub-menu")
+{
+    if (item.Children.Any(c => c.IsVisible()))
+    {
+        <ul class="@cssClass">
+            @foreach (var sub in item.Children.Where(c => c.IsVisible()))
+            {
+                if ((sub.Name.Contains("Login") || sub.Name.Contains("Password Recovery")) && CurrentUser.IsAuthenticated)
+                {
+                    continue;
+                }
+                else if ((sub.Name.Contains("Delete Account") || sub.Name.Contains("Account Address") || sub.Name.Contains("Account Orders") || sub.Name.Contains("Account Profile") || sub.Name.Contains("Logout")) && !CurrentUser.IsAuthenticated)
+                {
+                    continue;
+                }
+                <li>
+                    <a href="@sub.Url">@sub.Name</a>
+                    @renderSubMenu(sub)
+                </li>
+            }
+        </ul>
+    }
+}
+@helper renderSubCategories(Category cat)
+{
+    if (cat.SubCategories.Any())
+    {
+        <ul class="offcanvas-submenu">
+            @foreach (var sub in cat.SubCategories.Where(c => c.Published))
+            {
+                <li>
+                    <a href="/@CurrentUser.LanguageCode/shop/?c=@sub.Id">@sub.Name</a>
+                    @renderSubCategories(sub)
+                </li>
+            }
+        </ul>
+    }
+}

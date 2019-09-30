@@ -1,0 +1,122 @@
+﻿@model CartPageModel
+
+@if (!Model.CartItems.IsNullOrEmpty())
+{
+    using (Html.BeginUmbracoForm<ShopController>("UpdateCart", FormMethod.Post, new { id = "cartPage", @class = "col-12" }))
+    {
+        <!-- Shopping Cart-->
+        @Html.AntiForgeryToken()
+        <div class="table-responsive shopping-cart">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="padding-left-30x">Item</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Subtotal</th>
+                        <th class="text-center">Discount</th>
+                        <th class="text-center"><a class="btn btn-sm btn-outline-danger" id="clearCart">Clear Cart</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.CartItems.Count; i++)
+                    {
+                        Product p = null;
+                        TicketSale ticketSale = null;
+                        <tr>
+                            <td>
+                                @Html.Hidden("CartItems.Index", i)
+                                @Html.HiddenFor(m => m.CartItems[i].Id)
+                                @Html.HiddenFor(m => m.CartItems[i].CookieId)
+                                @Html.HiddenFor(m => m.CartItems[i].ProductId)
+                                @Html.HiddenFor(m => m.CartItems[i].TicketSaleId)
+                                @Html.HiddenFor(m => m.CartItems[i].Name)
+                                @if (Model.CartItems[i].ProductId.HasValue)
+                                {
+                                    p = Model.Products.Single(x => x.Id == Model.CartItems[i].ProductId);
+                                    <div class="product-item">
+                                        <a class="product-thumb" href="/@CurrentUser.LanguageCode/shop/product/?p=@p.Id"><img src="@CloudinaryService.GetCloudinaryUrl(Model.CartItems[i].MetaData, 110, 90, CropType.Lpad)" alt="@Model.CartItems[i].Name" /></a>
+                                        <div class="product-info">
+                                            <h4 class="product-title"><a href="/@CurrentUser.LanguageCode/shop/product/?p=@p.Id">@Model.CartItems[i].Name</a></h4>
+                                            @if (p.ContainsKey("Size"))
+                                            {
+                                                <span><em>Size:</em> @p["Size"]</span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    ticketSale = Model.TicketsSale.Single(x => x.Id == Model.CartItems[i].TicketSaleId);
+                                    <div class="product-item">
+                                        <a class="product-thumb" href="/@CurrentUser.LanguageCode/events/event/?e=@ticketSale.EventId"><img src="@CloudinaryService.GetCloudinaryUrl(Model.CartItems[i].MetaData, 110, 90, CropType.Lpad)" alt="@Model.CartItems[i].Name (@Model.CartItems[i].Description)" /></a>
+                                        <div class="product-info">
+                                            <h4 class="product-title"><a href="/@CurrentUser.LanguageCode/events/event/?e=@ticketSale.EventId">@Model.CartItems[i].Name</a></h4>                                            
+                                            <span><em>Ticket:</em> @Model.CartItems[i].Description</span>                                      
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="count-input">
+                                    @if (Model.CartItems[i].ProductId.HasValue)
+                                    {
+                                        @Html.TextBoxFor(model => Model.CartItems[i].Quantity, new { @class = "form-control", type = "number", min = "1" })
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @Html.HiddenFor(m => m.CartItems[i].Quantity)
+                                            @Model.CartItems[i].Quantity
+                                        </span>
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="text-center text-lg text-medium">
+                                @{
+                                    if (p != null)
+                                    {
+                                        @Html.Raw(SnuffoSettings.ConvertMoney(Model.CartItems[i].Quantity * p.GetPrice(SnuffoSettings.GetCurrency())))
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(SnuffoSettings.ConvertMoney(Model.CartItems[i].Quantity * ticketSale.TicketPrice.Value.GetValueOrDefault()))
+                                    }
+                                }
+                            </td>
+                            <td class="text-center text-lg text-medium">
+                                @if (Model.CartItems[i].ProductId.HasValue)
+                                {
+                                    @SnuffoSettings.ConvertMoney(Model.CartItems[i].Quantity * (p.GetDiscount(SnuffoSettings.GetCurrency()) + Model.CartItems[i].ItemDiscount))
+                                }
+                                else
+                                {
+                                    @Html.Raw(0)
+                                }
+                            </td>
+                            <td class="text-center"><a class="remove-from-cart" data-cart-item-id="@Model.CartItems[i].Id" data-toggle="tooltip" title="Remove item"><i class="icon-cross"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="shopping-cart-footer">
+            <div class="column">
+
+            </div>
+            <div class="column text-lg">Subtotal: <span id="subtotal" class="text-medium">@SnuffoSettings.ConvertMoney(Model.Subtotal)</span></div>
+        </div>
+        <div class="shopping-cart-footer">
+            <div class="column"><a class="btn btn-outline-secondary" href="/@CurrentUser.LanguageCode/shop/"><i class="icon-arrow-left"></i>&nbsp;Back to Shopping</a></div>
+            <div class="column">
+                <button class="btn btn-primary" type="submit" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Your cart" data-toast-message="is updated successfully!">Update Cart</button>
+                <a class="btn btn-success" href="@Model.CheckoutUrl">Checkout</a>
+            </div>
+        </div>
+
+    }
+}
+else
+{
+    <p>No items added to your shopping cart</p>
+}

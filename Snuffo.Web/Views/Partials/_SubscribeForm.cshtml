@@ -1,0 +1,26 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<SubscribeModel>
+
+@using (Html.BeginUmbracoForm<ServiceController>("Subscribe", FormMethod.Post, htmlAttributes: new { @class = "subscribe-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Request.Form.AllKeys.Contains("btnSubmitSubscription"))
+    {
+    <div>
+        @Html.ValidationSummary()
+    </div>
+    }
+    <span class="text-sm text-white opacity-50">Subscribe to our Newsletter to receive update, latest news, and sales information.</span>
+    <div class="clearfix padding-top-1x">
+        <div class="input-group input-light">            
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", maxlength = "512", placeholder = "Your e-mail", required = "required" })
+            <span class="input-group-addon"><i class="icon-mail"></i></span>
+        </div>
+        @Html.HiddenFor(model => model.Timestamp)
+        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">            
+            @Html.TextBoxFor(model => model.HoneyPot, new {  tabindex = "-1" })
+        </div>
+        <button class="btn btn-primary" type="submit" id="btnSubmitSubscription" name="btnSubmitSubscription"><i class="icon-check"></i></button>
+    </div>
+}

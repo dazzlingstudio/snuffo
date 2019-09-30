@@ -1,0 +1,11 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ShopPageModel>
+
+@using (Html.BeginUmbracoForm<ShopController>("ShopSorting", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="shop-sorting">
+        <label for="sorting">Sort by:</label>
+        @Html.DropDownListFor(model => model.SelectedSorting, Model.Sorting, new { id = "ddlSorting", @class = "form-control" })
+        <span class="text-muted">Showing:&nbsp;</span><span>@((Model.ShowingCount)) - @(Model.TotalRows) items</span>
+    </div>
+}

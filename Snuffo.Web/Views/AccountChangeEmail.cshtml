@@ -1,0 +1,10 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Html.CheckAuthenticated(CurrentUser.LanguageCode);
+    Layout = "MasterShopLogin.cshtml";
+
+    ViewBag.AccountActive = "email";
+}
+
+
+@{Html.RenderPartial("~/views/partials/account/_AccountChangeEmail.cshtml", new AccountChangeEmailModel(Model));}

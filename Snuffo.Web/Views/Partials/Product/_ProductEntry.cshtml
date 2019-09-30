@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Product>
+@{
+
+}
+@foreach (var p in Model)
+{
+<!-- Entry-->
+<div class="entry">
+    <div class="entry-thumb"><a href="/@CurrentUser.LanguageCode/shop/product/?p=@p.Id"><img src="@CloudinaryService.GetCloudinaryUrl(p["Image 1"].ConvertTo<string>(), 100, 100)" alt="@p.DisplayName()"></a></div>
+    <div class="entry-content">
+        <h4 class="entry-title"><a href="/@CurrentUser.LanguageCode/shop/product/?p=@p.Id">@p.DisplayName()</a></h4><span class="entry-meta">@SnuffoSettings.ConvertMoney(p.GetPrice(SnuffoSettings.GetCurrency()))</span>
+    </div>
+</div>
+}
+<a class="btn btn-outline-secondary btn-sm mb-0" href="/@CurrentUser.LanguageCode/shop">View More</a>

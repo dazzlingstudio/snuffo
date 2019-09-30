@@ -1,0 +1,109 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.PropertyModel
+@{
+    
+}
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+<div id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+    </ul>
+    @using (Html.BeginForm("CreateEdit", "Property", FormMethod.Post, htmlAttributes: new { id = "frmProperty", @class = "form-group", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Property.Id)
+        @Html.HiddenFor(model => model.Property.CreatedOn)
+        @Html.HiddenFor(model => model.Property.CreatedBy)
+        @Html.HiddenFor(model => model.Property.ModifiedBy)
+        @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.DefinitionType)
+
+    <div id="tabs-content" style="display:none;">
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.Name, htmlAttributes: new { @class = "control-label col-md-12" })
+            @Html.EditorFor(model => model.Property.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.DefinitionId, htmlAttributes: new { @class = "control-label col-md-12" })
+            @Html.DropDownListFor(model => model.Property.DefinitionId, Model.Definitions, new { @class = "form-control" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.DataTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            @Html.DropDownListFor(model => model.Property.DataTypeId, Model.DataTypes, new { id = "ddlPropertyDataTypes", @class = "form-control" })
+        </div>
+
+        <div id="container-tags" class="row">
+            @Html.LabelFor(model => model.Property.Tags, htmlAttributes: new { @class = "control-label col-md-12" })
+            @Html.TextBoxFor(model => model.Property.Tags, new { id = "txtDropDrownListTags", @class = "form-control input-sm tagsInput", autocomplete= "false" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.TextAreaFor(model => model.Property.Description, 2, 2, new { @class = "form-control input-sm" })
+        </div>
+
+        @if (Model.DefinitionType == Uvendia.Domain.Enums.DefinitionType.Product)
+        {
+            <div class="row">
+                @Html.LabelFor(model => model.Property.IsVariant, htmlAttributes: new { @class = "control-label col-md-3" })
+                <label class="switch">
+                    @Html.CheckBoxFor(model => model.Property.IsVariant, new { @class = "checkbox-middle" })
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        }
+        <div class="row">
+            @Html.LabelFor(model => model.Property.Required, htmlAttributes: new { @class = "control-label col-md-3" })
+            <label class="switch">
+                @Html.CheckBoxFor(model => model.Property.Required, new { @class = "checkbox-middle" })
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.ValidationExpression, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Property.ValidationExpression, new { htmlAttributes = new { @class = "form-control input-sm" } })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Property.ValidationAssemblyTypeName, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Property.ValidationAssemblyTypeName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            <pre class="help-block">Make sure your class inherit from the interface <i>IPropertyValidation</i></pre>
+        </div>
+
+    </div>
+
+        <div class="form-group">
+            <div class="btn-toolbar">
+                @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
+            </div>
+        </div>
+    }
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabs").tabs();            
+
+            toggleTags($('#ddlPropertyDataTypes').val());
+            
+            $('#ddlPropertyDataTypes').change(function () {
+                toggleTags($(this).val());
+            });
+        });
+        function toggleTags(dataTypeId) {
+
+            if (parseInt(dataTypeId) === 41) {                
+                $('#container-tags').show();
+            }
+            else
+                $('#container-tags').hide();
+        }
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+
+    </script>
+}

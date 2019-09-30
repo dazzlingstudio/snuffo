@@ -1,0 +1,86 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ProductModel
+@{
+    ViewData["Overlay"] = true;
+    ViewData.TemplateInfo.HtmlFieldPrefix = string.Concat("Variants[", Model.Index, "]");
+}
+<div id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" data-target="#tabs-stock">Stock</a></li>
+        @for (int i = 0; i < Model.Translations.Count; i++)
+        {
+            <li><a data-toggle="tab" data-target="#tabs-@(Model.Translations[i].CultureName)">@Model.Translations[i].NativeName</a></li>
+        }
+    </ul>
+    <div class="tab-content">
+        @Html.Hidden("hdnPrefix", ViewData.TemplateInfo.HtmlFieldPrefix, new { id="hdnPrefix" })
+        @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Product/_Inventory.cshtml", Model); }
+        @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Translations.cshtml", Model); }
+    </div>
+</div>
+
+<div class="break"></div>
+<div class="form-group">
+    <div class="btn-toolbar">
+        <button id="btnSaveInventoriesTranslations" type="button" class="btn btn-success pull-left save-and-close-translations action-link" data-index="@Model.Index">
+            Save &amp; Close <i class="glyphicon glyphicon-floppy-saved"></i>
+        </button>
+        <button type="button" class="btn btn-default pull-left closemodal action-link">
+            Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+        </button>
+    </div>
+</div>
+
+@section scripts{
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#tabs").tabs();
+        Uvendia.init();
+        
+        // New Inventory
+        var prefix = $('#hdnPrefix').val();
+        var hdnNewInventoryRows = $(window.parent.frames[0].document.getElementsByName(prefix + '.NewStockHtml'));
+        
+        if (hdnNewInventoryRows.length) {
+            var html = hdnNewInventoryRows.val();
+            if (html !== null) {
+                $(html).appendTo($('#tblStocks > tbody'));
+            }
+        }
+
+        // Bind the buffered data on the parent iframe
+        var els = $('#tabs').find("input, textarea");
+
+        els.each(function () {
+
+            var savedHiddenInput = $(window.parent.frames[0].document.getElementsByName($(this).attr('name'))); 
+
+            if (savedHiddenInput.length) {
+
+                if ($(this).is('textarea')) {
+                    $(this).closest('.jqte').find('.jqte_editor').html(savedHiddenInput.val());
+                }
+                else if ($(this).is('input[type="checkbox"]')) {
+
+                    if (savedHiddenInput.val() === 'false') {
+                        $(this).removeAttr('checked');
+                        Uvendia.showOrHideInventory();
+                    }
+                }
+                $(this).val(savedHiddenInput.val());
+            }
+        });
+        var deleted_container = $(window.parent.frames[0].document.getElementsByName(prefix + '.DeletedStockRowId'));
+        if (deleted_container.length) {
+            if (deleted_container.val() !== null && deleted_container.val() !== '') {
+                var toDeleteRows = deleted_container.val().split(';');
+                for (var i = 0; i < toDeleteRows.length; i++) {
+                    $('tr#' + toDeleteRows[i]).remove();
+                }
+            }
+        }
+        Uvendia.disableStocks();
+    });
+</script>
+}

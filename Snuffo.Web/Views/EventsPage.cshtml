@@ -1,0 +1,31 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using Uvendia.Domain.Enums;
+@{
+    Layout = "masterShopTop.cshtml";
+    var events = UvendiaContext.Events.All(EventStatus.Active.Id);
+}
+
+@if (events.IsNullOrEmpty())
+{
+    <span>No events available</span>
+}
+else
+{
+    foreach (var evnt in events)
+    {
+        <div class="col-sm-6 margin-bottom-2x pb-2">
+            <div class="card">
+                <a href="/@CurrentUser.LanguageCode/events/event?e=@evnt.Id" title="@evnt.DisplayName()">
+                    <img class="card-img-top" src="@CloudinaryService.GetCloudinaryUrl(evnt["Image 1"].ConvertTo<string>(), 450, 315, CropType.Fill, GravityType.Face, effect: Effect.Grayscale)" alt="@evnt.DisplayName()" />
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title">@evnt.DisplayName() <span class="text-muted text-sm">(@evnt.EventType.Name)</span></h4>
+
+                    <p class="card-text">
+                        @Html.Raw(evnt.GetShortDescription())
+                    </p><a class="btn btn-primary btn-sm" href="/@CurrentUser.LanguageCode/events/event?e=@evnt.Id" title="@evnt.DisplayName()">Get ticket(s)</a>
+                </div>
+            </div>
+        </div>
+    }
+}

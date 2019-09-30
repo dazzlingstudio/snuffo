@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountChangeEmailModel>
+
+@using (Html.BeginUmbracoForm<AccountController>("ChangeEmailAddress", FormMethod.Post, htmlAttributes: new { @class = "card" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card-body">
+        @Html.ValidationSummary()
+        <div class="form-group">
+            <label for="reg-email">Enter your new e-mail</label>
+            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", id = "reg-email", type="email", required = "required", maxlength = "150" })
+        </div>
+        <div class="form-group">
+            <label for="reg-confirm-email">Confirm your new e-mail</label>
+            @Html.TextBoxFor(m => m.ConfirmEmailAddress, new { @class = "form-control", id = "reg-confirm-email", type = "email", required = "required", maxlength = "150" })
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-primary" type="submit">Change E-mail Address</button>
+    </div>
+}
+

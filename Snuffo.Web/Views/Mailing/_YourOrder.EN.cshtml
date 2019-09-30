@@ -1,0 +1,194 @@
+﻿@model Order
+@{
+    Address shippingAddress = Model.GetShippingAddress();
+    Address invoiceAddress = Model.GetInvoiceAddress();
+
+}
+<table>
+		<tr>
+			<!-- content articlelist -->
+			<td width="650" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; letter-spacing: 0px; color: #000000;">
+				<!-- articles -->
+				<table cellpadding="0" cellspacing="0" border="0">
+					<!-- margin height 55px -->
+					<tr>
+						<td height="25" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<!-- headline -->
+					<tr>
+						<td style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;"><b>Your order reference: @Model.OrderNumber</b></td>
+					</tr>
+					<tr>
+						<td style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">Your order:</td>
+					</tr>
+					<!-- margin height 15px -->
+					<tr>
+						<td height="15" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<!-- header -->
+					<tr>
+						<td style="font-family: 'Roboto Condensed', sans-serif;letter-spacing: 0;">
+							<table cellpadding="0" cellspacing="0" border="0">
+								<tr>
+									<!-- margin width 10px -->
+									<td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+									<!-- article -->
+									<td align="left" width="268" style="font-family: 'Roboto Condensed', sans-serif;font-weight: 600; font-size: 11px; line-height: 17px; color: #000000; letter-spacing: 0px;">Item</td>
+									<!-- description -->
+									<td align="left" width="142" style="font-family: 'Roboto Condensed', sans-serif;font-weight: 600; font-size: 11px; line-height: 17px; color: #000000; letter-spacing: 0px;">Description</td>
+									<!-- price per unit -->
+									<td align="center" width="100" style="font-family: 'Roboto Condensed', sans-serif;font-weight: 600; font-size: 11px; line-height: 17px; color: #000000; letter-spacing: 0px;">Price</td>
+									<!-- quantity -->
+									<td align="center" width="47" style="font-family: 'Roboto Condensed', sans-serif;font-weight: 600; font-size: 11px; line-height: 17px; color: #000000; letter-spacing: 0px;">Quantity</td>
+									<!-- sum -->
+									<td align="right" width="72" style="font-family: 'Roboto Condensed', sans-serif;font-weight: 600; font-size: 11px; line-height: 17px; color: #000000; letter-spacing: 0px;">Total</td>
+									<!-- margin width 10px -->
+									<td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+								</tr>
+								<tr>
+									<!-- margin height 5px -->
+									<td height="5" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!-- seperator line -->
+					<tr>
+						<td width="650" style="font-family: 'Roboto Condensed', sans-serif;font-size:0; line-height: 0; border-top:1px solid #cacaca;">&nbsp;</td>
+					</tr>
+					<!-- items -->
+					<tr>
+                        <td width="650" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">
+                            @{
+                                if (Model.HasOrderProductDetails())
+                                {
+                                    Html.RenderPartial("~/Views/Mailing/_YourOrderProductDetails.EN.cshtml", Model);
+                                }
+                                if (Model.HasOrderTicketDetails())
+                                {
+                                    Html.RenderPartial("~/Views/Mailing/_YourOrderTicketDetails.EN.cshtml", Model);
+                                }
+                            }
+                        </td>
+					</tr>
+				</table>
+				<!-- calculation -->
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: 'Roboto Condensed', sans-serif;border-top: 4px solid #cacaca; line-height: 0; font-size: 0;">
+                    <tr>
+                        <!-- label -->
+                        <td width="540" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">Subtotal:</td>
+                        <!-- amount -->
+                        <td width="100" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            @SnuffoSettings.ConvertMoney(Model.CalculateSubTotalWithoutVAT())
+                        </td>
+                        <!-- margin width 10px -->
+                        <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <!-- label -->
+                        <td width="540" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            Shipping fee:
+                        </td>
+                        <!-- amount -->
+                        <td width="100" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            @SnuffoSettings.ConvertMoney(Model.CalculateShippingFee())
+                        </td>
+                        <!-- margin width 10px -->
+                        <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <!-- label -->
+                        <td width="540" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            Payment fee:
+                        </td>
+                        <!-- amount -->
+                        <td width="100" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            @SnuffoSettings.ConvertMoney(Model.CalculatePaymentFee())
+                        </td>
+                        <!-- margin width 10px -->
+                        <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+
+                    <!-- sum -->
+                    <tr>
+                        <!-- label -->
+                        <td width="540" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            Total incl. VAT:
+                        </td>
+                        <!-- amount -->
+                        <td width="100" align="right" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                            @SnuffoSettings.ConvertMoney(Model.CalculateTotal())
+                        </td>
+                        <!-- margin width 10px -->
+                        <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                    </tr>
+                </table>
+			</td>
+		</tr>
+		<tr>
+			<!-- seperator line -->
+			<td width="650" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;border-top: 1px solid #cacaca; font-size: 0px;">&nbsp;</td>
+		</tr>
+		<tr>
+			<!-- margin height 60px -->
+			<td height="20" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+		</tr>
+		<tr>			
+			<!-- content beneath articlelist -->
+			<td width="650" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; letter-spacing: 0.6px; color: #000000;">
+				<!-- fragrances -->
+				<!-- addresses -->
+				<table cellpadding="0" cellspacing="0" border="0">
+					<!-- headline -->
+					<tr>
+						<td width="275" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 15px; color: #000000; letter-spacing: 0.6px;"><b>Shipping address:</b></td>
+						<td width="275" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 15px; color: #000000; letter-spacing: 0.6px;"><b>Invoice address:</b></td>
+					</tr>
+					<!-- adresses -->
+					<tr>
+						<td width="275" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 15px; color: #000000;">									
+							@shippingAddress.AddressLine1<br />
+							@shippingAddress.Zipcode @shippingAddress.City<br />
+							@shippingAddress.Country.Name
+						</td>
+                        <td width="275" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 15px; color: #000000;">
+                            @invoiceAddress.AddressLine1<br />
+                            @invoiceAddress.Zipcode @invoiceAddress.City<br />
+                            @invoiceAddress.Country.Name
+                        </td>
+					</tr>
+				</table>
+				<!-- seperator line -->
+				<table cellpadding="0" cellspacing="0" border="0">
+					<!-- margin height 10px -->
+					<tr>
+						<td height="10" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<!-- seperator line -->
+					<tr>
+						<td width="650" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0; border-top: 1px solid #cacaca;">&nbsp;</td>
+					</tr>
+					<!-- margin height 10px -->
+					<tr>
+						<td height="10" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+				</table>
+				<!-- seperator line -->
+				<table cellpadding="0" cellspacing="0" border="0">
+					<!-- margin height 10px -->
+					<tr>
+						<td height="10" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>														
+				</table>
+				<!-- reservation -->
+			</td>			
+		</tr>
+		<tr>			
+			<!-- regards -->
+			<td width="650" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; letter-spacing: 0.6px; color: #000000;">
+				Best regards,<br />
+				Snuffo team
+			</td>			
+		</tr>
+</table>

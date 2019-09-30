@@ -1,0 +1,10 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<CheckoutPaymentModel>
+
+@{
+    Layout = "masterShopCheckout.cshtml";
+    ViewBag.CurrentCheckoutStepNr = 3;
+
+}
+
+
+@{Html.RenderPartial("~/Views/Partials/Checkout/_CheckoutPayment.cshtml", Model);}

@@ -1,0 +1,29 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.OrdersModel
+@using Uvendia.Domain
+@{
+
+}
+
+@Html.CreateAuthorizedActionHtml("Create Order", ActionType.Create, new Dictionary<string, string> { { "id", "createOrder" }, { "data-order-id", "0" }, { "class", "btn btn-primary action-link linkOrder" }, { "role", "button" } })
+<br />
+@if (Model.Items.Any())
+{
+    Html.RenderPartial("~/Umbraco/Uvendia/Views/Order/_Orders.cshtml", Model.Items);
+
+    @Html.Raw(Dazzling.Studio.Utils.Web.PagerHelper.CreatePaging(Model.TotalRows, Model.TotalPages, Model.PageIndex))
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(m => m.OrderStatusId)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

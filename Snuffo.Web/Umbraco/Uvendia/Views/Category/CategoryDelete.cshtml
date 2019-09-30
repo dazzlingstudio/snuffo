@@ -1,0 +1,79 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.CategoryDeleteModel
+@{
+
+}
+
+@Html.AntiForgeryToken()
+@Html.HiddenFor(model => model.Id, new { id="hdnCategoryId" })
+@Html.HiddenFor(model => model.StoreId)
+@Html.HiddenFor(model => model.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+
+<div>
+    Are you sure you want to delete '@Model.Name'?
+</div>
+<br />
+<br />
+<div class="break"></div>
+<div class="form-group">
+    <div class="btn-toolbar">
+        <button id="btnDeleteCategory" class="btn btn-danger pull-left action-link">
+            Delete <i class="glyphicon glyphicon-remove"></i>
+        </button>
+        <a id="btnCancel" class="btn btn-default pull-left linkCancel action-link" href="~/Umbraco/Uvendia/Views/Category/">
+            Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+        </a>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+        
+            $('#btnCancel').click(function () {
+                redirectToCurrentStore(null);
+            });
+
+            $('#btnDeleteCategory').click(function () {
+                var categoryId = $('#hdnCategoryId').val()
+                
+                $.ajax({
+                    type: "GET",
+                    url: '/Umbraco/Backoffice/Uvendia/Category/DeleteCategory/?id=' + categoryId,
+                    cache: false,
+                    dataType: 'json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var msg = $(XMLHttpRequest.responseText)[1].innerText;
+                        UmbClientMgr.showMessage('error', 'Error', msg);
+                    },
+                    success: function (data, textStatus, XMLHttpRequest) {
+
+                        // Refresh tree node
+                        var syncPath = $('#TreeSelectedNodePath').val();
+                        syncPath = syncPath.substr(0, syncPath.lastIndexOf(';'));
+                        UmbClientMgr.mainTree().syncTree(syncPath, true);                        
+
+                        UmbClientMgr.showMessage('save', 'Deleted', data);                        
+
+                        var treePath = $('#TreePath').val();
+                        treePath = treePath.substr(0, treePath.lastIndexOf(';'));
+                        redirectToCurrentStore(treePath);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+
+                    }
+                });
+            });
+        });
+        
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+        
+        function redirectToCurrentStore(treePath) {
+            if (treePath === null) {
+                treePath = $('#TreePath').val();
+            }
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/Category/Index/' + $('#StoreId').val() + '?treePath=' + treePath);
+        }
+    </script>
+}

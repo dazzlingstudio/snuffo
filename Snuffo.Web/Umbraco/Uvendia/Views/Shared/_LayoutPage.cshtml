@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    @Styles.Render("~/Umbraco/Uvendia/Content/bootstrap-3.3.7/css/bp.css")
+    @Styles.Render("~/Umbraco/assets/css/umb.css")
+
+    @Styles.Render("~/Umbraco/Uvendia/Content/jquery/jQuery-TE/jqte.css")
+    @Styles.Render("~/Umbraco/Uvendia/Content/jquery/uvendia.css")
+    @Styles.Render("~/Umbraco/Uvendia/Content/jstree/themes/default/jstree.css")
+    @Styles.Render("~/Umbraco/Uvendia/Content/chosen_v1.7.0/chosen.css")
+
+
+    @RenderSection("styles", required: false)
+    <title>Uvendia | Webshop</title>
+
+</head>
+<body>
+
+    <div class="umb-panel umb-editor-wrapper">
+        <div class="umb-split-views">
+            <div class="umb-split-views">
+
+                <div class="umb-editor-header" hide-icon="true" hide-description="true" hide-alias="true">
+
+                    <div class="umb-editor-header">
+                        <div class="flex items-center" style="height: 100%;">
+                            <div class="flex items-center" style="flex: 1;">
+                                <div id="nameField" class="umb-editor-header__name-and-description" style="flex: 1 1 auto;">
+                                    <h4>@ViewData["UvendiaCurrentTitle"]</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="umb-editor-container umb-panel-body umb-scrollable row-fluid ">
+                        <div class="umb-pane">
+                            <div class="umb-group-panel">
+                                @if (TempData["WARNING_WEB_ALERT"] != null)
+                                {
+                                <div class="alert alert-warning alert-dismissible show">
+                                    <strong>Warning!</strong> @TempData["WARNING_WEB_ALERT"]
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                </div>
+                                }
+                                <div class="uvendia-body" id="uvendia-body">
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/jquery/jq.js")
+    @Scripts.Render("~/Umbraco/uvendia/Content/jquery/jquery-extensions.js")
+    @Scripts.Render("~/Umbraco/uvendia/Content/chosen_v1.7.0/chosen.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/bp.js")
+    @Scripts.Render("~/Umbraco/uvendia/Content/angular/angular.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/umbraco-namespace.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/uvendia-all.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/umbClientMgr.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/umbraco.js")
+
+    @Scripts.Render("~/Umbraco/uvendia/Content/tinymce_5.0.14/js/tinymce/tinymce.min.js")
+    
+
+    @RenderSection("scripts", required: false)
+    @Html.Hidden("WEB_ALERT_MESSASGE", TempData["WEB_ALERT_MESSASGE"], new { id = "hdnWebAlertMessage" })
+    <script type="text/javascript">
+        $(function () {
+            $("button[type='submit'], input[type='submit']").click(function () {
+
+                $("#loading").fadeIn();
+                var hdnDownloadCookieValue = $('#hdnDownloadCookieValue');
+                if (hdnDownloadCookieValue.length) {
+                    hdnDownloadCookieValue.val(Date.now().toString());
+
+                    // start timer to wait for cookie
+                    var tmr = window.setInterval(function () {
+                        var cookie = 'dlc=' + hdnDownloadCookieValue.val();
+                        if (document.cookie.indexOf(cookie) !== -1) {
+                            // hide animation
+                            $("#loading").fadeOut();
+                            //console.log('delete cookie', cookie);
+                            Uvendia.deleteCookie('dlc');
+
+                            window.clearInterval(tmr); //  No need to keep polling, the download is done.
+                        }
+                    }, 100);
+                }
+            });
+        });
+
+    </script>
+    <div id="loading">
+        <div id="loadingcontent">
+            <p id="loadingspinner">
+                Please wait...
+            </p>
+        </div>
+    </div>
+</body>
+</html>

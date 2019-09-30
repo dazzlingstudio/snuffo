@@ -1,0 +1,144 @@
+﻿@inherits  UmbracoViewPage
+@{
+    var homepage = (Home)Model.Root();
+    var settings = SnuffoSettings.Create(Model);
+    ViewBag.Title = Model.Name;
+    var c = User.Identity;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>
+        @if (Request.IsLocal)
+        {
+            @Html.Raw("DEV")
+        }
+        @homepage.Sitename | @ViewBag.Title
+    </title>
+    <!-- SEO Meta Tags-->
+    <meta name="description" content="@homepage.HeroDescription">
+    <meta name="keywords" content="@(string.Join(",", homepage.Value<string[]>("keywords") ?? new string[0]))">
+    <meta name="author" content="Dazzling Studio B.V.">
+    <!-- Mobile Specific Meta Tag-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Favicon and Apple Icons-->
+    @*<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">*@
+    <!-- Vendor Styles including: Bootstrap, Font Icons, Plugins, etc.-->
+    @Styles.Render("~/content/css/vendor.min.css")
+    <!-- Main Template Styles-->
+    @Styles.Render("~/content/css/styles.css")
+    @Styles.Render("~/content/css/font-awesome.min.css")
+    @Styles.Render("~/content/css/jquery.toast.min.css")
+    @Styles.Render("~/content/css/custom.css?u=333")
+    <!-- Modernizr-->
+    @Scripts.Render("~/content/js/modernizr.min.js")
+    @Scripts.Render("~/content/js/zxcvbn.js")
+</head>
+<body>
+    @Html.Hidden("hdnCurrentCulture", System.Threading.Thread.CurrentThread.CurrentCulture.Name, new { id = "hdnCurrentCulture" })
+    @RenderSection("header", false)
+
+    @{Html.RenderPartial("~/views/partials/navigation/_ShopTopNavigation.cshtml"); }
+    <!-- Off-Canvas Wrapper-->
+    <div class="offcanvas-wrapper">
+        <main>
+            @RenderBody()
+        </main>
+        <!-- Site Footer-->
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <!-- Contact Info-->
+                        <section class="widget widget-light-skin">
+                            <h3 class="widget-title">Get In Touch With Us</h3>
+                            <p>E-mail: <a class="navi-link-light" href="mailto:@settings.StoreEmail">@settings.StoreEmail</a></p>
+                            <a class="social-button shape-circle sb-facebook sb-light-skin" href="@settings.FacebookUrl" target="_blank">
+                                <i class="socicon-facebook"></i>
+                            </a>
+                            <a class="social-button shape-circle sb-twitter sb-light-skin" href="@settings.TwitterUrl" target="_blank">
+                                <i class="socicon-twitter"></i>
+                            </a>
+                            <a class="social-button shape-circle sb-instagram sb-light-skin" href="@settings.InstagramUrl" target="_blank">
+                                <i class="socicon-instagram"></i>
+                            </a>
+                        </section>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <!-- About Us-->
+                        <section class="widget widget-links widget-light-skin">
+                            <h3 class="widget-title">About Us</h3>
+                            <ul>
+                                <li><a href="/@CurrentUser.LanguageCode/about-us/">About snuffo</a></li>
+                                <li><a href="/@CurrentUser.LanguageCode/contact/">Contact us</a></li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-md-6">
+                        <section class="widget widget-links widget-light-skin">
+                            <div class="margin-top-1x hidden-md-up"></div>
+                            @{Html.RenderPartial("~/views/partials/_SubscribeForm.cshtml", new SubscribeModel(Model)); }
+                        </section>
+                    </div>
+                </div>
+                <hr class="hr-light mt-2 margin-bottom-2x">
+
+                <!-- Copyright-->
+                <p class="footer-copyright">© @DateTime.Today.Year All rights reserved. Made with &nbsp;<i class="icon-heart text-danger"></i><a href="http://www.dazzlingstudio.com" target="_blank"> &nbsp;by Dazzling Studio B.V.</a></p>
+            </div>
+        </footer>
+    </div>
+    @RenderSection("footer", false)
+    <!-- Back To Top Button-->
+    <a class="scroll-to-top-btn" href="#"><i class="icon-arrow-up"></i></a>
+    <!-- Backdrop-->
+    <div class="site-backdrop"></div>
+    <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
+    @Scripts.Render("~/content/js/vendor.min.js")
+    @Scripts.Render("~/content/js/scripts.js")
+    @Scripts.Render("~/content/js/jquery.toast.min.js")
+    @Scripts.Render("~/content/js/custom.js")
+
+    @RenderSection("scripts", required: false)
+
+    @Html.Hidden("WEB_ALERT_TITLE", TempData["WEB_ALERT_TITLE"], new { id = "hdnWebAlertTitle" })
+    @Html.Hidden("WEB_ALERT_MESSASGE", TempData["WEB_ALERT_MESSASGE"], new { id = "hdnWebAlertMessage" })
+    @Html.Hidden("ALERT_MESSAGE_TYPE", TempData["ALERT_MESSAGE_TYPE"], new { id = "hdnWebAlertMessageType" })
+
+    <script type="text/javascript">
+        $(function () {
+            var deviceAgent = navigator.userAgent.toLowerCase();
+            var agentID = deviceAgent.match(/(iPad|iPhone|iPod)/i);
+            if (agentID) {
+                $('body').css('-webkit-overflow-scrolling', 'touch');
+            }
+
+            $("#ddlCurrency").on("change", function () {
+                $("#frmLCSelect").submit();
+            });
+
+        });
+
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148465647-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-148465647-1');
+    </script>
+
+</body>
+
+</html>

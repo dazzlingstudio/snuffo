@@ -1,0 +1,56 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.DefinitionsModel
+@using Uvendia.Domain
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+@*<a id="createDefinition" data-definition-id="0" class="btn btn-primary linkDefinition" role="button">Create Definition</a>
+    <br />*@
+@if (Model.Definitions.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.Type))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<Definition>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var definition in Model.Definitions)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkDefinition id-field" data-definition-id="@definition.Id">@definition.Id</a></td>
+                    <td><a class="linkDefinition" data-definition-id="@definition.Id">@definition.Name</a></td>
+                    <td>@definition.Type.ToString()</td>
+                    <td>@definition.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@definition.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@definition.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {definition.Name} ({definition.Id})" }, { "data-rowid", rowId }, { "data-id", definition.Id.ToString() }, { "data-controller", "Definition" }, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkDefinition').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/Definition/CreateEdit/' + $(this).data("definition-id") + '?treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
+    </script>
+}

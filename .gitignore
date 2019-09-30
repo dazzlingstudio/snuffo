@@ -1,0 +1,9 @@
+packages/
+Snuffo.Web/obj/
+Snuffo.Web/bin/
+Snuffo.Web.Tests/obj/
+.vs/
+Snuffo.Web.Tests/bin/
+Snuffo.Web/Snuffo.Web.csproj.user
+Snuffo.Web/App_Data/
+Snuffo.Web/Secrets/**/*.config

@@ -1,0 +1,54 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.ShippingMethodsModel
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+@Html.CreateAuthorizedActionHtml("Create Shipping Method", ActionType.Create, new Dictionary<string, string> { { "id", "createShippingmethod" }, { "data-shipping-method-id", "0" }, { "class", "btn btn-primary linkShippingMethod action-link" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.ShippingMethods.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<ShippingMethod>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<ShippingMethod>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<ShippingMethod>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<ShippingMethod>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<ShippingMethod>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model.ShippingMethods)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkShippingMethod id-field" data-shipping-method-id="@x.Id">@x.Id</a></td>
+                    <td><a class="linkShippingMethod" data-shipping-method-id="@x.Id">@x.Name</a></td>
+                    <td>@x.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@x.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@x.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {x.Name} ({x.Id})" }, { "data-rowid", rowId }, { "data-id", x.Id.ToString() }, { "data-controller", "ShippingMethod" }, { "class", "delete" } }, authorized)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkShippingMethod').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/ShippingMethod/CreateEdit/' + $(this).data("shipping-method-id") + '/?treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

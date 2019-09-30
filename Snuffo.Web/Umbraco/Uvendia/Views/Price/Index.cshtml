@@ -1,0 +1,54 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.PriceDefinitionsModel
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+@Html.CreateAuthorizedActionHtml("Create Price Definition", ActionType.Create, new Dictionary<string, string> { { "id", "createprice" }, { "data-price-id", "0" }, { "class", "btn btn-primary action-link linkPrice" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.PriceDefinitions.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<PriceDefinition>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PriceDefinition>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PriceDefinition>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PriceDefinition>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PriceDefinition>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pd in Model.PriceDefinitions)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkPrice id-field" data-price-id="@pd.Id">@pd.Id</a></td>
+                    <td><a class="linkPrice" data-price-id="@pd.Id">@pd.Name</a></td>
+                    <td>@pd.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@pd.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@pd.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {pd.Name} ({pd.Id})" }, { "data-rowid", rowId }, { "data-id", pd.Id.ToString() }, { "data-controller", "Price" }, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkPrice').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/Price/CreateEdit/' + $(this).data("price-id") + '?treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

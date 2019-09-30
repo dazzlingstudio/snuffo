@@ -1,0 +1,543 @@
+﻿.umb-editor-wrapper {
+    overflow: scroll;
+}
+.umb-editor-header{
+    width:99%;
+}
+input[type="text"], input[type="number"], input[type="date"] { /*width: 500px !important;*/
+    height: 35px !important;
+}
+
+input[type="text"].input-sm, input[type="number"].input-sm, input[type="date"].input-sm {
+    height: 30px !important;
+}
+
+.id-field {
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    background-color: #fff;
+    display: inline-block;
+    margin-bottom: 0;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-image: none;
+    border: 1px solid #ccc;
+    padding: 3px 8px 2px 8px;
+    font-size: 12px;
+    line-height: 1.42857143;
+}
+#tabs-content, .tabs-content, .tab-pane, .ui-tabs-panel {
+    padding-left: 5px;
+}
+.nav-tabs > li {
+    margin-bottom: -2px;
+}
+
+div.validation-summary-errors ul {
+    margin-left: 14px;
+    margin-bottom: 20px;
+}
+table.table-hover thead{
+    background: #fcfbfb;
+}
+a {
+    cursor: pointer !important;
+}
+.umb-group-panel {
+    padding: 20px;
+}
+.umb-editor-container {
+    overflow: visible;
+}
+
+.jqte_tool.jqte_tool_1 .jqte_tool_label {
+    height: 100%;
+}
+
+.jqte {
+    border: none;
+    margin: 0;
+    width: 100%;
+}
+
+.jqte_editor, .jqte_source {
+    height: 130px;
+}
+
+html {
+    overflow: scroll;
+}
+
+div.uvendia-body {
+    width: 85%;
+    margin-left: 20px;
+    margin-top: 25px;
+}
+
+div.uvendia-body a.btn-primary {
+    margin-bottom: 20px;
+}
+
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0px;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    height: 35px;
+}
+
+.image-preview-clear {
+    height: 35px;
+}
+
+.image-preview-input input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.image-preview-input-title {
+    margin-left: 2px;
+}
+
+.break {
+    clear: both;
+}
+
+.col-md-12 {
+    padding-left: 0 !important;
+}
+
+.variants-actions { /*width: 78px;*/
+    padding-right: 0px;
+    white-space: nowrap;
+    width: 77px;
+}
+
+.variants-actions a {
+    margin-right: 4px;
+    
+}
+.openVariantPrices {
+    font-size: 18px;
+}
+/* Upload media to cloudinary css */
+.addImage-body {
+    position: relative;
+    border: 2px dashed #ccc;
+    margin: 10px 0 10px 0;
+    text-align: center;
+    height: 30%;
+    width: 100%;
+}
+
+.image-folders {
+    text-align: left;
+}
+
+.image-folders label {
+    font-size: 12px !important; 
+}
+div#files {margin-bottom: 10px;}
+.addImage-body span:not(.select-text):not(.fileinput-button):not(.text-danger) {
+    color: #a6a6a6;
+}
+
+.addImage-body .media-holder {
+    padding: 5px;
+}
+
+.drag-and-drop-text {
+    font-size: 10pt;
+}
+
+.progress {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.progress-bar-success {
+    animation: progress-bar-stripes 2s linear infinite;
+}
+
+.media-type-container {
+    margin: 15px 0 15px 0;
+}
+
+.media-container, .media-container .image-item {
+    text-align: center;
+}
+
+.media-container .image-item img, .media-container .video-item iframe {
+    border: 1px solid #8c919b;
+    padding: 4px;
+    position: relative;
+}
+
+.media-container .image-item, .media-container .video-container {
+    position: relative;
+}
+
+.media-container .btn-delete, .media-container .btn-edit {
+    top: 0px;
+}
+
+.media-container .btn-edit {
+    top: 0px;
+    left: 220px;
+}
+
+.media-container .btn-delete, .media-container .btn-edit {
+    position: absolute;
+    z-index: 999;
+    cursor: pointer;
+}
+
+.media-container .select-text {
+    font-size: 12px;
+}
+
+img.cloudinary-image {
+    width: 200px;
+}
+
+div.cloudinary-image-container a.cloudinary-image-delete {
+    display: block;
+    padding-top: 8px;
+    padding-bottom: 20px;
+}
+
+.float-left {
+    float: left;
+}
+
+.image_block {
+    float: left;
+    padding: 4px;
+    margin-right: 2px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+
+div.caption p {
+    margin: 0px !important;
+}
+
+.image_block .image_block_inner {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.image_block_inner .checkbox_box {
+    position: absolute;
+    z-index: 2;
+    background: white;
+    padding: 2px;
+}
+
+#old-dialog-service {
+    width: 700px !important;
+}
+
+.umb-modal.fade.in {
+    width: 700px !important;
+    margin-left: -700px !important;
+}
+
+.smaller-fontsize {
+    font-size: 12px !important;
+}
+
+.chosen-search-input, .chosen-container {
+    width: 100% !important;
+}
+
+.non-padding {
+    padding: 0;
+}
+
+.padding-right {
+    padding-right: 5px;
+}
+/*input[type="date"]::before{
+    
+content: attr(placeholder) ": ";
+}
+input[type="date"]:focus::before {
+content: "" !important;
+}*/
+table .collapse.in:not(li) {
+    display: table-row;
+}
+
+.checkbox-middle {
+    vertical-align: top;
+    margin-top: -5px;
+    display: inline;
+}
+
+.text-right-align {
+    text-align: right !important;
+}
+.text-center-align {
+    text-align: center !important;
+}
+
+#tblOrderDetails > tfoot {
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    background-color: #f2f2f2;
+}
+
+#tblOrderDetails > tfoot > tr > td {
+    border: none;
+}
+
+.check-box {
+    margin: 0 !important;
+}
+
+.bootstrap-datetimepicker-widget {
+    z-index: 9999 !important;
+}
+
+.row {
+    margin-bottom: 5px;
+}
+
+.uvendia-fieldset {
+    border: 1px dashed #8c919b;
+    width: 65%;
+    padding: 20px;
+}
+
+.uvendia-fieldset legend {
+    font-size: 14px;
+    font-weight: bold;
+    max-width: 29%;
+    border: none;
+    margin: 0;
+    line-height: unset;
+}
+
+.btn-linkbutton {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+}
+
+.btn-linkbutton:hover {
+    text-decoration: underline;
+}
+
+.dropdown-menu ul li {
+    list-style: none;
+}
+
+.dropdown-menu ul {
+    margin: 0;
+}
+
+.dropdown-menu ul li button {
+    border: none;
+    background: none;
+}
+
+.dropdown-menu ul li button:hover {
+    text-decoration: underline;
+}
+
+.dropdown-menu {
+    display: none;
+}
+.cancellation-insurance-select {
+    vertical-align: bottom;
+}
+.cancellation-insurance-label {
+    background-color: #CADDFE;
+    padding: 3px;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+div.cancellation-insurance-label {
+    width: 195px;
+}
+
+.input-group {
+    padding-bottom: 6px;
+}
+
+#container-stocks {
+    margin-top: 20px;
+}
+
+#txtQuantityTickets {
+    height: 33px !important;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.action-buttons {
+    float: left;
+    margin-right: 12px;
+    margin-top: 8px;
+}
+
+button:disabled, button[disabled] {
+    cursor: not-allowed !important;
+}
+
+table > tbody > tr > td.deleteRow {
+    vertical-align: bottom;
+}
+/* The switch - the box around the slider */
+.switch, .switch_small {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    vertical-align: middle;
+}
+
+.switch_small {
+    width: 44px;
+    height: 18px;
+}
+
+/* Hide default HTML checkbox */
+.switch input[type="checkbox"], .switch_small input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider, .slider_small {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+/*.switch input {
+    display: none;
+}*/
+.slider:before, .slider_small:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider_small:before {
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+}
+
+input[type="checkbox"]:checked + input[type="hidden"] + .slider, input[type="checkbox"]:checked + input[type="hidden"] + .slider_small,
+input[type="checkbox"]:checked + .slider, input[type="checkbox"]:checked + .slider_small {
+    background-color: #2196F3;
+}
+
+input[type="checkbox"]:focus + input[type="hidden"] + .slider, input[type="checkbox"]:focus + input[type="hidden"] + .slider_small,
+input[type="checkbox"]:focus + .slider, input[type=checkbox]:focus + .slider_small {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input[type="checkbox"]:checked + input[type="hidden"] + .slider:before, input[type="checkbox"]:checked + input[type="hidden"] + .slider_small:before,
+input[type="checkbox"]:checked + .slider:before, input[type="checkbox"]:checked + .slider_small:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round, .slider_small.round {
+    border-radius: 34px;
+}
+
+.slider.round:before, .slider_small.round:before {
+    border-radius: 50%;
+}
+
+#loading {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.8);
+    z-index: 1000;
+}
+
+#loadingcontent {
+    display: table;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#loadingspinner {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    text-align: center;
+    font-size: larger;
+    padding-top: 80px;
+}
+
+i.glyphicon-plus, i.glyphicon-minus {
+    cursor: pointer;
+}
+.input-group-addon {
+    padding-bottom: 5px;
+}
+div.tagsinput span.tag {
+    border: 1px solid #2184f3;    
+    background: #2196f3;
+    color: #fff;    
+}
+div.tagsinput span.tag a {
+    color: #d8d7d9;
+}
+.help-block {
+    background-color: #F7F1B9;
+    border: 1px solid #F9EE89;
+}
+.help-block i.glyphicon  {
+    vertical-align: text-bottom;
+}
+a.action-link, button.action-link {
+    text-transform: uppercase;
+    font-size: 11px !important;
+}

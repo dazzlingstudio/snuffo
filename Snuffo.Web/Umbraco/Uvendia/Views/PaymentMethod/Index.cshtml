@@ -1,0 +1,54 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.PaymentMethodsModel
+@{
+    bool authorized = UmbracoUtils.IsUserAllowedToModify();
+}
+
+@Html.CreateAuthorizedActionHtml("Create Payment Method", ActionType.Create, new Dictionary<string, string> { { "id", "createpaymentmethod" }, { "data-payment-method-id", "0" }, { "class", "btn btn-primary action-link linkPaymentMethod" }, { "role", "button" } }, authorized)
+<br />
+@if (Model.PaymentMethods.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-center-align">@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethod>(x => x.Id))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethod>(x => x.Name))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethod>(x => x.ModifiedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethod>(x => x.CreatedOn))</th>
+                <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethod>(x => x.CreatedBy))</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model.PaymentMethods)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId">
+                    <td><a class="linkPaymentMethod id-field" data-payment-method-id="@x.Id">@x.Id</a></td>
+                    <td><a class="linkPaymentMethod" data-payment-method-id="@x.Id">@x.Name</a></td>
+                    <td>@x.ModifiedOn.ConvertToLongDateTimeString()</td>
+                    <td>@x.CreatedOn.ConvertToLongDateTimeString()</td>
+                    <td>@x.CreatedBy</td>
+                    <td>                        
+                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete {x.Name} ({x.Id})" }, { "data-rowid", rowId }, { "data-id", x.Id.ToString() }, { "data-controller", "PaymentMethod" }, { "class", "delete" } }, authorized)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <p><i>No records found</i></p>
+}
+@Html.HiddenFor(m => m.TreePath)
+@Html.HiddenFor(model => model.TreeSelectedNodePath)
+@section scripts {
+    <script>
+        $('.linkPaymentMethod').click(function () {
+            UmbClientMgr.contentFrame('/Backoffice/Uvendia/PaymentMethod/CreateEdit/' + $(this).data("payment-method-id") + '/?treePath=' + $('#TreePath').val());
+        });
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+    </script>
+}

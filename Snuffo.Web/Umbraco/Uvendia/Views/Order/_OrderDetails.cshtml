@@ -1,0 +1,276 @@
+﻿@model Order
+@{
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Order";
+    var currentCulture = Model.GetCurrentCultureInfo();
+}
+
+@if (Model.HasOrderDetails())
+{
+    <table id="tblOrderDetails" class="table table-condensed smaller-fontsize">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Item</th>
+                <th>Sku</th>
+                <th>Name</th>
+                <th>Unit price</th>
+                <th>Quantity</th>
+                <th style="width:3%">@(PropertyUtils.GetPropertyNameDisplayName<ProductOrderDetail>(x => x.Retoured))</th>
+                <th>Discount</th>
+                <th>Tax</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (int i = 0; i < Model.ProductOrderDetails.Count; i++)
+            {
+                var rowId = Guid.NewGuid().ToString("D");
+                <tr id="@rowId"
+                    data-id="@Model.ProductOrderDetails[i].ProductId"
+                    data-item-id="@Model.ProductOrderDetails[i].ProductId"
+                    data-name="@Model.ProductOrderDetails[i].Product.Name" data-type="product" data-entity="true"
+                    style="@(Model.ProductOrderDetails[i].Retoured ? "background-color:#ffcccc" : "")"
+                    data-retoured="@(Model.ProductOrderDetails[i].Retoured)">
+                    <td>
+                        @Html.Hidden("ProductOrderDetails.Index", i, new { @class = "index" })
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Id, new { @class = "detailId" })
+                        <a title="Delete item (@Model.ProductOrderDetails[i].Product.Name)" data-rowid="@rowId" data-id="@Model.ProductOrderDetails[i].Id" data-controller="ProductOrderDetail" class="delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].ProductId, new { @class = "item-id" })
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.Id)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.Sku)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.VariantSku)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.HasVariant)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.Weight)
+                        @Model.ProductOrderDetails[i].ProductId
+                    </td>
+                    <td>
+                        @if (Model.ProductOrderDetails[i].Product.VariantSku.IsNullOrEmpty())
+                        {
+                            @Model.ProductOrderDetails[i].Product.Sku
+                        }
+                        else
+                        {
+                            @Model.ProductOrderDetails[i].Product.VariantSku
+                        }
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.Name)
+                        @Model.ProductOrderDetails[i].Product.Name
+                    </td>
+                    <td class="col-xs-3">
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.PriceDefinitionId, new { @class = "hdnPriceDefId" })
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.Value)
+                        @*@Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPriceId)*@
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.Definition.VAT)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.Definition.Name)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.Definition.Currency)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPrice.Definition.Id)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Discount)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].SalePrice)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].MetaData)
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Product.DiscountPercentage)
+
+                        @if (Model.ProductOrderDetails[i].Id == Guid.Empty)
+                        {
+                            @Html.DropDownListFor(model => model.ProductOrderDetails[i].UnitPriceId,
+                                                  new SelectList(Model.ProductOrderDetails[i].Product.PriceCollection, "Id", "Name", Model.ProductOrderDetails[i].UnitPriceId),
+                                                  new { @class = "form-control input-sm ddlUnitPrice hdnPriceId" })
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(m => m.ProductOrderDetails[i].UnitPriceId, new { @class = "hdnPriceId" })
+                            @Model.ProductOrderDetails[i].SalePrice.ToString("N2", currentCulture)
+                        }
+                    </td>
+                    <td class="col-xs-1">
+                        @Html.TextBoxFor(m => m.ProductOrderDetails[i].Quantity, "{0}", new { @class = "form-control quantity input-sm", type = "number", @maxlength = "9", min = "1" })
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.HiddenFor(m => m.ProductOrderDetails[i].Retoured, new { @class = "retoured" })
+                        @if (Model.ProductOrderDetails[i].Retoured)
+                        {
+                            @*@Html.CheckBoxFor(m => m.ProductOrderDetails[i].Retoured, new { @class = "product-retoured" })*@
+                            <i class="glyphicon glyphicon-ok"></i>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </td>
+                    <td class="discount">
+                        @Model.ProductOrderDetails[i].Discount.ToString("N2", currentCulture)
+                    </td>
+                    <td class="vat">
+                        @Model.ProductOrderDetails[i].CalculateVAT().ToString("N2", currentCulture)
+                    </td>
+                    <td class="total">
+                        @Model.ProductOrderDetails[i].CalculateTotal().ToString("N2", currentCulture)
+                    </td>
+                </tr>
+            }
+
+            @{
+                if (Model.HasOrderTicketDetails())
+                {
+                    long ticketSaleId = -1;
+                    Model.TicketOrderDetails = Model.TicketOrderDetails.OrderBy(tod => tod.TicketSaleId).ToList();
+                    for (int i = 0; i < Model.TicketOrderDetails.Count; i++)
+                    {
+                        if (ticketSaleId != Model.TicketOrderDetails[i].TicketSaleId)
+                        {
+                            ticketSaleId = Model.TicketOrderDetails[i].TicketSaleId;
+                            int ticketSaleQuantity = Model.TicketOrderDetails.Where(x => x.TicketSaleId == ticketSaleId).Count();
+
+                            <tr data-type="event" data-id="@Model.TicketOrderDetails[i].TicketSaleId"
+                                class="clickable" aria-expanded="true" data-toggle="collapse" data-target=".row@(ticketSaleId)" data-retoured="false">
+                                <td><i class="glyphicon glyphicon-plus"></i></td>
+                                <td>
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSaleId, new { @class = "item-id" })                                    
+                                    @Model.TicketOrderDetails[i].TicketSale.EventId
+                                </td>
+                                <td>
+                                    Ticket (@Model.TicketOrderDetails[i].TicketSale.ToString())
+                                </td>
+                                <td>
+                                    @Model.TicketOrderDetails[i].TicketSale.Event.Get().Name
+                                </td>
+                                <td class="col-xs-3">
+                                    @if (Model.TicketOrderDetails[i].TicketSale.HasTicketPrice())
+                                    {
+                                        <span>@Model.TicketOrderDetails[i].CalculatePrice().ToString("N2", currentCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+
+                                </td>
+                                <td colspan="2" class="col-xs-1">
+                                    @Html.TextBox("txtQuantity", ticketSaleQuantity, "{0}", new { @class = "form-control quantity input-sm", type = "number", @maxlength = "9", @readonly = "readonly", min = "1" })
+                                </td>
+                                <td class="discount">
+                                    @((Model.TicketOrderDetails[i].Discount * ticketSaleQuantity).ToString("N2", currentCulture))
+                                </td>
+                                <td class="vat">
+                                    @((Model.TicketOrderDetails[i].CalculateVAT() * ticketSaleQuantity).ToString("N2", currentCulture))
+                                </td>
+                                <td class="total">
+                                    @((Model.TicketOrderDetails[i].CalculateTotal() * ticketSaleQuantity).ToString("N2", currentCulture))
+                                </td>
+                            </tr>
+                        }
+                        var rowId = Guid.NewGuid().ToString("D");
+                        <tr id="@rowId"
+                            class="collapse row@(ticketSaleId)"
+                            data-item-id="@Model.TicketOrderDetails[i].TicketSaleId"
+                            data-name="@Model.TicketOrderDetails[i].TicketSale.Description"
+                            data-cancellation-insured="@Model.TicketOrderDetails[i].CancellationInsured"
+                            data-type="event" data-target=".row@(ticketSaleId)" data-entity="true"
+                            data-retoured="false">
+                            <td>
+                                @Html.Hidden("TicketOrderDetails.Index", i, new { @class = "index" })
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].Id, new { @class = "detailId" })
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].Quantity, new { @class = "quantity" })
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSaleId, new { @class = "item-id" })
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].SalePrice)
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.EventId)
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.Description)
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].CancellationInsured, new { @class = "hdnCancellationInsured" })
+                                @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketTypeId)
+
+                                @if (Model.TicketOrderDetails[i].TicketSale.HasTicketPrice())
+                                {
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.Id)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Id, new { @class="hdnPriceId" })
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Value)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Definition.VAT)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Definition.Id)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.PriceDefinitionId, new { @class = "hdnPriceDefId" })
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Definition.Name)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].TicketSale.TicketPrice.Definition.Currency)
+                                    @Html.HiddenFor(m => m.TicketOrderDetails[i].Discount)
+                                }
+                                <a title="Delete item @Model.TicketOrderDetails[i].GetUniqueCode()" data-rowid="@rowId" data-id="@Model.TicketOrderDetails[i].Id" data-controller="TicketOrderDetail" class="delete"><i class="glyphicon glyphicon-trash"></i></a>
+                            </td>
+                            <td colspan="9">
+                                Ticket unique code: @Model.TicketOrderDetails[i].GetUniqueCode()
+                                @if (Model.TicketOrderDetails[i].CancellationInsured)
+                                {
+                                    <span class="cancellation-insurance-label">+ Cancellation insurance (@Model.TicketOrderDetails[i].TicketSale.TicketPrice.Definition.Currency @Model.TicketOrderDetails[i].GetCancellationInsurancePrice().ToString("N2", currentCulture))</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+
+        </tbody>
+        @if (Model.Id > 0)
+        {
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-right-align">
+                        <a id="btnRefresh" name="submit" value="Refresh" class="btn btn-default btn-sm action-link">
+                            Refresh <i class="glyphicon glyphicon-refresh"></i>
+                        </a>
+                    </td>
+                    <td colspan="4" class="text-right-align">
+                        Sub total
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculateSubTotal().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" class="text-right-align">
+                        Shipping fee
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculateShippingFee().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" class="text-right-align">
+                        Payment fee
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculatePaymentFee().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" class="text-right-align">
+                        Total discount
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculateTotalDiscount().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" class="text-right-align">
+                        VAT (Tax)
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculateVAT().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" class="text-right-align">
+                        Total
+                    </td>
+                    <td colspan="2" class="text-right-align">
+                        @Model.CalculateTotal().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
+                    </td>
+                </tr>
+            </tfoot>
+        }
+    </table>
+}
+else
+{
+    <p><i>No order details available</i></p>
+}

@@ -1,0 +1,16 @@
+﻿@model Product
+
+@{
+
+}
+
+@if (Model.HasDiscount())
+{
+    <span>
+        <del class="text-muted text-normal">@SnuffoSettings.ConvertMoney(Model.GetPrice(SnuffoSettings.GetCurrency()))</del>&nbsp;@SnuffoSettings.ConvertMoney(Model.GetPriceWithDiscount(SnuffoSettings.GetCurrency()))
+    </span>
+}
+else
+{
+    <span>@SnuffoSettings.ConvertMoney(Model.GetPrice(SnuffoSettings.GetCurrency()))</span>
+}

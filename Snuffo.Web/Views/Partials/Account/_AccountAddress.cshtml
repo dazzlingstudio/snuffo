@@ -1,0 +1,18 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountAddressModel>
+
+@using (Html.BeginUmbracoForm<AccountController>("UpdateAccountAddress", FormMethod.Post, htmlAttributes: new { @class = "row" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="breaker"></div>
+
+    Html.RenderPartial("~/Views/Partials/_CustomerAddresses.cshtml", Model);
+
+    <div class="text-right">
+        <button class="btn btn-primary margin-bottom-none" type="submit">Update Address</button>
+    </div>
+}

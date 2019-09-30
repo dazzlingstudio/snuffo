@@ -1,0 +1,17 @@
+﻿@model AccountProfileModel
+
+@{
+    Layout = "~/Views/Mailing/MasterSimpleMail.cshtml";
+    string url = string.Concat(Html.GetApplicationUrlPath(),"nl/account/email-verification/?u=", Model.UserId);
+}
+@section header
+{
+	Bevestig je E-mailadres
+}
+<div style="font-family: 'Roboto Condensed', sans-serif;">
+	<p>Beste klant,</p>
+	<p>We hebben je gegevens goed ontvangen.</p>
+	<p><a href='@url'>Klik hier</a> om je registratie te bevestigen.</p>
+	<p>Werkt de bovenstaande link niet? Dan kan je nog steeds je registratie bevestigen door naar onderstaande pagina te surfen: <br /><a href="@url">@url</a></p><br /><br />
+	<p>Bedankt.</p>
+</div>

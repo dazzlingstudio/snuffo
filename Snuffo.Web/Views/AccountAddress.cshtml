@@ -1,0 +1,24 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Html.CheckAuthenticated(CurrentUser.LanguageCode);
+    Layout = "MasterShopLogin.cshtml";
+
+    ViewBag.AccountActive = "address";
+    var model = new AccountAddressModel(Model);
+    var addresess = UvendiaContext.Addresses.AllByUserId(CurrentUser.UserId);
+    var shipAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.ShipAddress);
+    if (shipAddress == null)
+    {
+        model.ShippingAddress = new Address();
+        model.HasSameAddress = true;
+    }
+    else
+    {
+        model.HasSameAddress = false;
+        model.ShippingAddress = shipAddress;
+    }
+
+    model.ContactAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.Default) ?? new Address();
+}
+
+@{Html.RenderPartial("~/views/partials/account/_AccountAddress.cshtml", model);}

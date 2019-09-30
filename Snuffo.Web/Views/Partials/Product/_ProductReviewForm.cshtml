@@ -1,0 +1,64 @@
+﻿@model ProductReviewModel
+
+@{
+    var allStars = new List<SelectListItem>();
+    for (int i = 1; i <= 5; i++)
+    {
+        allStars.Add(new SelectListItem { Text = string.Concat(i, " Stars"), Value = i.ToString() });
+    }
+
+}
+<!-- Review Form-->
+<h5 class="mb-30 padding-top-1x">Leave Review</h5>
+
+@using (Html.BeginUmbracoForm<ShopController>("PostProductReview", FormMethod.Post, new { @class = "row" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary()
+    </div>
+
+    @Html.HiddenFor(m => m.ProductId)
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="review_name">Your Name</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control form-control-rounded", id = "review_name", required = "required", maxlength = "500" })
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="review_email">Your Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-rounded", type = "email", id = "review_email", required = "required", maxlength = "1000" })
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="review_subject">Subject</label>
+            @Html.TextBoxFor(m => m.Subject, new { @class = "form-control form-control-rounded", id = "review_subject", required = "required", maxlength = "1500" })
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="review_rating">Rating</label>
+            @Html.DropDownListFor(model => model.Stars, allStars, new { id = "review_rating", @class = "form-control form-control-rounded" })
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="review_text">Review </label>
+            @Html.TextAreaFor(m => m.Comment, 8, 1, new { @class = "form-control form-control-rounded", id = "review_text", required = "required" })
+        </div>
+    </div>
+
+    <div class="col-12">
+        <!-- Render recaptcha control with default properties. -->
+        @reCaptcha.ReCaptcha.GetHtml(publicKey: DataUtils.GetConfig("reCaptcha:SiteKey"), callback: "enableReviewSubmitBtn")
+    </div>
+
+    <div class="col-12 text-right">
+        <button id="btnReview" class="btn btn-outline-primary" type="submit" disabled>Submit Review</button>
+    </div>
+
+
+}

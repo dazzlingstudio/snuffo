@@ -1,0 +1,99 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<CheckoutReviewModel>
+@{
+    Layout = "masterShopCheckout.cshtml";
+    ViewBag.CurrentCheckoutStepNr = 4;
+}
+
+<h4>Review Your Order</h4>
+<hr class="padding-bottom-1x">
+<div class="table-responsive shopping-cart">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="padding-left-30x">Item</th>
+                <th class="text-center">Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                if (item.ProductId.HasValue)
+                {
+                    var product = Model.Products.Single(x => x.Id == item.ProductId.Value);
+                    <tr>
+                        <td>
+                            <div class="product-item">
+                                <a class="product-thumb" href="/@CurrentUser.LanguageCode/shop/product/?p=@item.ProductId"><img src="@CloudinaryService.GetCloudinaryUrl(item.MetaData, 110, 90, CropType.Lpad)" alt="@item.Name"></a>
+                                <div class="product-info">
+                                    <h4 class="product-title">
+                                        <a href="/@CurrentUser.LanguageCode/shop/product/?p=@item.ProductId">@item.Name<small>x @item.Quantity</small></a>
+                                    </h4>
+                                    @if (product.ContainsKey("Size"))
+                                    {
+                                        <span><em>Size:</em> @product["Size"]</span>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center text-lg text-medium">@SnuffoSettings.ConvertMoney(item.Quantity * item.UnitPrice)</td>
+                        <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/cart">Edit</a></td>
+                    </tr>
+                }
+
+                if (item.TicketSaleId.HasValue)
+                {
+                    var ts = Model.TicketsSale.Single(x => x.Id == item.TicketSaleId.Value);
+                    <tr>
+                        <td>
+                            <div class="product-item">
+                                <a class="product-thumb" href="/@CurrentUser.LanguageCode/events/event/?e=@ts.EventId"><img src="@CloudinaryService.GetCloudinaryUrl(item.MetaData, 110, 90, CropType.Lpad)" alt="@item.Name (@item.Description)"></a>
+                                <div class="product-info">
+                                    <h4 class="product-title">
+                                        <a href="/@CurrentUser.LanguageCode/events/event/?e=@ts.EventId">@item.Name<small>x @item.Quantity</small></a>
+                                    </h4>
+                                    <span><em>Ticket:</em> @ts.Description</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center text-lg text-medium">@SnuffoSettings.ConvertMoney(item.Quantity * item.UnitPrice)</td>
+                        <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/cart">Edit</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="shopping-cart-footer">
+    <div class="column"></div>
+    <div class="column text-lg">Subtotal: <span class="text-medium">@SnuffoSettings.ConvertMoney(Model.CurrentCart.CalculateSubtotal())</span></div>
+</div>
+<div class="row padding-top-1x mt-3">
+    <div class="col-sm-7">
+        <h5>Shipping to:</h5>
+        <ul class="list-unstyled">
+            <li><span class="text-muted">Client: </span>@Model.Order.GetCustomerName()</li>
+            <li><span class="text-muted">Address: </span>@Model.Order.GetCustomerShippingAddress()</li>
+            <li><span class="text-muted">Phone: </span>@Model.Order.GetCustomerPhone()</li>
+            <li><span class="text-muted">E-mail: </span>@Model.Order.GetCustomerEmailAddress()</li>
+        </ul>
+    </div>
+    <div class="col-sm-5">
+        <h5>Payment method:</h5>
+        <ul class="list-unstyled">
+            @if (Model.Order.PaymentMethod.Name.Equals("ideal", StringComparison.InvariantCultureIgnoreCase))
+            {
+                <li><span class="text-muted">@Model.Order.PaymentMethod.Name: </span>@Model.Order.MetaData</li>
+            }
+            else
+            {
+                <li><span class="text-muted">@Model.Order.PaymentMethod.Name</span></li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="checkout-footer">
+    <div class="column"><a class="btn btn-outline-secondary" href="/@CurrentUser.LanguageCode/cart/checkout-payment"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
+    <div class="column"><a class="btn btn-primary" href="/@CurrentUser.LanguageCode/checkout-completed"><span class="hidden-xs-down">Complete order&nbsp;</span><i class="icon-arrow-right"></i></a></div>
+</div>

@@ -1,0 +1,120 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.SearchEventModel
+@{
+
+}
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+@using (Html.BeginForm("Search", "Event", FormMethod.Post, htmlAttributes: new { id = "frmSearch", @class = "form-group" }))
+{
+    @Html.HiddenFor(model => model.TreeSelectedNodePath)
+    @Html.HiddenFor(m => m.Title)
+    <div>
+        <div class="row">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", @maxlength = "50" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.EventNumber, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.EventNumber, new { @class = "form-control input-sm", @maxlength = "50" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.Addressee, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.Addressee, new { @class = "form-control input-sm", placeholder = "Location name", autocomplete = "off" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(model => model.AddressLine, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+            @Html.TextBoxFor(model => model.AddressLine, new { @class = "form-control input-sm", placeholder = "Address line", autocomplete = "off" })
+        </div>
+        <div class="row">
+            <div class="col-sm-6 non-padding padding-right">
+                @Html.TextBoxFor(model => model.Housenumber, new { @class = "form-control input-sm", placeholder = "House number", type = "number", autocomplete = "off" })
+            </div>
+            <div class="col-sm-6 non-padding">
+                @Html.TextBoxFor(model => model.HousenumberExtension, new { @class = "form-control input-sm", placeholder = "Addition", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 non-padding padding-right">
+                @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control input-sm", placeholder = "Zip code" })
+            </div>
+            <div class="col-sm-5 non-padding padding-right">
+                @Html.TextBoxFor(model => model.City, new { @class = "form-control input-sm", placeholder = "City" })
+            </div>
+            <div class="col-sm-4 non-padding">
+                @Html.DropDownListFor(model => Model.CountryCode,
+                    new SelectList(Model.AllAvailableInCountries, "Code", "Name", Model.CountryCode), "Select a country...",
+                    new { @class = "form-control input-sm" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="btn-toolbar">
+                <button id="btnSearch" type="submit" class="btn btn-success pull-left action-link">
+                    Search <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.AddOrderDetail)
+        <div id="containter-results"></div>
+    </div>
+}
+
+@if (Model.AddOrderDetail)
+{
+    <div class="break"></div>
+    <div class="form-group">
+        <div class="btn-toolbar">
+            <button type="submit" class="btn btn-default pull-left save-and-close-search action-link">
+                Save &amp; Close <i class="glyphicon glyphicon-floppy-saved"></i>
+            </button>
+            <button type="submit" class="btn btn-default pull-left closemodal action-link">
+                Cancel <i class="glyphicon glyphicon-floppy-remove"></i>
+            </button>
+        </div>
+    </div>
+}
+
+@Html.HiddenFor(m => m.TreePath)
+@section scripts {
+    <script>
+        UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
+        $(function () {
+            $("#btnSearch").click(function (e) {
+                e.preventDefault();
+                var form = $('#frmSearch');
+
+                $.ajax({
+                    url: '/Umbraco/Backoffice/Uvendia/Event/Search',
+                    data: form.serialize(),
+                    type: 'POST',
+                    success: function (data) {
+                        $("#containter-results").html(data);
+                        Uvendia.closeLoadingSpinner();
+                    }
+                });
+            });
+
+            $('div.uvendia-body').on('click', 'tr.clickable', function () {
+
+                var targetRowClass = $(this).data('target');
+                var targetRow = $(this).parent().find(targetRowClass);
+
+                targetRow.toggle('slow');
+
+                var i = $(this).find('i.collapsable-event');
+
+                if (i.hasClass('glyphicon-plus'))
+                    i.toggleClass('glyphicon-plus glyphicon-minus');
+                else {
+                    i.toggleClass('glyphicon-minus glyphicon-plus');
+
+
+                }
+            });
+        });
+    </script>
+}

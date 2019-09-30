@@ -1,0 +1,31 @@
+﻿@inherits UmbracoViewPage<EmailVerification>
+@using Auth0.AuthenticationApi
+@using Auth0.AuthenticationApi.Models
+@using Auth0.ManagementApi.Models
+
+@{
+    Layout = "MasterShopTop.cshtml";
+    var auth0Helper = new Auth0Helper();
+    bool userNotFound = true;
+    Auth0.ManagementApi.Models.User user = null;
+    string firstName = "";
+    if (!Request.QueryString["u"].IsNullOrEmpty())
+    {
+        user = auth0Helper.GetAuth0User(Request.QueryString["u"]);
+        userNotFound = (user == null);
+        user.EmailVerified = true;
+        user = auth0Helper.VerifyAuth0User(user);
+        firstName = user.UserMetadata.FirstName;
+    }
+}
+
+<div class="col-md-6">
+    @if (userNotFound)
+    {
+        @Html.Raw(Model.EmailNotFoundText)
+    }
+    else
+    {
+        @Html.Raw(Model.Value<string>("welcomeText").Replace("{firstname}", firstName).Replace("{LANG}", CurrentUser.LanguageCode))
+    }
+</div>

@@ -1,0 +1,8 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Html.CheckAuthenticated(CurrentUser.LanguageCode);
+    Layout = "MasterShopLogin.cshtml";
+    ViewBag.AccountActive = "delete";
+}
+
+ @{Html.RenderPartial("~/views/partials/account/_AccountDelete.cshtml");}

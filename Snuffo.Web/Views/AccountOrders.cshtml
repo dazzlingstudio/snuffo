@@ -1,0 +1,27 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Html.CheckAuthenticated(CurrentUser.LanguageCode);
+    Layout = "MasterShopLogin.cshtml";
+
+    ViewBag.AccountActive = "orders";
+
+    var orders = UvendiaContext.Orders.All("o.CreatedBy=@createdBy", "OrderDate DESC", parms: new { createdBy = CurrentUser.UserId });
+}
+
+@section header {
+    <!-- Open Ticket Modal-->
+    <div class="modal fade" id="orderDetails" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@{Html.RenderPartial("~/views/partials/account/_AccountOrders.cshtml", orders);}

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title></title>
+</head>
+<body bgcolor="#ffffff">
+	<table cellpadding="0" cellspacing="0" border="0" align="center">
+		<!-- top -->
+		<tr>
+			<!-- shadow top -->
+			<td width="750" height="10" colspan="3" bgcolor="#efefef" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0px;">&nbsp;</td>
+		</tr>
+		<!-- middle -->
+		<tr>
+			<!-- shadow left -->
+			<td width="10" height="10" bgcolor="#efefef" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0px;">&nbsp;</td>
+			<!-- site -->
+			<td width="730">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<!-- margin height 17px -->
+						<td height="17" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<tr>
+						<!-- margin width 40px -->
+						<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+						<!-- header -->
+						<td width="650">
+							<table cellpadding="0" cellspacing="0" border="0">
+								<!-- menu -->														
+								<!-- margin height 35px -->
+								<tr>
+									<td height="35" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+								</tr>
+								<!-- logo -->
+                                @if (ViewBag.LogoUrl.ToString() != string.Empty)
+                                {
+								<tr>
+									<td width="650" align="center">
+										<a><img src="@ViewBag.LogoUrl" border="0" width="225" /></a>
+									</td>
+								</tr>
+                                }
+								<!-- margin height 57px -->
+								<tr>
+									<td height="20" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+								</tr>
+								<!-- headline -->
+								<tr>
+									<td width="650" align="center" style="font-family: 'Roboto Condensed', sans-serif;font-size: 16px; line-height: 19px; letter-spacing: 2px; color: #666666; text-transform: uppercase;">
+										@RenderSection("header", required: true)
+									</td>
+								</tr>															
+								
+							</table>
+						</td>
+						<!-- margin width 40px -->
+						<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>					
+					<tr>
+						<td height="45" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+				</table>
+				@RenderBody()
+				<table>
+					<tr>
+						<!-- margin height 55px -->
+						<td height="20" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<tr>
+						<!-- margin width 40px -->
+						<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+						<!-- footer -->
+						<td width="650">
+							<table cellpadding="0" cellspacing="0" border="0">
+								<!-- seperator line -->
+								<tr>
+									<td width="650" style="font-family: 'Roboto Condensed', sans-serif;border-top: 1px solid #cacaca; font-size: 0px;">
+										&nbsp;
+									</td>
+
+								</tr>
+								
+								<!-- imprint -->
+								<!-- margin height 17px -->
+								<tr>
+									<td height="17" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+								</tr>
+								<!-- imprint -->
+	
+								<!-- margin height 15px -->
+								<tr>
+									<td height="15" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+								</tr>
+								
+
+							</table>
+						</td>
+						<!-- margin width 40px -->
+						<td width="40" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+					<tr>
+						<!-- margin height 30px -->
+						<td height="30" colspan="3" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+			<!-- shadow right -->
+			<td width="10" height="10" bgcolor="#efefef" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0px;">&nbsp;</td>
+		</tr>
+		<!-- bottom -->
+		<tr>
+			<!-- shadow bottom -->
+			<td width="750" height="10" colspan="3" bgcolor="#efefef" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0px;">&nbsp;</td>
+		</tr>
+	</table>
+	<!-- layout -->
+</body>
+</html>

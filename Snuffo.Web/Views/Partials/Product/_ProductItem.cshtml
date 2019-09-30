@@ -1,0 +1,31 @@
+﻿@model Product
+
+@{
+
+}
+<!-- Product-->
+<div class="grid-item">
+    <div class="product-card">
+        @if (Model.HasDiscount())
+        {
+            <div class="product-badge text-danger">@(Math.Round(Model.DiscountPercentage.Value))% Off</div>
+        }
+        <a class="product-thumb" href="/@CurrentUser.LanguageCode/shop/product/?p=@Model.Id"><img src="@CloudinaryService.GetCloudinaryUrl(Model["Image 1"].ConvertTo<string>(), 350, 250, CropType.Lpad)" alt="@Model.DisplayName()"></a>
+        <h3 class="product-title"><a href="/@CurrentUser.LanguageCode/shop/product/?p=@Model.Id">@Model.DisplayName()</a></h3>
+        <h4 class="product-price">
+            @if (Model.HasDiscount())
+            {
+                <del>@SnuffoSettings.ConvertMoney(Model.GetPrice(SnuffoSettings.GetCurrency()))</del>
+                @SnuffoSettings.ConvertMoney(Model.GetPriceWithDiscount(SnuffoSettings.GetCurrency()))
+            }
+            else
+            {
+                @SnuffoSettings.ConvertMoney(Model.GetPrice(SnuffoSettings.GetCurrency()))
+            }
+        </h4>
+        <div class="product-buttons">
+            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist"><i class="icon-heart"></i></button>
+            <button data-product-id="@Model.Id" data-thumb="@Model["Image 1"]" class="btn btn-outline-primary btn-sm btnAddToCart"><i class="icon-bag"></i> Add to Cart</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿/* The select2 - Uvendia Product Select */
+.select2-result-product__title {
+    color: black;
+    font-weight: 700;
+    word-wrap: break-word;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.select2-result-product__description {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+}

@@ -1,0 +1,43 @@
+﻿@model Uvendia.Domain.Address
+@{ 
+    ViewData.TemplateInfo.HtmlFieldPrefix = ViewData["HtmlFieldPrefix"].ToString();
+}
+@Html.HiddenFor(a => a.Id)
+@Html.HiddenFor(a => a.AddressTypeId)
+
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="txtCompany">Company</label>
+        @Html.TextBoxFor(m => m.AddresseeName, new { id = "txtCompany", @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.Label("for='ddlCountry'", "Country")
+        @Html.DropDownListFor(model => model.CountryCode, ViewData["AllCountries"] as List<SelectListItem>, "Select a country...", new { id = "ddlCountry", @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.LabelFor(m => m.City)
+        @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Zipcode)
+        @Html.TextBoxFor(m => m.Zipcode, new { @class = "form-control"})
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.LabelFor(m => m.AddressLine1)
+        @Html.TextBoxFor(m => m.AddressLine1, new { @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.LabelFor(m => m.AddressLine2)
+        @Html.TextBoxFor(m => m.AddressLine2, new { @class = "form-control" })
+    </div>
+</div>

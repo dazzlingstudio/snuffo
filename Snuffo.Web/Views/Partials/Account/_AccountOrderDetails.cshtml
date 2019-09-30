@@ -1,0 +1,82 @@
+﻿@model Order
+@{
+    var orderCurrency = Model.GetOrderCurrency();
+}
+
+<div class="table-responsive shopping-cart mb-0">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th class="text-center">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pod in Model.ProductOrderDetails)
+            {
+                if (pod.Product.Properties.IsNullOrEmpty())
+                {
+                    pod.Product.LazyLoadProperties();
+                }
+                string imageId = pod.Product["Image 1"] as string;
+                if (pod.Product.IsVariant())
+                {
+                    var parent = pod.Product.Parent.Get();
+                    imageId = parent["Image 1"] as string;
+                }
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <a class="product-thumb" href="/@CurrentUser.LanguageCode/shop/product?p=@pod.ProductId"><img src="@CloudinaryService.GetCloudinaryUrl(imageId, 110, 90, CropType.Lpad)" alt="@pod.Product.DisplayName()"></a>
+                            <div class="product-info">
+                                <h4 class="product-title">
+                                    <a href="/@CurrentUser.LanguageCode/shop/product?p=@pod.ProductId">@pod.Product.DisplayName()<small>x @pod.Quantity</small></a>
+                                </h4>
+                                @if (pod.Product.ContainsKey("Size"))
+                                {
+                                    <span><em>Size:</em> @pod.Product["Size"]</span>
+                                }
+                                @if (pod.Retoured)
+                                {
+                                    <span class="text-danger">(Retoured)</span>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center text-lg text-medium">@SnuffoSettings.ConvertMoney(pod.CalculateTotalWithoutVAT(), orderCurrency)</td>
+                </tr>
+            }
+            @foreach (var tod in Model.TicketOrderDetails)
+            {
+                var evnt = tod.TicketSale.Event.Get();
+                if (evnt.Properties.IsNullOrEmpty())
+                {
+                    evnt.LazyLoadProperties();
+                }
+                string imageId = evnt["Image 1"] as string;                
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <a class="product-thumb" href="/@CurrentUser.LanguageCode/events/event?e=@evnt.Id"><img src="@CloudinaryService.GetCloudinaryUrl(imageId, 110, 90, CropType.Lpad)" alt="@evnt.DisplayName()"></a>
+                            <div class="product-info">
+                                <h4 class="product-title"><a href="/@CurrentUser.LanguageCode/events/event?p=@evnt.Id">@evnt.DisplayName()<small>x @tod.Quantity</small></a></h4>
+                                <span><em>Ticket:</em> @tod.TicketSale.Description</span>
+                                <span><em>Ticket Unique Id:</em> @tod.GetUniqueCode(true)</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center text-lg text-medium">@SnuffoSettings.ConvertMoney(tod.CalculateTotalWithoutVAT(), orderCurrency)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<hr class="mb-3">
+<div class="d-flex flex-wrap justify-content-between align-items-center pb-2">
+    <div class="px-2 py-1">Subtotal: <span class='text-medium'>@SnuffoSettings.ConvertMoney(Model.CalculateSubTotalWithoutVAT(), orderCurrency)</span></div>
+    <div class="px-2 py-1">Shipping: <span class='text-medium'>@SnuffoSettings.ConvertMoney(Model.CalculateShippingFee(), orderCurrency)</span></div>
+    <div class="px-2 py-1">Service fee: <span class='text-medium'>@SnuffoSettings.ConvertMoney(Model.CalculatePaymentFee(), orderCurrency)</span></div>
+    <div class="px-2 py-1">Tax: <span class='text-medium'>@SnuffoSettings.ConvertMoney(Model.CalculateVAT(), orderCurrency)</span></div>
+    <div class="text-lg px-2 py-1">Total: <span class='text-medium'>@SnuffoSettings.ConvertMoney(Model.CalculateTotal(), orderCurrency)</span></div>
+</div>
+    

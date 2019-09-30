@@ -1,0 +1,28 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<LanguageCurrencySelectModel>
+
+<div class="topbar-column">
+    <div class="lang-currency-switcher-wrap">
+        @using (Html.BeginUmbracoForm<LanguageCurrencySelectController>("LanguageCurrencySelect", FormMethod.Post, htmlAttributes: new { id = "frmLCSelect" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="lang-currency-switcher dropdown-toggle">
+                <span class="language">
+                    <img alt="@Model.GetLanguageName()" src="~/content/img/flags/@(CurrentUser.LanguageCode).png">
+                </span>
+                <span class="currency">@Model.SelectedCurrencyText</span>
+            </div>
+
+            <div class="dropdown-menu">
+                <div class="currency-select">
+                    @Html.DropDownListFor(model => model.SelectedCurrency, Model.Currencies, new { id = "ddlCurrency", @class = "form-control form-control-rounded form-control-sm" })
+                </div>
+                @foreach (var lang in Model.Languages)
+                {
+                    <a class="dropdown-item" href="/@lang.Value.ToLower()/">
+                        <img src="~/content/img/flags/@(lang.Value).png" alt="@lang.Text">@lang.Text
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>

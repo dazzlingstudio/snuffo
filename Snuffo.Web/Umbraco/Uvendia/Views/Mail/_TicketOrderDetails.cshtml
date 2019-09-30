@@ -1,0 +1,99 @@
+﻿@model Uvendia.Domain.Mvc.ViewModels.Mail.OrderMailModel
+@using Dazzling.Studio.Utils.Media
+@{
+
+}
+@helper RenderImage(Event evnt)
+{
+    if (evnt.Properties.IsNullOrEmpty())
+    {
+        evnt.LazyLoadProperties();
+    }
+    PropertyValue prop = evnt.Properties?.FirstOrDefault(ep => ep.Property.DataTypeId == Uvendia.Domain.Enums.DataType.CloudinaryImage.Id && !ep.IsEmpty());
+    if (prop != null)
+    {
+        <img src="@CloudinaryService.GetCloudinaryUrl(prop.Value.ToString(), 70, 105, CropType.Lpad)" title="@evnt.DisplayName()" />
+    }
+    else
+    {
+        <span>@evnt.DisplayName()</span>
+    }
+}
+
+@if (Model.Order.HasOrderTicketDetails())
+{
+    if (Model.Order.HasOrderProductDetails())
+    { 
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <!-- margin height 5px -->
+            <td width="650" style="font-family: 'Roboto Condensed', sans-serif;height:38px;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                Your ticket(s):
+            </td>
+        </tr>
+        <!-- seperator line -->
+        <tr>
+            <td width="650" style="font-family: 'Roboto Condensed', sans-serif;font-size:0; line-height: 0; border-top:0.5px solid #cacaca;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td height="15" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+        </tr>
+    </table>
+    }
+    <table border="0" cellspacing="0" cellpadding="0">
+        @foreach (var item in Model.Order.TicketOrderDetails)
+        {
+            var evnt = item.TicketSale.Event.Get();
+            <!-- ticket -->
+            <tr>
+                <!-- margin height 5px -->
+                <td height="5" style="font-family: 'Roboto Condensed', sans-serif;line-height: 0; font-size: 0;">&nbsp;</td>
+            </tr>
+
+            <tr>
+                <!-- image -->
+                <td width="70" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;" align="center" valign="middle">
+                    <!-- default ticket -->
+                    @RenderImage(item.TicketSale.Event.Get())
+                </td>
+                <!-- information -->
+                <td width="580" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">
+                    <!-- default ticket -->
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <!-- margin width 10px -->
+                            <td width="20" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+
+                            <td align="center" width="185" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                                @item.GetUniqueCode(true)
+                            </td>
+                            <td align="left" width="185" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                                @evnt.Name
+                                <br />
+                                @item.TicketSale.ToString()
+                            </td>
+
+                            <td align="right" width="90" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                                <div>@item.TicketSale.TicketPrice.Value.GetValueOrDefault().ToString("N2", Model.CurrentCulture)</div>
+                            </td>
+                            <!-- quantity -->
+                            <td align="center" width="55" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@item.Quantity</td>
+                            <td align="center" width="55" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">@item.Discount.ToString("N2", Model.CurrentCulture)</td>
+                            <!-- sum storno/soldout/deafult -->
+                            <td align="right" width="60" style="font-family: 'Roboto Condensed', sans-serif;font-size: 12px; line-height: 18px; color: #000000; letter-spacing: 0px;">
+                                <!-- default -->
+                                @(item.CalculateTotalWithoutVAT().ToString("N2", Model.CurrentCulture))
+                            </td>
+                            <!-- margin width 10px -->
+                            <td width="10" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!-- margin height 5px -->
+            <tr>
+                <td height="5" style="font-family: 'Roboto Condensed', sans-serif;font-size: 0; line-height: 0;">&nbsp;</td>
+            </tr>
+        }
+    </table>
+}

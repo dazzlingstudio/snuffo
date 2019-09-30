@@ -1,0 +1,13 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<LoginModel>
+@{
+    Layout = "MasterShopTop.cshtml";
+    var authModel = Model.AuthenticateModel;
+    authModel.ReturnUrl = Request.QueryString["returnUrl"];
+}
+
+@if (!CurrentUser.IsAuthenticated)
+{
+    Html.RenderPartial("~/views/partials/account/_Login.cshtml", authModel);
+
+    Html.RenderPartial("~/views/partials/account/_Register.cshtml", Model.RegisterModel);
+}
