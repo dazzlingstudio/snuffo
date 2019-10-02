@@ -7,6 +7,10 @@
         Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/page-not-found"));
     }
     var evnt = UvendiaContext.Events.Single(id);
+    if (evnt == null)
+    {
+        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/page-not-found"));
+    }
     var imageUrl = CloudinaryService.GetCloudinaryUrl(evnt["Image 1"].ConvertTo<string>(), 886, 575, CropType.Fit, gravityType: GravityType.None, effect: Effect.Incognito);
 }
 

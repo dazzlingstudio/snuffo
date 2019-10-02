@@ -20,14 +20,18 @@ namespace Snuffo.Web.Controllers
 {
     public class ProductDetailPageController : RenderMvcController
     {
-        public ActionResult ProductDetailPage(ContentModel model, long p)
+        public ActionResult ProductDetailPage(ContentModel model, long? p)
         {
-            if (p < 1)
-                throw new ArgumentNullException(nameof(p), "ProductId is required");
+            if (!p.HasValue)
+                Response.Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
 
             var ppModel = new ProductPageModel(model.Content);
 
             var fetched = UvendiaContext.Products.Single(p);
+
+            if (fetched == null)
+                Response.Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
+
             ppModel.SelectedVariant = fetched;
 
             if (fetched.IsVariant())
