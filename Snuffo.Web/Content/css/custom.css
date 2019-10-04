@@ -288,6 +288,15 @@ button[disabled], a[disabled] {
     margin: 0 0 2px 0 !important;
 }
 
+.linkedin-btn {
+    border-color: #0073b1;
+    background-color: transparent;
+    color: #0073b1;
+}
+.linkedin-btn {
+    text-transform: none;
+}
+
 @media (max-width: 768px) {
     .padding-bottom-3x {
         padding-left: 30px;

@@ -18,7 +18,7 @@ namespace Snuffo.Web.Models
     public class AuthenticateModel : ContentModel
     {
         readonly Auth0Helper _auth0Helper;
-        string _googleAuthUrl, _facebookAuthUrl, _twitterAuthUrl;
+        string _googleAuthUrl, _facebookAuthUrl, _twitterAuthUrl, _linkedInAuthUrl;
 
         public AuthenticateModel() : this(Current.UmbracoContext.PublishedRequest.PublishedContent)
         {
@@ -66,6 +66,15 @@ namespace Snuffo.Web.Models
             }
         }
 
+        public string LinkedInAuthUrl
+        {
+            get
+            {
+                SetUrls();
+                return _linkedInAuthUrl;
+            }
+        }
+
         public string ReturnUrl { get; set; }
 
         private void SetUrls()
@@ -98,14 +107,23 @@ namespace Snuffo.Web.Models
                 .Build();
             _facebookAuthUrl = facebook_authorizationUrl.ToString();
 
-            var twitter_authorizationUrl = client.BuildAuthorizationUrl()
+            //var twitter_authorizationUrl = client.BuildAuthorizationUrl()
+            //    .WithResponseType(AuthorizationResponseType.Code)
+            //    .WithClient(Auth0Helper.Auth0ClientId)
+            //    .WithConnection("twitter")
+            //    .WithRedirectUrl(returnUrl)
+            //    .WithScope("openid profile email")
+            //    .Build();
+            //_twitterAuthUrl = twitter_authorizationUrl.ToString();
+
+            var linkedIn_authorizationUrl = client.BuildAuthorizationUrl()
                 .WithResponseType(AuthorizationResponseType.Code)
                 .WithClient(Auth0Helper.Auth0ClientId)
-                .WithConnection("twitter")
+                .WithConnection("linkedin")
                 .WithRedirectUrl(returnUrl)
                 .WithScope("openid profile email")
                 .Build();
-            _twitterAuthUrl = twitter_authorizationUrl.ToString();
+            _linkedInAuthUrl = linkedIn_authorizationUrl.ToString();
         }
 
     }

@@ -70,10 +70,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>10/02/2019 18:23:47</publishTime>
+      <publishTime>10/04/2019 15:13:31</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>10/02/2019 18:23:47</publishTime>
+      <publishTime>10/04/2019 15:13:31</publishTime>
     </File>
     <File Include="bin/Auth0.AuthenticationApi.dll">
       <publishTime>09/03/2019 15:34:06</publishTime>
@@ -817,10 +817,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/21/2019 09:45:52</publishTime>
     </File>
     <File Include="bin/Snuffo.Web.dll">
-      <publishTime>10/02/2019 18:23:34</publishTime>
+      <publishTime>10/04/2019 15:13:18</publishTime>
     </File>
     <File Include="bin/Snuffo.Web.pdb">
-      <publishTime>10/02/2019 18:23:34</publishTime>
+      <publishTime>10/04/2019 15:13:18</publishTime>
     </File>
     <File Include="bin/SqlServerTypes/x64/msvcr120.dll">
       <publishTime>09/28/2019 23:21:34</publishTime>
@@ -1150,7 +1150,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/12/2019 15:26:19</publishTime>
     </File>
     <File Include="Content/css/custom.css">
-      <publishTime>09/07/2019 11:25:39</publishTime>
+      <publishTime>10/04/2019 14:43:35</publishTime>
     </File>
     <File Include="Content/css/font-awesome.min.css">
       <publishTime>01/09/2018 09:44:01</publishTime>
@@ -1414,7 +1414,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/28/2019 20:23:11</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>10/02/2019 18:23:38</publishTime>
+      <publishTime>10/04/2019 15:13:21</publishTime>
     </File>
     <File Include="SqlServerTypes/readme.htm">
       <publishTime>09/30/2019 16:20:06</publishTime>
@@ -7915,7 +7915,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/29/2019 12:32:11</publishTime>
     </File>
     <File Include="Views/Partials/Account/_Login.cshtml">
-      <publishTime>06/13/2019 10:25:00</publishTime>
+      <publishTime>10/04/2019 14:43:52</publishTime>
     </File>
     <File Include="Views/Partials/Account/_PasswordRecovery.cshtml">
       <publishTime>06/12/2019 13:16:19</publishTime>

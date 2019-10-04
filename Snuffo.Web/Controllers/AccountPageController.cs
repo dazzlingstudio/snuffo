@@ -57,7 +57,7 @@ namespace Snuffo.Web.Controllers
                 // Authenticate
                 _auth0Helper.Authenticate(user, true, AuthenticationManager);
 
-                returnUrl = returnUrl == "/" ? $"/{CurrentUser.LanguageCode}/" : returnUrl;
+                returnUrl = returnUrl == "/" ? $"/{CurrentUser.LanguageCode}/account/my-profile/" : returnUrl;
                 
                 return RedirectToLocal(returnUrl, loginModel);
             }
