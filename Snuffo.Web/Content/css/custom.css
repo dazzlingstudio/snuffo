@@ -297,6 +297,11 @@ button[disabled], a[disabled] {
     text-transform: none;
 }
 
+.linkedin-btn:hover {
+  background-color: #0073b1;
+  color: #ffffff;
+}
+
 @media (max-width: 768px) {
     .padding-bottom-3x {
         padding-left: 30px;

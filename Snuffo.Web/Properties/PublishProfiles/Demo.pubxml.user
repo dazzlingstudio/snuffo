@@ -70,10 +70,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>10/04/2019 15:13:31</publishTime>
+      <publishTime>10/04/2019 15:29:10</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>10/04/2019 15:13:31</publishTime>
+      <publishTime>10/04/2019 15:29:10</publishTime>
     </File>
     <File Include="bin/Auth0.AuthenticationApi.dll">
       <publishTime>09/03/2019 15:34:06</publishTime>
@@ -817,10 +817,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/21/2019 09:45:52</publishTime>
     </File>
     <File Include="bin/Snuffo.Web.dll">
-      <publishTime>10/04/2019 15:13:18</publishTime>
+      <publishTime>10/04/2019 15:28:56</publishTime>
     </File>
     <File Include="bin/Snuffo.Web.pdb">
-      <publishTime>10/04/2019 15:13:18</publishTime>
+      <publishTime>10/04/2019 15:28:56</publishTime>
     </File>
     <File Include="bin/SqlServerTypes/x64/msvcr120.dll">
       <publishTime>09/28/2019 23:21:34</publishTime>
@@ -1150,7 +1150,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/12/2019 15:26:19</publishTime>
     </File>
     <File Include="Content/css/custom.css">
-      <publishTime>10/04/2019 14:43:35</publishTime>
+      <publishTime>10/04/2019 15:27:39</publishTime>
     </File>
     <File Include="Content/css/font-awesome.min.css">
       <publishTime>01/09/2018 09:44:01</publishTime>
@@ -1414,7 +1414,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/28/2019 20:23:11</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>10/04/2019 15:13:21</publishTime>
+      <publishTime>10/04/2019 15:29:00</publishTime>
     </File>
     <File Include="SqlServerTypes/readme.htm">
       <publishTime>09/30/2019 16:20:06</publishTime>
