@@ -5,7 +5,7 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
     </ul>
     @using (Html.BeginForm("Countries", "Settings", FormMethod.Post, htmlAttributes: new { id = "frmAvailableInCountry", @class = "form-group", style = "height:500px" }))
     {
@@ -14,6 +14,7 @@
         @Html.HiddenFor(model => model.AvailableInCountry.CreatedOn)
         @Html.HiddenFor(model => model.AvailableInCountry.CreatedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
         <div id="tabs-content" style="display:none;">
             <select data-placeholder="Choose a Country..." class="chosen-select" style="width:100%" name="selectedCountries" multiple>
@@ -23,7 +24,7 @@
                 }
             </select>
         </div>
-        <br />        
+        <br />
         <div class="form-group">
             <div class="btn-toolbar">
                 @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
@@ -34,7 +35,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
             $('.chosen-select').chosen({});
         });
         UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);

@@ -23,7 +23,7 @@
             {
                 var rowId = Guid.NewGuid().ToString("D");
                 <tr id="@rowId">
-                    <td><a class="linkCategory id-field" data-category-id="@category.Id">@category.Id</a></td>
+                    <td class="text-center-align"><a class="linkCategory id-field" data-category-id="@category.Id">@category.Id</a></td>
                     <td><a class="linkCategory" data-category-id="@category.Id">@category.Name</a></td>
                     <td>@category.ModifiedOn.ConvertToLongDateTimeString()</td>
                     <td>@category.CreatedOn.ConvertToLongDateTimeString()</td>

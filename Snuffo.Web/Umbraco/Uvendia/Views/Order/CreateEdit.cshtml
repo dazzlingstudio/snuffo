@@ -6,7 +6,7 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
     </ul>
     @using (Html.BeginForm("CreateEdit", "Order", FormMethod.Post, htmlAttributes: new { id = "frmCreateOrder", @class = "form-group", novalidate = "novalidate" }))
     {
@@ -23,214 +23,215 @@
         @Html.HiddenFor(model => model.Order.CustomerPhone)
         @Html.HiddenFor(model => model.Order.CookieId)
         @Html.HiddenFor(model => model.Order.MetaData)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
-    <div id="tabs-content" style="display:none;">
-        <div class="row">
-            <div class="col-sm-6">
-                <h5>Invoice Address</h5>
-                @Html.HiddenFor(model => model.Order.InvoiceAddressId)
-                @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Address.cshtml", Model.Order.InvoiceAddress, new ViewDataDictionary { { "HtmlFieldPrefix", "Order.InvoiceAddress" }, { "Countries", Model.AllCountries } });}
-            </div>
-            <div class="col-sm-6">
-                <h5 class="float-left">Shipping Address</h5>
-                <div class="float-left" style="margin-top:14px;margin-left:20px">
-                    @Html.LabelFor(model => model.IsShippingAddressSameAsInvoiceAddress, htmlAttributes: new { @class = "smaller-fontsize" })
-                    @Html.EditorFor(model => model.IsShippingAddressSameAsInvoiceAddress, new { htmlAttributes = new { id = "chbIsShippingAddressSameAsInvoiceAddress", @class = "" } })
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h5>Invoice Address</h5>
+                    @Html.HiddenFor(model => model.Order.InvoiceAddressId)
+                    @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Address.cshtml", Model.Order.InvoiceAddress, new ViewDataDictionary { { "HtmlFieldPrefix", "Order.InvoiceAddress" }, { "Countries", Model.AllCountries } });}
                 </div>
-                <div id="container-shipping-address">
-                    @Html.HiddenFor(model => model.Order.ShipAddressId)
-                    @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Address.cshtml", Model.Order.ShipAddress, new ViewDataDictionary { { "HtmlFieldPrefix", "Order.ShipAddress" }, { "Countries", Model.AllCountries } });}
-                </div>
-            </div>
-        </div>
-        <br />
-
-        <div class="row">
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.OrderNumber, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.OrderNumber, new { @class = "form-control input-sm" })
-            </div>
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.OrderDate, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                <div class='input-group date datetimepicker'>
-                    @Html.TextBoxFor(model => model.Order.OrderDate, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm" })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-
-            </div>
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.OrderStatus, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.DropDownListFor(model => model.Order.OrderStatusId, Model.AllOrderStatus, new { @class = "form-control input-sm" })
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.PaymentMethodId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.DropDownListFor(model => model.Order.PaymentMethodId, Model.PaymentMethods, "None", new { id = "ddlPaymentMethod", @class = "form-control input-sm" })
-            </div>
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.ShippingMethodId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.DropDownListFor(model => model.Order.ShippingMethodId, Model.ShippingMethods, "None", new { id = "ddlShippingMethod", @class = "form-control input-sm" })
-            </div>
-
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.ShippedDate, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                <div class='input-group date datetimepicker'>
-                    @Html.TextBoxFor(model => model.Order.ShippedDate, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm" })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.PaidAmount, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.PaidAmount, new { @class = "form-control input-sm", placeholder = "Paid amount", type = "number" })
-            </div>
-
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.PaymentTransactionId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.PaymentTransactionId, new { @class = "form-control input-sm", placeholder = "Payment transaction Id" })
-            </div>
-
-            <div class="col-sm-4">
-                @Html.LabelFor(model => model.Order.PayerId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.PayerId, new { @class = "form-control input-sm", placeholder = "Payer Id" })
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                @Html.LabelFor(model => model.Order.PaymentError, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextAreaFor(model => model.Order.PaymentError, 2, 6, new { @class = "form-control input-sm", placeholder = "Payment error", @readonly = "readonly" })
-            </div>
-
-            <div class="col-sm-12">
-                @Html.LabelFor(model => model.Order.TrackTrace, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.TrackTrace, new { @class = "form-control input-sm", placeholder = "Track & Trace information for the customer" })
-            </div>
-
-            <div class="col-sm-12">
-                @Html.LabelFor(model => model.Order.ExternalId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                @Html.TextBoxFor(model => model.Order.ExternalId, new { @class = "form-control input-sm", placeholder = "External-ID (optional)" })
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.Order.Paid, htmlAttributes: new { @class = "control-label smaller-fontsize" })
-                <label class="switch">
-                    @Html.CheckBoxFor(model => model.Order.Paid, new { @class = "checkbox-middle" })
-                    <span class="slider round"></span>
-                </label>
-            </div>
-        </div>
-
-        <br class="break" />
-
-        <div class="row">
-            <div class="action-buttons">
-                <button type="button" id="btnAddOrderDetail" class="btn btn-default btn-sm pull-left action-link">
-                    Add product order detail <i class="glyphicon glyphicon-plus"></i>
-                </button>
-            </div>
-            <div class="action-buttons">
-                <button type="button" id="btnAddTicketOrderDetail" class="btn btn-sm pull-left action-link" style="background-color:#f5e0bf;">
-                    Add ticket order detail <i class="glyphicon glyphicon-plus"></i>
-                </button>
-            </div>
-            <div class="action-buttons">
-                <div class="btn-group">
-                    <button type="button"
-                            value="DownloadInvoice"
-                            name="submit"
-                            class="btn btn-sm generatePdf dropdown-toggle save-needed action-link"
-                            style="background-color:#83b08f"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            @(!Model.Order.HasOrderProductDetails() ? "disabled" : "")>
-                        Download Invoice <i class="glyphicon glyphicon-download-alt"></i>
-                    </button>
-                    <div class="dropdown-menu @*dropdown-menu-right*@">
-                        <ul>
-                            @foreach (var l in Model.Languages)
-                            {
-                                <li>
-                                    <button name="submit" value="DownloadInvoice|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
-                                        @l.NativeName
-                                    </button>
-                                </li>
-                            }
-                        </ul>
+                <div class="col-sm-6">
+                    <h5 class="float-left">Shipping Address</h5>
+                    <div class="float-left" style="margin-top:14px;margin-left:20px">
+                        @Html.LabelFor(model => model.IsShippingAddressSameAsInvoiceAddress, htmlAttributes: new { @class = "smaller-fontsize" })
+                        @Html.EditorFor(model => model.IsShippingAddressSameAsInvoiceAddress, new { htmlAttributes = new { id = "chbIsShippingAddressSameAsInvoiceAddress", @class = "" } })
+                    </div>
+                    <div id="container-shipping-address">
+                        @Html.HiddenFor(model => model.Order.ShipAddressId)
+                        @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Address.cshtml", Model.Order.ShipAddress, new ViewDataDictionary { { "HtmlFieldPrefix", "Order.ShipAddress" }, { "Countries", Model.AllCountries } });}
                     </div>
                 </div>
             </div>
-            <div class="action-buttons">
-                <div class="btn-group">
-                    <button type="button"
-                            value="DownloadTicket"
-                            name="submit"
-                            class="btn btn-sm generatePdf dropdown-toggle save-needed action-link"
-                            style="background-color:#FFD033"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            @(!Model.Order.HasOrderTicketDetails() ? "disabled" : "")>
-                        Download Ticket <i class="glyphicon glyphicon-download-alt"></i>
-                    </button>
-                    <div class="dropdown-menu @*dropdown-menu-right*@">
-                        <ul>
-                            @foreach (var l in Model.Languages)
-                            {
-                                <li>
-                                    <button name="submit" value="DownloadTicket|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
-                                        @l.NativeName
-                                    </button>
-                                </li>
-                            }
-                        </ul>
+            <br />
+
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.OrderNumber, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.OrderNumber, new { @class = "form-control input-sm" })
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.OrderDate, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    <div class='input-group date datetimepicker'>
+                        @Html.TextBoxFor(model => model.Order.OrderDate, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.OrderStatus, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.DropDownListFor(model => model.Order.OrderStatusId, Model.AllOrderStatus, new { @class = "form-control input-sm" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.PaymentMethodId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.DropDownListFor(model => model.Order.PaymentMethodId, Model.PaymentMethods, "None", new { id = "ddlPaymentMethod", @class = "form-control input-sm" })
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.ShippingMethodId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.DropDownListFor(model => model.Order.ShippingMethodId, Model.ShippingMethods, "None", new { id = "ddlShippingMethod", @class = "form-control input-sm" })
+                </div>
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.ShippedDate, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    <div class='input-group date datetimepicker'>
+                        @Html.TextBoxFor(model => model.Order.ShippedDate, "{0:dd MMMM yyyy HH:mm}", new { @class = "form-control input-sm" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="action-buttons">
-                <div class="btn-group">
-                    <button type="button"
-                            value="SendEmail"
-                            name="submit"
-                            class="btn btn-sm dropdown-toggle save-needed action-link"
-                            style="background-color:#c3a585"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            @(!Model.Order.HasOrderDetails() || Model.EmailTemplates.IsNullOrEmpty() ? "disabled" : "")>
-                        Send E-mail To Customer <i class="glyphicon glyphicon-send"></i>
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.PaidAmount, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.PaidAmount, new { @class = "form-control input-sm", placeholder = "Paid amount", type = "number" })
+                </div>
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.PaymentTransactionId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.PaymentTransactionId, new { @class = "form-control input-sm", placeholder = "Payment transaction Id" })
+                </div>
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(model => model.Order.PayerId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.PayerId, new { @class = "form-control input-sm", placeholder = "Payer Id" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    @Html.LabelFor(model => model.Order.PaymentError, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextAreaFor(model => model.Order.PaymentError, 2, 6, new { @class = "form-control input-sm", placeholder = "Payment error", @readonly = "readonly" })
+                </div>
+
+                <div class="col-sm-12">
+                    @Html.LabelFor(model => model.Order.TrackTrace, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.TrackTrace, new { @class = "form-control input-sm", placeholder = "Track & Trace information for the customer" })
+                </div>
+
+                <div class="col-sm-12">
+                    @Html.LabelFor(model => model.Order.ExternalId, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    @Html.TextBoxFor(model => model.Order.ExternalId, new { @class = "form-control input-sm", placeholder = "External-ID (optional)" })
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    @Html.LabelFor(model => model.Order.Paid, htmlAttributes: new { @class = "control-label smaller-fontsize" })
+                    <label class="switch">
+                        @Html.CheckBoxFor(model => model.Order.Paid, new { @class = "checkbox-middle" })
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <br class="break" />
+
+            <div class="row">
+                <div class="action-buttons">
+                    <button type="button" id="btnAddOrderDetail" class="btn btn-default btn-sm pull-left action-link">
+                        Add product order detail <i class="glyphicon glyphicon-plus"></i>
                     </button>
-                    <div class="dropdown-menu">
-                        <ul>
-                            @foreach (var e in Model.EmailTemplates)
-                            {
-                                foreach (var l in Model.Languages)
+                </div>
+                <div class="action-buttons">
+                    <button type="button" id="btnAddTicketOrderDetail" class="btn btn-sm pull-left action-link" style="background-color:#f5e0bf;">
+                        Add ticket order detail <i class="glyphicon glyphicon-plus"></i>
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <div class="btn-group">
+                        <button type="button"
+                                value="DownloadInvoice"
+                                name="submit"
+                                class="btn btn-sm generatePdf dropdown-toggle save-needed action-link"
+                                style="background-color:#83b08f"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                @(!Model.Order.HasOrderProductDetails() ? "disabled" : "")>
+                            Download Invoice <i class="glyphicon glyphicon-download-alt"></i>
+                        </button>
+                        <div class="dropdown-menu @*dropdown-menu-right*@">
+                            <ul>
+                                @foreach (var l in Model.Languages)
                                 {
                                     <li>
-                                        <button name="submit" value="SendEmail|@e.Id|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
-                                            @e.TemplateName (@l.NativeName)
+                                        <button name="submit" value="DownloadInvoice|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
+                                            @l.NativeName
                                         </button>
                                     </li>
                                 }
-                            }
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
+                </div>
+                <div class="action-buttons">
+                    <div class="btn-group">
+                        <button type="button"
+                                value="DownloadTicket"
+                                name="submit"
+                                class="btn btn-sm generatePdf dropdown-toggle save-needed action-link"
+                                style="background-color:#FFD033"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                @(!Model.Order.HasOrderTicketDetails() ? "disabled" : "")>
+                            Download Ticket <i class="glyphicon glyphicon-download-alt"></i>
+                        </button>
+                        <div class="dropdown-menu @*dropdown-menu-right*@">
+                            <ul>
+                                @foreach (var l in Model.Languages)
+                                {
+                                    <li>
+                                        <button name="submit" value="DownloadTicket|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
+                                            @l.NativeName
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <div class="btn-group">
+                        <button type="button"
+                                value="SendEmail"
+                                name="submit"
+                                class="btn btn-sm dropdown-toggle save-needed action-link"
+                                style="background-color:#c3a585"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                @(!Model.Order.HasOrderDetails() || Model.EmailTemplates.IsNullOrEmpty() ? "disabled" : "")>
+                            Send E-mail To Customer <i class="glyphicon glyphicon-send"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <ul>
+                                @foreach (var e in Model.EmailTemplates)
+                                {
+                                    foreach (var l in Model.Languages)
+                                    {
+                                        <li>
+                                            <button name="submit" value="SendEmail|@e.Id|@l.CultureName" type="submit" class="dropdown-item smaller-fontsize">
+                                                @e.TemplateName (@l.NativeName)
+                                            </button>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <br />
-        <h5>Order details</h5>
-        <div id="container-orderdetails">
-            @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Order/_OrderDetails.cshtml", Model.Order);}
+            <br />
+            <h5>Order details</h5>
+            <div id="container-orderdetails">
+                @{Html.RenderPartial("~/Umbraco/Uvendia/Views/Order/_OrderDetails.cshtml", Model.Order);}
+            </div>
         </div>
-    </div>
 
         <div class="break"></div>
         <div class="form-group">
@@ -243,7 +244,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
 
             $('input[type=number]').each(function () {
                 if ($(this).val() == '0') $(this).val('');

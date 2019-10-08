@@ -11,7 +11,11 @@ input[type="text"], input[type="number"], input[type="date"] { /*width: 500px !i
 input[type="text"].input-sm, input[type="number"].input-sm, input[type="date"].input-sm {
     height: 30px !important;
 }
-
+.uvendia-version {
+    font-size: 12px;
+    padding-left: 10px;
+    color: #bdbdbd;
+}
 .id-field {
     font-size: 12px;
     line-height: 1.5;
@@ -404,7 +408,7 @@ button:disabled, button[disabled] {
 }
 
 table > tbody > tr > td.deleteRow {
-    vertical-align: bottom;
+    vertical-align: middle;
 }
 /* The switch - the box around the slider */
 .switch, .switch_small {

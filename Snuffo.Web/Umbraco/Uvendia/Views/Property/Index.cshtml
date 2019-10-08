@@ -23,7 +23,7 @@
             {
                 var rowId = Guid.NewGuid().ToString("D");
                 <tr id="@rowId">
-                    <td><a class="linkProp id-field" data-property-id="@p.Id">@p.Id</a></td>
+                    <td class="text-center-align"><a class="linkProp id-field" data-property-id="@p.Id">@p.Id</a></td>
                     <td><a class="linkProp" data-property-id="@p.Id">@p.Name</a></td>
                     <td>@p.DataType.Name</td>
                     <td>@p.ModifiedOn.ConvertToLongDateTimeString()</td>

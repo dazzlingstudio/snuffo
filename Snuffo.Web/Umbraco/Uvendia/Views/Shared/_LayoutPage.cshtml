@@ -40,14 +40,17 @@
                             <div class="umb-group-panel">
                                 @if (TempData["WARNING_WEB_ALERT"] != null)
                                 {
-                                <div class="alert alert-warning alert-dismissible show">
-                                    <strong>Warning!</strong> @TempData["WARNING_WEB_ALERT"]
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                </div>
+                                    <div class="alert alert-warning alert-dismissible show">
+                                        <strong>Warning!</strong> @TempData["WARNING_WEB_ALERT"]
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    </div>
                                 }
                                 <div class="uvendia-body" id="uvendia-body">
                                     @RenderBody()
                                 </div>
+                            </div>
+                            <div class="uvendia-version">
+                                Uvendia version @WebshopUtils.GetAssemblyVersion() | © @DateTime.Today.Year Dazzling Studio B.V. All rights reserved.
                             </div>
                         </div>
                     </div>

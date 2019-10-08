@@ -5,7 +5,7 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
         <li><a data-toggle="tab" href="#tabs-address">Event's Address</a></li>
         @foreach (var trans in Model.Translations)
         {
@@ -21,6 +21,7 @@
         @Html.HiddenFor(model => model.Event.CreatedOn)
         @Html.HiddenFor(model => model.Event.CreatedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
         @Html.HiddenFor(model => model.ImageFolders, new { id = "ImageFolders" })
 
         <div id="tabs-content" style="display:none;">
@@ -113,7 +114,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
 
             Uvendia.Event.showOrHideTicketSale();
             $('#chbIsTicketSaleEnabled').change(function () {

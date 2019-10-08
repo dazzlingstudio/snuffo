@@ -7,7 +7,7 @@
 
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
     </ul>
     @using (Html.BeginForm("CreateEdit", "Property", FormMethod.Post, htmlAttributes: new { id = "frmProperty", @class = "form-group", novalidate = "novalidate" }))
     {
@@ -18,64 +18,65 @@
         @Html.HiddenFor(model => model.Property.ModifiedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
         @Html.HiddenFor(model => model.DefinitionType)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
-    <div id="tabs-content" style="display:none;">
+        <div id="tabs-content" style="display:none;">
 
-        <div class="row">
-            @Html.LabelFor(model => model.Property.Name, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.EditorFor(model => model.Property.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
-        </div>
-
-        <div class="row">
-            @Html.LabelFor(model => model.Property.DefinitionId, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.DropDownListFor(model => model.Property.DefinitionId, Model.Definitions, new { @class = "form-control" })
-        </div>
-
-        <div class="row">
-            @Html.LabelFor(model => model.Property.DataTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.DropDownListFor(model => model.Property.DataTypeId, Model.DataTypes, new { id = "ddlPropertyDataTypes", @class = "form-control" })
-        </div>
-
-        <div id="container-tags" class="row">
-            @Html.LabelFor(model => model.Property.Tags, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.TextBoxFor(model => model.Property.Tags, new { id = "txtDropDrownListTags", @class = "form-control input-sm tagsInput", autocomplete= "false" })
-        </div>
-
-        <div class="row">
-            @Html.LabelFor(model => model.Property.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.TextAreaFor(model => model.Property.Description, 2, 2, new { @class = "form-control input-sm" })
-        </div>
-
-        @if (Model.DefinitionType == Uvendia.Domain.Enums.DefinitionType.Product)
-        {
             <div class="row">
-                @Html.LabelFor(model => model.Property.IsVariant, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.Property.Name, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.EditorFor(model => model.Property.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Property.DefinitionId, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.DropDownListFor(model => model.Property.DefinitionId, Model.Definitions, new { @class = "form-control" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Property.DataTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.DropDownListFor(model => model.Property.DataTypeId, Model.DataTypes, new { id = "ddlPropertyDataTypes", @class = "form-control" })
+            </div>
+
+            <div id="container-tags" class="row">
+                @Html.LabelFor(model => model.Property.Tags, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.TextBoxFor(model => model.Property.Tags, new { id = "txtDropDrownListTags", @class = "form-control input-sm tagsInput", autocomplete = "false" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Property.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextAreaFor(model => model.Property.Description, 2, 2, new { @class = "form-control input-sm" })
+            </div>
+
+            @if (Model.DefinitionType == Uvendia.Domain.Enums.DefinitionType.Product)
+            {
+                <div class="row">
+                    @Html.LabelFor(model => model.Property.IsVariant, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <label class="switch">
+                        @Html.CheckBoxFor(model => model.Property.IsVariant, new { @class = "checkbox-middle" })
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            }
+            <div class="row">
+                @Html.LabelFor(model => model.Property.Required, htmlAttributes: new { @class = "control-label col-md-3" })
                 <label class="switch">
-                    @Html.CheckBoxFor(model => model.Property.IsVariant, new { @class = "checkbox-middle" })
+                    @Html.CheckBoxFor(model => model.Property.Required, new { @class = "checkbox-middle" })
                     <span class="slider round"></span>
                 </label>
             </div>
-        }
-        <div class="row">
-            @Html.LabelFor(model => model.Property.Required, htmlAttributes: new { @class = "control-label col-md-3" })
-            <label class="switch">
-                @Html.CheckBoxFor(model => model.Property.Required, new { @class = "checkbox-middle" })
-                <span class="slider round"></span>
-            </label>
-        </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Property.ValidationExpression, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Property.ValidationExpression, new { htmlAttributes = new { @class = "form-control input-sm" } })
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Property.ValidationExpression, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Property.ValidationExpression, new { htmlAttributes = new { @class = "form-control input-sm" } })
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Property.ValidationAssemblyTypeName, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Property.ValidationAssemblyTypeName, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            <pre class="help-block">Make sure your class inherit from the interface <i>IPropertyValidation</i></pre>
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Property.ValidationAssemblyTypeName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Property.ValidationAssemblyTypeName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                <pre class="help-block">Make sure your class inherit from the interface <i>IPropertyValidation</i></pre>
+            </div>
 
-    </div>
+        </div>
 
         <div class="form-group">
             <div class="btn-toolbar">
@@ -86,8 +87,7 @@
 </div>
 @section scripts{
     <script>
-        $(function () {
-            $("#tabs").tabs();            
+        $(function () {        
 
             toggleTags($('#ddlPropertyDataTypes').val());
             

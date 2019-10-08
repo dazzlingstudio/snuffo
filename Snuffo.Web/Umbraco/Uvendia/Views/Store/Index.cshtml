@@ -25,7 +25,7 @@
                 {
                     var rowId = Guid.NewGuid().ToString("D");
                     <tr id="@rowId">
-                        <td><a class="linkStore id-field" data-store-id="@store.Id">@store.Id</a></td>
+                        <td class="text-center-align"><a class="linkStore id-field" data-store-id="@store.Id">@store.Id</a></td>
                         <td><a class="linkStore" data-store-id="@store.Id">@store.Name</a></td>
                         <td>@store.ModifiedOn.ConvertToLongDateTimeString()</td>
                         <td>@store.CreatedOn.ConvertToLongDateTimeString()</td>

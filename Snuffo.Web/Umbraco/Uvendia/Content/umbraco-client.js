@@ -34,7 +34,7 @@
 
                 var injector = getRootInjector();
 
-                var rootScope = injector.get("$rootScope");
+                var $rootScope = injector.get("$rootScope");
                 var angularHelper = injector.get("angularHelper");
                 var navService = injector.get("navigationService");
 
@@ -53,7 +53,7 @@
                         return top; //return the current window if the content frame doesn't exist in the current context
                     }
                 }
-                angularHelper.safeApply(rootScope, function () {
+                angularHelper.safeApply($rootScope, function () {
                     navService.loadLegacyIFrame(strLocation.toLowerCase());
                 });
             },
@@ -83,43 +83,51 @@
             },
             openModalWindow: function (url, title, size, onCloseCallback) {
                 //need to create the modal on the top window if the top window has a client manager, if not, create it on the current window   
-                var injector = getRootInjector();
+                var injector = getRootInjector();                
                 var editorService = injector.get("editorService");
-                var rootScope = injector.get("$rootScope");
-                
-                editorService.open({
-                    view: url,
-                    size: size,
-                    title: title
-                });
+                var $rootScope = injector.get("$rootScope");
+                var angularHelper = injector.get("angularHelper");
 
-                if (typeof rootScope.modal === "undefined") {
-                    rootScope.modal = [];
-                }
-                rootScope.modal.push(onCloseCallback);
+                angularHelper.safeApply($rootScope, function () {
+                    
+                    if (typeof $rootScope.modal === "undefined" || $rootScope.modal === null || $rootScope.modal.length === 0) {
+                        $rootScope.modal = [];
+                    }
+                
+                    $rootScope.modal.push(onCloseCallback);
+
+                    editorService.open({
+                        view: url,
+                        size: size,
+                        title: title
+                    });
+                });                
             },
             closeModalWindow: function (rVal) {                
                 //get our angular navigation service
                 var injector = getRootInjector();
                 var editorService = injector.get("editorService");
-                var rootScope = injector.get("$rootScope");
-                
+                var $rootScope = injector.get("$rootScope");
+                var angularHelper = injector.get("angularHelper");
+
                 // all legacy calls to closeModalWindow are expecting to just close the last opened one so we'll ensure
                 // that this is still the case.
-                if (typeof rootScope.modal !== "undefined" && rootScope.modal !== null && rootScope.modal.length > 0) {
-                    
-                    var lastModal = rootScope.modal.pop();
+                angularHelper.safeApply($rootScope, function () {                    
+                    if (typeof $rootScope.modal !== "undefined" && $rootScope.modal !== null && $rootScope.modal.length > 0) {
 
-                    //if we've stored a callback on this modal call it before we close.
-                    var self = this;
-                    //get the compat callback from the modal element
-                    var onCloseCallback = lastModal;
-                    if (typeof onCloseCallback === "function") {
-                        onCloseCallback.apply(self, [{ outVal: rVal }]);
-                    }                    
-                }    
-                
-                editorService.close();
+                        var lastModal = $rootScope.modal.pop();
+
+                        //if we've stored a callback on this modal call it before we close.
+                        var self = this;
+                        //get the compat callback from the modal element
+                        var onCloseCallback = lastModal;
+                        if (typeof onCloseCallback === "function") {
+                            onCloseCallback.apply(self, [{ outVal: rVal }]);
+                        }
+                    }
+
+                    editorService.close();
+                });
             },
             showMessage: function (icon, header, message) {
                 //get our angular navigation service

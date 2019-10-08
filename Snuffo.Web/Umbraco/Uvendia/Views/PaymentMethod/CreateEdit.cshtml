@@ -5,9 +5,9 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>        
-        <li><a data-toggle="tab" href="#tabs-Availability">Availability</a></li>        
-        <li><a data-toggle="tab" href="#tabs-Pricing">Pricing</a></li>        
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-Availability">Availability</a></li>
+        <li><a data-toggle="tab" href="#tabs-Pricing">Pricing</a></li>
     </ul>
     @using (Html.BeginForm("CreateEdit", "PaymentMethod", FormMethod.Post, htmlAttributes: new { @class = "form-group", novalidate = "novalidate" }))
     {
@@ -17,92 +17,93 @@
         @Html.HiddenFor(model => model.PaymentMethod.CreatedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
         @Html.HiddenFor(model => model.TreePath)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
-    <div id="tabs-content" style="display:none;">
-        <div class="row">
-            @Html.LabelFor(model => model.PaymentMethod.Name, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.EditorFor(model => model.PaymentMethod.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
-        </div>
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                @Html.LabelFor(model => model.PaymentMethod.Name, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.EditorFor(model => model.PaymentMethod.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.PaymentMethod.Enabled, htmlAttributes: new { @class = "control-label" })            
-            <label class="switch">
-                @Html.EditorFor(model => model.PaymentMethod.Enabled, new { htmlAttributes = new { @class = "form-control" } })
-                <span class="slider round"></span>
-            </label>
-        </div>
-        <div class="row">
-            @Html.LabelFor(model => model.PaymentMethod.Description, htmlAttributes: new { @class = "control-label col-md-12" })
-            @Html.TextAreaFor(model => model.PaymentMethod.Description, 2, 6, new { @class = "form-control" })
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.PaymentMethod.Enabled, htmlAttributes: new { @class = "control-label" })
+                <label class="switch">
+                    @Html.EditorFor(model => model.PaymentMethod.Enabled, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="row">
+                @Html.LabelFor(model => model.PaymentMethod.Description, htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.TextAreaFor(model => model.PaymentMethod.Description, 2, 6, new { @class = "form-control" })
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.PaymentMethod.LogoId, htmlAttributes: new { @class = "control-label" })
-            @Html.Raw(Model.Logo.RenderControl())
-        </div>
-        <br />
+            <div class="row">
+                @Html.LabelFor(model => model.PaymentMethod.LogoId, htmlAttributes: new { @class = "control-label" })
+                @Html.Raw(Model.Logo.RenderControl())
+            </div>
+            <br />
 
-        <div class="row">
-            @Html.Label("", "Payment method configurations:", htmlAttributes: new { @class = "control-label" })
-            <table id="tblPaymentMethodSetting" class="table table-hover smaller-fontsize">
-                <thead>
-                    <tr>
-                        <th style="width:1%">&nbsp;</th>
-                        <th style="width:25%">@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethodSetting>(x => x.Key))</th>
-                        <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethodSetting>(x => x.Value))</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.PaymentMethod.Settings.Count; i++)
-                    {
-                        var rowId = Guid.NewGuid().ToString("D");
-                        <tr id="@rowId" data-index="@i">
-                            <td class="deleteRow">
-                                @if (i > 0)
-                                {                                    
-                                    @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete setting {Model.PaymentMethod.Settings[i].Key}" }, { "data-rowid", rowId }, { "data-id", Model.PaymentMethod.Settings[i].Key }, { "class", "deletePaymentMethodSetting" } }, authorized)
-                                }
-                                &nbsp;
-                            </td>
-
-                            <td>
-                                @Html.Hidden("PaymentMethod.Settings.Index", i, new Dictionary<string, object> { { "data-readonlyname", "true" }, { "data-clearable", "false" } })
-                                @Html.TextBoxFor(model => Model.PaymentMethod.Settings[i].Key, new { @class = "form-control input-sm smaller-fontsize", @maxlength = "35", placeholder = "Key" })
-                            </td>
-
-                            <td>
-                                @if (authorized)
-                                {
-                                    @Html.TextBoxFor(model => Model.PaymentMethod.Settings[i].Value, new { @class = "form-control input-sm smaller-fontsize paymentsecret", placeholder = "Value" })
-                                }
-                                else
-                                {
-                                    @Html.TextBox(string.Concat(Model.PaymentMethod.Settings[i].Key, "Value"), "****************************************", new { @class = "form-control input-sm smaller-fontsize paymentsecret", placeholder = "Value" })
-                                }
-
-                            </td>
+            <div class="row">
+                @Html.Label("", "Payment method configurations:", htmlAttributes: new { @class = "control-label" })
+                <table id="tblPaymentMethodSetting" class="table table-hover smaller-fontsize">
+                    <thead>
+                        <tr>
+                            <th style="width:1%">&nbsp;</th>
+                            <th style="width:25%">@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethodSetting>(x => x.Key))</th>
+                            <th>@(PropertyUtils.GetPropertyNameDisplayName<PaymentMethodSetting>(x => x.Value))</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.PaymentMethod.Settings.Count; i++)
+                        {
+                            var rowId = Guid.NewGuid().ToString("D");
+                            <tr id="@rowId" data-index="@i">
+                                <td class="deleteRow">
+                                    @if (i > 0)
+                                    {
+                                        @Html.CreateAuthorizedActionHtml("", ActionType.Delete, new Dictionary<string, string> { { "title", $"Delete setting {Model.PaymentMethod.Settings[i].Key}" }, { "data-rowid", rowId }, { "data-id", Model.PaymentMethod.Settings[i].Key }, { "class", "deletePaymentMethodSetting" } }, authorized)
+                                    }
+                                    &nbsp;
+                                </td>
+
+                                <td>
+                                    @Html.Hidden("PaymentMethod.Settings.Index", i, new Dictionary<string, object> { { "data-readonlyname", "true" }, { "data-clearable", "false" } })
+                                    @Html.TextBoxFor(model => Model.PaymentMethod.Settings[i].Key, new { @class = "form-control input-sm smaller-fontsize", @maxlength = "35", placeholder = "Key" })
+                                </td>
+
+                                <td>
+                                    @if (authorized)
+                                    {
+                                        @Html.TextBoxFor(model => Model.PaymentMethod.Settings[i].Value, new { @class = "form-control input-sm smaller-fontsize paymentsecret", placeholder = "Value" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBox(string.Concat(Model.PaymentMethod.Settings[i].Key, "Value"), "****************************************", new { @class = "form-control input-sm smaller-fontsize paymentsecret", placeholder = "Value" })
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (authorized)
+                    {
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right-align">
+                                    <a id="btnAddPaymentMethodSetting" class="btn btn-default btn-sm smaller-fontsize">
+                                        Add new payment method setting <i class="glyphicon glyphicon-plus"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tfoot>
                     }
-                </tbody>
-                @if (authorized)
-                {
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="text-right-align">
-                            <a id="btnAddPaymentMethodSetting" class="btn btn-default btn-sm smaller-fontsize">
-                                Add new payment method setting <i class="glyphicon glyphicon-plus"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tfoot>
-                }
-            </table>
+                </table>
+            </div>
         </div>
-    </div>
 
         <div id="tabs-Availability" style="display:none;">
             <div class="row" style="height:450px;">
-                @Html.Label("", "Available in countries", new { @class= "control-label col-md-12" })
+                @Html.Label("", "Available in countries", new { @class = "control-label col-md-12" })
                 <br />
                 <select data-placeholder="Choose a Country..." class="chosen-select" style="width:100%" name="selectedCountries" multiple>
                     @foreach (var c in Model.AllAvailableInCountries)
@@ -178,8 +179,7 @@
 </div>
 @section scripts{
     <script>
-        $(function () {
-            $("#tabs").tabs();
+        $(function () {            
             $('.chosen-select').chosen({});
         });
         UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);

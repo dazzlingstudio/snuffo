@@ -6,7 +6,7 @@
 
 <div id="tabs" class="media-container" data-cloudinary-type="@type">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" data-target="#tabs-select">Select your @type</a></li>
+        <li><a data-toggle="tab" data-target="#tabs-select">Select your @type</a></li>
         <li><a data-toggle="tab" data-target="#tabs-upload">Upload your @type</a></li>
     </ul>
     <div class="tab-content">
@@ -18,6 +18,7 @@
                 @Html.HiddenFor(m => m.PageIndex)
                 @Html.HiddenFor(m => m.PageSize)
                 @Html.HiddenFor(m => m.TotalRows)
+                @Html.HiddenFor(model => model.CurrentTabIndex)
                 <button id="btnLoadMoreCloudinaryFiles" class="btn btn-info action-link" data-filetype="@Model.FileType">
                     Load more... <i class="glyphicon glyphicon-cloud-download"></i>
                 </button>
@@ -72,7 +73,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
             var uploadUrl = '/Umbraco/Backoffice/Uvendia/Base/UploadToCloudinary';
             $('.fileupload').fileupload('option', 'url', uploadUrl);
 

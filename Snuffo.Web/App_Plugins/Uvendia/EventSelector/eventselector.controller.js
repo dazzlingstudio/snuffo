@@ -1,12 +1,12 @@
 ﻿var app = angular.module("umbraco");
-app.controller("Uvendia.ProductSelectorController",
+app.controller("Uvendia.EventSelectorController",
     function ($scope, assetsService) {
         assetsService
             .load([
                 "~/Umbraco/Uvendia/Content/select2/js/select2.min.js"
             ])
             .then(function () {   
-                var productSelect2 = $('.select2-js-data-ajax');
+                var eventSelect2 = $('.select2-js-event-data-ajax');
 
                 if ($scope.model.value !== null && $scope.model.value !== '') {
                     // Load selected values
@@ -16,7 +16,7 @@ app.controller("Uvendia.ProductSelectorController",
                     
                     $.ajax({
                         type: "GET",
-                        url: '/umbraco/backoffice/uvendiaplugin/CatalogApi/GetProductsById/?id=' + selected,
+                        url: '/umbraco/backoffice/uvendiaplugin/EventApi/GetEventsById/?id=' + selected,
                         cache: false,
                         dataType: 'json',
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -26,11 +26,14 @@ app.controller("Uvendia.ProductSelectorController",
                             // create the option and append to Select2
                             for (var i = 0; i < data.length; i++) {
 
-                                var txt = data[i].name + ' (' + (data[i].variantSku || data[i].sku) + ')';
+                                var txt = data[i].name;
+                                if (data[i].startDate)
+                                    txt += " (" + data[i].startDate + " - " + data[i].endDate + ")";
+
                                 var option = new Option(txt, data[i].id, true, true);
-                                productSelect2.append(option).trigger('change');
+                                eventSelect2.append(option).trigger('change');
                             }
-                            productSelect2.trigger({
+                            eventSelect2.trigger({
                                 type: 'select2:select',
                                 params: {
                                     data: data
@@ -43,9 +46,9 @@ app.controller("Uvendia.ProductSelectorController",
                     });
                 }                
 
-                productSelect2.select2({                    
+                eventSelect2.select2({                    
                     ajax: {
-                        url: "/umbraco/backoffice/uvendiaplugin/CatalogApi/GetProductsByQuery/",
+                        url: "/umbraco/backoffice/uvendiaplugin/EventApi/GetEventsByQuery/",
                         dataType: 'json',
                         delay: 250,
                         width: 'resolve',
@@ -71,42 +74,39 @@ app.controller("Uvendia.ProductSelectorController",
                         },
                         cache: true
                     },
-                    placeholder: 'Search for product(s) to select',
+                    placeholder: 'Search for event(s) to select',
                     minimumInputLength: 3,
                     escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                    templateResult: formatProduct,
-                    templateSelection: formatProductSelection
+                    templateResult: formatEvent,
+                    templateSelection: formatEventSelection
                 }).on("change", function (e)
                     {
                         save(e);
                     });
 
-                function formatProduct(product) {
-                    if (product.loading) {
-                        return product.name;
+                function formatEvent(event) {
+                    if (event.loading) {
+                        return event.name;
                     }
 
                     var markup = 
-                        "<div class='select2-result-product__title'>" + product.name + "</div>";
+                        "<div class='select2-result-product__title'>" + event.name + "</div>";                    
+                    if (event.startDate) {
+                        markup += "<div class='select2-result-product__description'>(" + event.startDate + " - " + event.endDate + ")</div>";
+                    }                    
 
-                    if (!product.variantSku) {
-                        markup += "<div class='select2-result-product__description'>Sku: " + product.sku + "</div>";
-                    }
-                    else {
-                        markup += "<div class='select2-result-product__description'>Sku: " + product.sku + ", VariantSku: " + product.variantSku + " <i>(variant)</i></div>";
-                    }
-                    
                     return markup;
                 }
 
-                function formatProductSelection(product) {
-                    
-                    if (product.name) {
-                        var txt = product.name + ' (' + (product.variantSku || product.sku) + ')';
+                function formatEventSelection(event) {
+                    if (event.name) {
+                        var txt = event.name;
+                        if (event.startDate)
+                            txt += " (" + event.startDate + " - " + event.endDate + ")";
                         return txt;
                     }
                     else
-                        return product.text;
+                        return event.text;
                 }
 
                 function save(e) {

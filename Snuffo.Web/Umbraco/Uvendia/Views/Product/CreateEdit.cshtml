@@ -17,9 +17,10 @@
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
         @Html.HiddenFor(model => model.SelectedCategoryId)
         @Html.HiddenFor(model => model.SelectedCategoryName, new { id = "ImageFolders" })
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+            <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
             @if (Model.Product.HasVariantProperties())
             {
                 <li><a data-toggle="tab" href="#tabs-variants">Variants</a></li>
@@ -134,9 +135,7 @@
     <script type="text/javascript">
         $(function () {
             UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
-
-            $("#tabs").tabs();
-
+            
             $("#jstree").jstree({
                 "checkbox": {
                     "keep_selected_style": false,

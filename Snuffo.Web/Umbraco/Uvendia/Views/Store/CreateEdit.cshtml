@@ -5,7 +5,7 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
         @foreach (var trans in Model.Translations)
         {
             <li><a data-toggle="tab" href="#tabs-@(trans.CultureName)">@trans.NativeName</a></li>
@@ -20,46 +20,47 @@
         @Html.HiddenFor(model => model.Entity.CreatedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
         @Html.HiddenFor(model => model.ImageFolders, new { id = "ImageFolders" })
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
-    <div id="tabs-content" style="display:none;">
-        <div class="row">
-            @Html.LabelFor(model => model.Entity.Name, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Entity.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
-            @*@Html.ValidationMessageFor(model => model.Store.Name, "", new { @class = "text-danger" })*@
-        </div>
+        <div id="tabs-content" style="display:none;">
+            <div class="row">
+                @Html.LabelFor(model => model.Entity.Name, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Entity.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
+                @*@Html.ValidationMessageFor(model => model.Store.Name, "", new { @class = "text-danger" })*@
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Entity.Published, htmlAttributes: new { @class = "control-label" })
-            <label class="switch">
-                @Html.CheckBoxFor(model => model.Entity.Published, new { @class = "checkbox-middle" })
-                <span class="slider round"></span>
-            </label>
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Entity.Published, htmlAttributes: new { @class = "control-label" })
+                <label class="switch">
+                    @Html.CheckBoxFor(model => model.Entity.Published, new { @class = "checkbox-middle" })
+                    <span class="slider round"></span>
+                </label>
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Entity.DefinitionId, htmlAttributes: new { @class = "control-label" })
-            @Html.DropDownListFor(model => model.Entity.DefinitionId, Model.Definitions, "Select a definition...", new { id = "ddlDefinitions", @class = "form-control" })
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Entity.DefinitionId, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Entity.DefinitionId, Model.Definitions, "Select a definition...", new { id = "ddlDefinitions", @class = "form-control" })
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Entity.OrderNr, htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.TextBoxFor(model => model.Entity.OrderNr, new { @class = "form-control input-sm", type = "number", @maxlength = "9" })
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Entity.OrderNr, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.Entity.OrderNr, new { @class = "form-control input-sm", type = "number", @maxlength = "9" })
+            </div>
 
-        <div class="row">
-            @Html.LabelFor(model => model.Entity.ExternalId, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Entity.ExternalId, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "External-ID (optional)" } })
-        </div>
+            <div class="row">
+                @Html.LabelFor(model => model.Entity.ExternalId, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Entity.ExternalId, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "External-ID (optional)" } })
+            </div>
 
-        <div id="extended" data-item-id="@Model.Entity.Id" data-prefix="Entity.Properties" data-section="Store">
-            @Html.Raw(HtmlControlFactory.Create(Model.Entity.Definition, Model.Entity.Properties, "Entity.Properties").RenderExtendedProperties())
+            <div id="extended" data-item-id="@Model.Entity.Id" data-prefix="Entity.Properties" data-section="Store">
+                @Html.Raw(HtmlControlFactory.Create(Model.Entity.Definition, Model.Entity.Properties, "Entity.Properties").RenderExtendedProperties())
+            </div>
         </div>
-    </div>
 
         Html.RenderPartial("~/Umbraco/Uvendia/Views/Shared/_Translations.cshtml", Model);
         <div class="break"></div>
         <div class="form-group">
-            <div class="btn-toolbar">                
+            <div class="btn-toolbar">
                 @Html.CreateAuthorizedActionButton("Save", ActionType.Save, new Dictionary<string, string> { { "type", "submit" }, { "class", "btn btn-success pull-left action-link" } })
             </div>
         </div>
@@ -69,7 +70,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
         });
         UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
 

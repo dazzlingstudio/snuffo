@@ -71,7 +71,7 @@
       <HintPath>..\packages\ClientDependency-Mvc5.1.9.3\lib\net45\ClientDependency.Core.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="CloudinaryDotNet, Version=1.8.0.0, Culture=neutral, PublicKeyToken=c8234dc617ae7841, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uvendia.Domain.1.0.5\lib\net472\CloudinaryDotNet.dll</HintPath>
+      <HintPath>..\packages\Uvendia.Domain.1.1.1\lib\net472\CloudinaryDotNet.dll</HintPath>
     </Reference>
     <Reference Include="CookComputing.XmlRpcV2, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
       <HintPath>..\packages\xmlrpcnet.3.0.0.266\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
@@ -89,7 +89,7 @@
       <HintPath>..\packages\Dazzling.Studio.SqlRepository.1.0.1\lib\net472\Dazzling.Studio.SqlRepository.dll</HintPath>
     </Reference>
     <Reference Include="Dazzling.Studio.Utils, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uvendia.Domain.1.0.5\lib\net472\Dazzling.Studio.Utils.dll</HintPath>
+      <HintPath>..\packages\Uvendia.Domain.1.1.1\lib\net472\Dazzling.Studio.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Examine, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Examine.1.0.1\lib\net452\Examine.dll</HintPath>
@@ -518,11 +518,11 @@
     <Reference Include="UrlRewritingNet.UrlRewriter, Version=2.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UrlRewritingNet.2.0.7\lib\UrlRewritingNet.UrlRewriter.dll</HintPath>
     </Reference>
-    <Reference Include="Uvendia.Domain, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uvendia.Domain.1.0.5\lib\net472\Uvendia.Domain.dll</HintPath>
+    <Reference Include="Uvendia.Domain, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Uvendia.Domain.1.1.1\lib\net472\Uvendia.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Uvendia.Reports, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uvendia.Domain.1.0.5\lib\net472\Uvendia.Reports.dll</HintPath>
+      <HintPath>..\packages\Uvendia.Domain.1.1.1\lib\net472\Uvendia.Reports.dll</HintPath>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0.3\lib\net40\WebActivatorEx.dll</HintPath>
@@ -549,11 +549,13 @@
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.html" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
-    <Content Include="App_Plugins\Uvendia\UvendiaProductSelector\productselector.controller.js" />
-    <Content Include="App_Plugins\Uvendia\UvendiaProductSelector\productselector.html" />
-    <Content Include="App_Plugins\Uvendia\UvendiaProductTreePicker\producttreepicker.controller.js" />
-    <Content Include="App_Plugins\Uvendia\UvendiaProductTreePicker\producttreepicker.html" />
-    <Content Include="App_Plugins\Uvendia\UvendiaProductTreePicker\producttreepicker.resource.js" />
+    <Content Include="App_Plugins\Uvendia\EventSelector\eventselector.controller.js" />
+    <Content Include="App_Plugins\Uvendia\EventSelector\eventselector.html" />
+    <Content Include="App_Plugins\Uvendia\ProductSelector\productselector.controller.js" />
+    <Content Include="App_Plugins\Uvendia\ProductSelector\productselector.html" />
+    <Content Include="App_Plugins\Uvendia\ProductTreePicker\producttreepicker.controller.js" />
+    <Content Include="App_Plugins\Uvendia\ProductTreePicker\producttreepicker.html" />
+    <Content Include="App_Plugins\Uvendia\ProductTreePicker\producttreepicker.resource.js" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -1979,6 +1981,7 @@
     <Content Include="Umbraco\Uvendia\Content\chosen_v1.7.0\chosen.proto.min.js" />
     <Content Include="Umbraco\Uvendia\Content\images\archive.png" />
     <Content Include="Umbraco\Uvendia\Content\images\loading.gif" />
+    <Content Include="Umbraco\Uvendia\Content\images\logo.jpg" />
     <Content Include="Umbraco\Uvendia\Content\images\multimedia.png" />
     <Content Include="Umbraco\Uvendia\Content\images\progressbar.gif" />
     <Content Include="Umbraco\Uvendia\Content\images\upload.png" />
@@ -2932,6 +2935,7 @@
     <Content Include="Umbraco\Uvendia\Content\tinymce_5.0.14\js\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Umbraco\Uvendia\Content\tinymce_5.0.14\js\tinymce\skins\ui\oxide-dark\fonts\tinymce-mobile.woff" />
     <Content Include="Umbraco\Uvendia\Content\tinymce_5.0.14\js\tinymce\langs\readme.md" />
+    <Content Include="Umbraco\Uvendia\Content\License.md" />
     <Content Include="Umbraco\Uvendia\Content\jquery\jquery-ui-1.12.1\package.json" />
     <Content Include="Umbraco\Uvendia\Content\bootstrap-3.3.7\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Umbraco\Uvendia\Content\bootstrap-3.3.7\fonts\glyphicons-halflings-regular.woff" />

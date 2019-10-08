@@ -24,7 +24,7 @@
             {
                 var rowId = Guid.NewGuid().ToString("D");
                 <tr id="@rowId">
-                    <td><a class="linkDefinition id-field" data-definition-id="@definition.Id">@definition.Id</a></td>
+                    <td class="text-center-align"><a class="linkDefinition id-field" data-definition-id="@definition.Id">@definition.Id</a></td>
                     <td><a class="linkDefinition" data-definition-id="@definition.Id">@definition.Name</a></td>
                     <td>@definition.Type.ToString()</td>
                     <td>@definition.ModifiedOn.ConvertToLongDateTimeString()</td>

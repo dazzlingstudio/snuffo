@@ -82,10 +82,7 @@ ALTER DATABASE [$(DatabaseName)]
 
 
 GO
--- Enable the snapshot transaction isolation level
-ALTER DATABASE [$(DatabaseName)]
-	SET ALLOW_SNAPSHOT_ISOLATION ON
-GO
+
 /*
  Pre-Deployment Script Template              
 --------------------------------------------------------------------------------------

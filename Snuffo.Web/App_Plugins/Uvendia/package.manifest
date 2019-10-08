@@ -8,7 +8,7 @@
       "name": "Uvendia ProductTreePicker",
       /*the html file we will load for the editor*/
       "editor": {
-        "view": "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.html"
+        "view": "~/App_Plugins/Uvendia/ProductTreePicker/producttreepicker.html"
       }
     },
     {
@@ -18,15 +18,26 @@
       "name": "Uvendia ProductSelector",
       /*the html file we will load for the editor*/
       "editor": {
-        "view": "~/App_Plugins/Uvendia/UvendiaProductSelector/productselector.html"
+        "view": "~/App_Plugins/Uvendia/ProductSelector/productselector.html"
+      }
+    },
+    {
+      /*this must be a unique alias*/
+      "alias": "Uvendia.EventSelector",
+      /*the name*/
+      "name": "Uvendia EventSelector",
+      /*the html file we will load for the editor*/
+      "editor": {
+        "view": "~/App_Plugins/Uvendia/EventSelector/eventselector.html"
       }
     }
   ],
 
   //array of files we want to inject into the application on app_start
   "javascript": [
-    "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.controller.js",
-    "~/App_Plugins/Uvendia/UvendiaProductTreePicker/producttreepicker.resource.js",
-    "~/App_Plugins/Uvendia/UvendiaProductSelector/productselector.controller.js"
+    "~/App_Plugins/Uvendia/ProductTreePicker/producttreepicker.controller.js",
+    "~/App_Plugins/Uvendia/ProductTreePicker/producttreepicker.resource.js",
+    "~/App_Plugins/Uvendia/ProductSelector/productselector.controller.js",
+    "~/App_Plugins/Uvendia/EventSelector/eventselector.controller.js"
   ]
 }

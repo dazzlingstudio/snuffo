@@ -23,7 +23,7 @@
             {
                 var rowId = Guid.NewGuid().ToString("D");
                 <tr id="@rowId">
-                    <td><a class="linkTicketType id-field" data-tickettype-id="@tt.Id">@tt.Id</a></td>
+                    <td class="text-center-align"><a class="linkTicketType id-field" data-tickettype-id="@tt.Id">@tt.Id</a></td>
                     <td><a class="linkTicketType" data-tickettype-id="@tt.Id">@tt.Name</a></td>
                     <td>@tt.ModifiedOn.ConvertToLongDateTimeString()</td>
                     <td>@tt.CreatedOn.ConvertToLongDateTimeString()</td>

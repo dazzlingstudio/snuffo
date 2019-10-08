@@ -15,9 +15,23 @@ $(function () {
 
     ready.jquery = true;
 
-    $(".nav a").click(function (e) {
+    $(".nav-tabs a").click(function (e) {
         e.preventDefault();
     });
+
+    if ($("#tabs").length) {
+        $("#tabs").tabs();
+        // Keep selected tab on post
+        var currentIndex = $('#CurrentTabIndex');
+        if (currentIndex.length) {
+            Uvendia.selectTab(currentIndex.val());
+
+            $('.nav-tabs a').on('shown.bs.tab', function (event) {
+                var idx = $(this).index('a[data-toggle="tab"]');
+                currentIndex.val(idx);
+            });
+        }
+    }
 
     var alertMessage = $("#hdnWebAlertMessage").val();
     if (alertMessage !== null && alertMessage !== "") {
@@ -332,7 +346,7 @@ $(function () {
             index: $(this).data('index'),
             rowId: $(this).data('rowid')
         };
-
+        
         Uvendia.closeModal(item);
     });
 
@@ -533,6 +547,10 @@ $(function () {
 
             $('[data-toggle="tooltip"]').tooltip();
         },
+        selectTab: function (tabindex) {            
+            $('#tabs .nav-tabs li:eq(' + tabindex + ') a').tab('show');                        
+            $("#tabs").tabs("option", "active", tabindex);
+        },
         cleanHTML: function (text) {
             return text.replace(/<[^>]*>?/gm, '');
         },
@@ -565,7 +583,7 @@ $(function () {
             UmbClientMgr.closeModalWindow(data);
         },
         onCloseDeleteModal: function (data) {
-            
+
             if (data.outVal !== null) {
                 var item = data.outVal;
                 //console.log('item ', item.id);

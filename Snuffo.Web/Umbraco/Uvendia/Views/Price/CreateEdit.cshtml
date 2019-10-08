@@ -5,7 +5,7 @@
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 <div id="tabs">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>        
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
     </ul>
     @using (Html.BeginForm("CreateEdit", "Price", FormMethod.Post, htmlAttributes: new { id = "frmPriceDefinition", @class = "form-group", novalidate = "novalidate" }))
     {
@@ -14,11 +14,12 @@
         @Html.HiddenFor(model => model.PriceDefinition.CreatedOn)
         @Html.HiddenFor(model => model.PriceDefinition.CreatedBy)
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
         <div id="tabs-content" style="display:none;">
             <div class="row">
                 @Html.LabelFor(model => model.PriceDefinition.Name, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.PriceDefinition.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })                
+                @Html.EditorFor(model => model.PriceDefinition.Name, new { htmlAttributes = new { @class = "form-control input-sm required" } })
             </div>
 
             <div class="row">
@@ -33,10 +34,10 @@
 
             <div class="row">
                 @Html.LabelFor(model => model.PriceDefinition.Currency, htmlAttributes: new { @class = "control-label" })
-                @Html.DropDownListFor(model => model.PriceDefinition.Currency, Model.Currencies, new { id="ddlCurrencies", @class = "form-control" })
+                @Html.DropDownListFor(model => model.PriceDefinition.Currency, Model.Currencies, new { id = "ddlCurrencies", @class = "form-control" })
             </div>
-            
-        </div>        
+
+        </div>
 
         <div class="form-group">
             <div class="btn-toolbar">
@@ -48,7 +49,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
         });
         UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), true);
 

@@ -24,7 +24,7 @@
             {
                 var rowId = Guid.NewGuid().ToString("D");
                 <tr id="@rowId">
-                    <td><a class="linkOrderEmailTemplate id-field" data-orderemailtemplate-id="@tt.Id">@tt.Id</a></td>
+                    <td class="text-center-align"><a class="linkOrderEmailTemplate id-field" data-orderemailtemplate-id="@tt.Id">@tt.Id</a></td>
                     <td><a class="linkOrderEmailTemplate" data-orderemailtemplate-id="@tt.Id">@tt.TemplateName</a></td>
                     <td>@tt.ModifiedOn.ConvertToLongDateTimeString()</td>
                     <td>@tt.CreatedOn.ConvertToLongDateTimeString()</td>

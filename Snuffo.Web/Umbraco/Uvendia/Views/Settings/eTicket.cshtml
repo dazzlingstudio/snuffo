@@ -11,7 +11,7 @@
     <br />
 
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tabs-content">Content</a></li>
+        <li><a data-toggle="tab" href="#tabs-content">Content</a></li>
         @foreach (var lang in Model.Languages)
         {
             <li><a data-toggle="tab" href="#tabs-@(lang.CultureName)">@lang.NativeName</a></li>
@@ -22,86 +22,87 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.TreeSelectedNodePath)
+        @Html.HiddenFor(model => model.CurrentTabIndex)
 
         <div id="tabs-content" style="display:none;">
             <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.LogoUrl, htmlAttributes: new { @class = "control-label" })                
+                @Html.LabelFor(model => model.eTicketSetting.LogoUrl, htmlAttributes: new { @class = "control-label" })
                 @Html.Raw(Model.Logo.RenderControl())
-            </div>            
-            
+            </div>
+
         </div>
 
         for (int i = 0; i < Model.eTicketSetting.Details.Count(); i++)
         {
-        <div id="tabs-@Model.Languages[i].CultureName" style="display:none;">
-            @Html.HiddenFor(model => model.eTicketSetting.Details[i].LanguageCultureName)
+            <div id="tabs-@Model.Languages[i].CultureName" style="display:none;">
+                @Html.HiddenFor(model => model.eTicketSetting.Details[i].LanguageCultureName)
 
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].Title, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].Title, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].Title, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].Title, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].Intro, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].Intro, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].DateTime, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].DateTime, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].UniqueID, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].UniqueID, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].CancellationInsurance, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].CancellationInsurance, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].Location, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].Location, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].YourInformation, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].YourInformation, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].CustomerNr, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].CustomerNr, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].CustomerName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].CustomerName, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].TicketPrice, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].TicketPrice, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].Conditions, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextAreaFor(model => model.eTicketSetting.Details[i].Conditions, 6, 10, new { @class = "form-control editor" })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].AdditionalInformation, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextAreaFor(model => model.eTicketSetting.Details[i].AdditionalInformation, 6, 10, new { @class = "form-control editor" })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.eTicketSetting.Details[i].Footer, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.eTicketSetting.Details[i].Footer, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                </div>
+
             </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].Intro, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].Intro, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].DateTime, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].DateTime, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].UniqueID, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].UniqueID, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].CancellationInsurance, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].CancellationInsurance, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].Location, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].Location, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].YourInformation, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].YourInformation, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].CustomerNr, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].CustomerNr, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].CustomerName, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].CustomerName, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].TicketPrice, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].TicketPrice, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].Conditions, htmlAttributes: new { @class = "control-label" })
-                @Html.TextAreaFor(model => model.eTicketSetting.Details[i].Conditions, 6, 10, new { @class = "form-control editor" })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].AdditionalInformation, htmlAttributes: new { @class = "control-label" })
-                @Html.TextAreaFor(model => model.eTicketSetting.Details[i].AdditionalInformation, 6, 10, new { @class = "form-control editor" })
-            </div>
-
-            <div class="row">
-                @Html.LabelFor(model => model.eTicketSetting.Details[i].Footer, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.eTicketSetting.Details[i].Footer, new { htmlAttributes = new { @class = "form-control input-sm" } })
-            </div>
-
-        </div>
         }
 
         <div class="form-group">
@@ -114,7 +115,6 @@
 @section scripts{
     <script>
         $(function () {
-            $("#tabs").tabs();
         });
         UmbClientMgr.mainTree().syncTree($('#TreeSelectedNodePath').val(), false);
 
