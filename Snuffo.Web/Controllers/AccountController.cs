@@ -342,7 +342,7 @@ namespace Snuffo.Web.Controllers
             }
             else
             {
-                return Redirect($"/{CurrentUser.LanguageCode}/");
+                return Redirect($"/{CurrentUser.LanguageCode}/account/my-profile/");
             }
         }
 

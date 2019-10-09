@@ -15,6 +15,8 @@ using System.Web;
 using System.Web.Mvc;
 using Umbraco.Web.Models;
 using Umbraco.Web.Mvc;
+using Snuffo.Web.Models;
+using Uvendia.Domain.Repositories;
 
 namespace Snuffo.Web.Controllers
 {
@@ -68,8 +70,72 @@ namespace Snuffo.Web.Controllers
         public ActionResult Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return Redirect(string.Concat("/", CurrentUser.LanguageCode, "/"));
+            return Redirect(string.Concat("/", CurrentUser.LanguageCode, "/account/login-register/"));
         }
+
+        [Authorize]
+        public ActionResult AccountOrders(ContentModel model)
+        {
+            return CurrentTemplate(model);
+        }
+
+        [Authorize]
+        public ActionResult AccountAddress(ContentModel model)
+        {
+            var aam = new AccountAddressModel(model.Content);
+            var addresess = UvendiaContext.Addresses.AllByUserId(CurrentUser.UserId);
+            var shipAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.ShipAddress);
+            if (shipAddress == null)
+            {
+                aam.ShippingAddress = new Address();
+                aam.HasSameAddress = true;
+            }
+            else
+            {
+                aam.HasSameAddress = false;
+                aam.ShippingAddress = shipAddress;
+            }
+
+            aam.ContactAddress = addresess.FirstOrDefault(x => x.AddressType == Uvendia.Domain.Enums.AddressType.Default) ?? new Address();
+
+            return CurrentTemplate(aam);
+        }
+
+        [Authorize]
+        public ActionResult AccountChangeEmail(ContentModel model)
+        {
+            return CurrentTemplate(model);
+        }
+
+        [Authorize]
+        public ActionResult AccountChangePassword(ContentModel model)
+        {
+            return CurrentTemplate(model);
+        }
+
+        [Authorize]
+        public ActionResult AccountDelete(ContentModel model)
+        {
+            return CurrentTemplate(model);
+        }
+
+        [Authorize]
+        public ActionResult AccountProfile(ContentModel model)
+        {
+            var auth0Helper = new Auth0Helper();
+            var user = auth0Helper.GetAuth0User(CurrentUser.UserId);
+            var customer = new AccountProfileModel(model.Content)
+            {
+                UserId = user.UserId,
+                EmailAddress = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.UserMetadata != null ? user.UserMetadata.Phone : "",
+                SubscribedToNewsletter = user.UserMetadata != null ? Convert.ToBoolean(user.UserMetadata.SubscribedToNewsletter) : false,
+            };
+
+            return CurrentTemplate(customer);
+        }        
 
         private ActionResult RedirectToLocal(string returnUrl, ContentModel model)
         {

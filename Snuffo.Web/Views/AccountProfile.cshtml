@@ -1,21 +1,7 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AccountProfileModel>
 @{
-    Html.CheckAuthenticated(CurrentUser.LanguageCode);
-
-    Layout = "MasterShopLogin.cshtml";
-
-    var auth0Helper = new Auth0Helper();
-    var user = auth0Helper.GetAuth0User(CurrentUser.UserId);
-    var customer = new AccountProfileModel(Model)
-    {
-        UserId = user.UserId,
-        EmailAddress = user.Email,
-        FirstName = user.FirstName,
-        LastName = user.LastName,
-        Phone = user.UserMetadata != null ? user.UserMetadata.Phone : "",
-        SubscribedToNewsletter = user.UserMetadata != null ? Convert.ToBoolean(user.UserMetadata.SubscribedToNewsletter) : false,
-    };
+    Layout = "MasterShopLogin.cshtml";    
     ViewBag.AccountActive = "profile";
 }
 
-@{Html.RenderPartial("~/views/partials/account/_AccountProfile.cshtml", customer);}
+@{Html.RenderPartial("~/views/partials/account/_AccountProfile.cshtml", Model);}

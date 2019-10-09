@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Dazzling.Studio.Utils;
 using Umbraco.Web.Composing;
 using Snuffo.Web.Controllers;
+using System.Web.Helpers;
 
 namespace Snuffo.Web
 {

@@ -15,8 +15,10 @@ namespace Snuffo.Web
             if (!CurrentUser.IsAuthenticated)
             {
                 var context = html.ViewContext.RequestContext.HttpContext;
+                
                 SnuffoSettings.ShowMessage(html.ViewContext.TempData, "Inloggen", "Je moet eerst ingelogd zijn");
                 var redirectUrl = string.Concat("/", langCode, "/account/login-register/?returnUrl=/", langCode, "/account/my-profile/");
+
                 context.Response.Redirect(redirectUrl);
             }
         }

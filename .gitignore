@@ -7,3 +7,4 @@ Snuffo.Web.Tests/bin/
 Snuffo.Web/Snuffo.Web.csproj.user
 Snuffo.Web/App_Data/
 Snuffo.Web/Secrets/**/*.config
+Snuffo.Web/Properties/PublishProfiles/Demo.pubxml.user
