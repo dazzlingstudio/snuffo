@@ -23,14 +23,14 @@ namespace Snuffo.Web.Controllers
         public ActionResult ProductDetailPage(ContentModel model, long? p)
         {
             if (!p.HasValue)
-                Response.Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
+                return Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
 
             var ppModel = new ProductPageModel(model.Content);
 
             var fetched = UvendiaContext.Products.Single(p);
 
             if (fetched == null)
-                Response.Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
+                return Redirect($"/{CurrentUser.LanguageCode}/page-not-found/");
 
             ppModel.SelectedVariant = fetched;
 
