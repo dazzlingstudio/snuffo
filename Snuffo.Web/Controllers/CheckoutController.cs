@@ -127,13 +127,17 @@ namespace Snuffo.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateOrderCheckoutPayment(CheckoutPaymentModel model)
         {
-            var paymentMethod = UvendiaContext.PaymentMethods.Single(model.SelectedPaymentMethodId.Value);
+            PaymentMethod paymentMethod = null;
             if (model.SelectedPaymentMethodId.HasValue)
-            {                
-                if (string.Equals(paymentMethod.Name, "ideal", StringComparison.InvariantCultureIgnoreCase)
-                    && model.iDealIssuerId.IsNullOrEmpty())
+            {
+                paymentMethod = UvendiaContext.PaymentMethods.Single(model.SelectedPaymentMethodId.Value);
+                if (model.SelectedPaymentMethodId.HasValue)
                 {
-                    ModelState.AddModelError("", "Please select your bank");
+                    if (string.Equals(paymentMethod.Name, "ideal", StringComparison.InvariantCultureIgnoreCase)
+                        && model.iDealIssuerId.IsNullOrEmpty())
+                    {
+                        ModelState.AddModelError("", "Please select your bank");
+                    }
                 }
             }
 

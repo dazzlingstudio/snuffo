@@ -1,17 +1,6 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<EventDetailModel>
 @{
-    Layout = "masterShopTop.cshtml";
-
-    if (!long.TryParse(Request.QueryString["e"], out long id))
-    {
-        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/page-not-found"));
-    }
-    var evnt = UvendiaContext.Events.Single(id);
-    if (evnt == null)
-    {
-        Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/page-not-found"));
-    }
-    var imageUrl = CloudinaryService.GetCloudinaryUrl(evnt["Image 1"].ConvertTo<string>(), 886, 575, CropType.Fit, gravityType: GravityType.None, effect: Effect.Incognito);
+    Layout = "masterShopTop.cshtml";    
 }
 
 <div class="about-section">
@@ -20,7 +9,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="about-image before-right">
-                        <img class="img-responsive" src="@imageUrl" alt="@evnt.DisplayName()">
+                        <img class="img-responsive" src="@Model.ImageUrl" alt="@Model.Event.DisplayName()">
                         <div class="image-overlay">
 
                         </div>
@@ -28,25 +17,25 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="festival-info">
-                        <h1>@evnt.DisplayName()</h1>
+                        <h1>@Model.Event.DisplayName()</h1>
                         <p>
-                            @Html.Raw(evnt.GetShortDescription())
+                            @Html.Raw(Model.Event.GetShortDescription())
                         </p>
                         <ul class="about-time">
-                            @if (evnt.StartTime.HasValue)
+                            @if (Model.Event.StartTime.HasValue)
                             {
-                                <li><i class="fa fa-clock-o"></i>Start: @evnt.StartTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
+                                <li><i class="fa fa-clock-o"></i>Start: @Model.Event.StartTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
                             }
-                            @if (evnt.EndTime.HasValue)
+                            @if (Model.Event.EndTime.HasValue)
                             {
-                                <li><i class="fa fa-clock-o"></i>End: @evnt.EndTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
+                                <li><i class="fa fa-clock-o"></i>End: @Model.Event.EndTime.Value.ToString("dd MMMM yyyy HH:mm")</li>
                             }
-                            @if (evnt.Address != null)
+                            @if (Model.Event.Address != null)
                             {
-                                <li><i class="fa fa-map"></i>@evnt.Address.ToString()</li>
+                                <li><i class="fa fa-map"></i>@Model.Event.Address.ToString()</li>
                             }
                         </ul>
-                        @if (evnt.IsTicketSaleEnabled)
+                        @if (Model.Event.IsTicketSaleEnabled)
                         {
                             <a href="#tickets" class="btn btn-primary">Get a Ticket</a>
                         }
@@ -56,7 +45,7 @@
         </div><!-- container fluid -->
     </div><!-- festival content -->
 </div><!-- about section -->
-@{Html.RenderPartial("~/views/partials/event/_TicketForm.cshtml", new EventDetailModel { Event = evnt }); }
+@{Html.RenderPartial("~/views/partials/event/_TicketForm.cshtml", Model); }
 
 @section scripts {
     <script type="text/javascript">

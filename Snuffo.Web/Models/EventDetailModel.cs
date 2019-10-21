@@ -26,6 +26,7 @@ namespace Snuffo.Web.Models
         }
 
         public Event @Event { get; set; }
+        public string ImageUrl { get; internal set; }
 
         private Dictionary<long, int> _buffer = new Dictionary<long, int>();
 

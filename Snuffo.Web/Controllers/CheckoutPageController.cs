@@ -63,6 +63,43 @@ namespace Uvendia.Cms.Controllers
             //Mapper.AssertConfigurationIsValid();
         }
 
+        public ActionResult CheckoutLoginPage(ContentModel model)
+        {
+            var authModel = new AuthenticateModel(model.Content);
+            authModel.ReturnUrl = Request.QueryString["returnUrl"];
+
+            authModel.Authenticated = CurrentUser.IsAuthenticated;
+            if (!authModel.Authenticated)
+            {
+                var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
+                var order = currentCart.GetOrder();
+
+                if (order.InvoiceAddressId.HasValue)
+                {
+                    return Redirect(string.Concat("/", CurrentUser.LanguageCode, "/cart/checkout-address/"));
+                }
+            }
+
+            return CurrentTemplate(authModel);
+        }
+
+        public ActionResult CheckoutShippingPage(ContentModel model)
+        {
+            var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
+            var order = currentCart.GetOrder();
+            if (!order.InvoiceAddressId.HasValue)
+            {
+                return Redirect(string.Concat("/", CurrentUser.LanguageCode, "/cart/checkout-address"));
+            }
+
+            var csm = new CheckoutShippingModel(model.Content);
+            csm.ShippingMethods = UvendiaContext.ShippingMethods.All().Where(s => s.Enabled).ToList();
+
+            csm.SelectedShippingMethodId = order.ShippingMethodId;
+
+            return CurrentTemplate(csm);
+        }
+
         public ActionResult CheckoutPaymentPage(ContentModel model)
         {
             var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
@@ -84,7 +121,7 @@ namespace Uvendia.Cms.Controllers
             {
                 var ideal = cpm.PaymentMethods.Single(x => x.Name.Equals("ideal", StringComparison.InvariantCultureIgnoreCase));
                 ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;                
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 Connector connector = new Connector();
                 connector.MerchantId = ideal["MerchantID"];

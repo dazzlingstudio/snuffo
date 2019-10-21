@@ -1,26 +1,12 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
-@using Uvendia.Domain.Cart
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<AuthenticateModel>
 @{
     Layout = "masterShopTop.cshtml";
-    var authModel = new AuthenticateModel(Model);
-    authModel.ReturnUrl = Request.QueryString["returnUrl"];
 
-    bool authenticated = CurrentUser.IsAuthenticated;
-    if (!authenticated)
-    {
-        var currentCart = CurrentCart.Create(SnuffoSettings.STORE_NAME);
-        var order = currentCart.GetOrder();
-
-        if (order.InvoiceAddressId.HasValue)
-        {
-            Response.Redirect(string.Concat("/", CurrentUser.LanguageCode, "/cart/checkout-address/"));
-        }
-    }
 }
 
-@if (!authenticated)
+@if (!Model.Authenticated)
 {
-    Html.RenderPartial("~/views/partials/account/_Login.cshtml", authModel);
+    Html.RenderPartial("~/views/partials/account/_Login.cshtml", Model);
 
     <div class="col-md-6">
         <div class="padding-top-3x hidden-md-up"></div>

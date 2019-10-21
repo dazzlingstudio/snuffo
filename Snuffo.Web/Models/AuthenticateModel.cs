@@ -76,6 +76,7 @@ namespace Snuffo.Web.Models
         }
 
         public string ReturnUrl { get; set; }
+        public bool Authenticated { get; internal set; }
 
         private void SetUrls()
         {
