@@ -219,50 +219,50 @@
                             Refresh <i class="glyphicon glyphicon-refresh"></i>
                         </a>
                     </td>
-                    <td colspan="4" class="text-right-align">
+                    <td colspan="5" class="text-right-align">
                         Sub total
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculateSubTotal().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="text-right-align">
+                    <td colspan="9" class="text-right-align nowrap">
                         Shipping fee
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculateShippingFee().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="text-right-align">
+                    <td colspan="9" class="text-right-align">
                         Payment fee
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculatePaymentFee().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="text-right-align">
+                    <td colspan="9" class="text-right-align">
                         Total discount
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculateTotalDiscount().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="text-right-align">
+                    <td colspan="9" class="text-right-align">
                         VAT (Tax)
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculateVAT().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="text-right-align">
+                    <td colspan="9" class="text-right-align">
                         Total
                     </td>
-                    <td colspan="2" class="text-right-align">
+                    <td colspan="1" class="text-left-align nowrap">
                         @Model.CalculateTotal().ConvertToMoney(Model.GetOrderNumberFormatInfo(currentCulture))
                     </td>
                 </tr>

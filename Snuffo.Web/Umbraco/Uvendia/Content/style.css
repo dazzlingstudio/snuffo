@@ -127,7 +127,9 @@ div.uvendia-body a.btn-primary {
     white-space: nowrap;
     width: 77px;
 }
-
+.nowrap {
+    white-space: nowrap;
+}
 .variants-actions a {
     margin-right: 4px;
     

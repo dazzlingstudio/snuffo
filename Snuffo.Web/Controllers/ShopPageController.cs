@@ -28,7 +28,7 @@ namespace Snuffo.Web.Controllers
             shopPageModel.Categories = UvendiaContext.Categories.GetByStoreId(settings.StoreId);
             shopPageModel.PageIndex = page;
 
-            int totalRows;
+            long totalRows;
             long categoryId;
             long.TryParse(Request.QueryString["c"], out categoryId);
             long priceDefinitionId = UvendiaContext.PriceDefinitions.Single(SnuffoSettings.GetCurrency()).Id;

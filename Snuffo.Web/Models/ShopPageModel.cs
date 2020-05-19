@@ -26,18 +26,18 @@ namespace Snuffo.Web.Models
 
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
-        public int TotalRows { get; set; }
+        public long TotalRows { get; set; }
 
         public int TotalPages { get { return (int)Math.Ceiling(((double)TotalRows) / PageSize); } }
 
         public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Product> Products { get; set; }
 
-        public int ShowingCount
+        public long ShowingCount
         {
             get
             {
-                int retVal = PageIndex * PageSize;
+                long retVal = PageIndex * PageSize;
                 if (retVal > TotalRows)
                     retVal = TotalRows;
 
