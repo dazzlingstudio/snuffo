@@ -2,7 +2,26 @@
 @{
     Layout = "masterShopTop.cshtml";
 }
-
+@section header {
+    <!-- Shop Filters Modal-->
+    <div class="modal fade" id="modalShopFilters" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Shop Filters</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Widget Categories-->
+                    <section class="widget widget-categories">
+                        <h3 class="widget-title">Shop Categories</h3>
+                        @renderCategoryMenu(Model.Categories, true)
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <!-- Products-->
 <div class="col-xl-9 col-lg-8 order-lg-2">
     <!-- Shop Toolbar-->
@@ -50,11 +69,12 @@
         @foreach (var cat in categories)
         {
             if (cat.SubCategories.Any())
-            {
-                <a href="shop/?c=@cat.Id">@cat.DisplayName()</a>
-                <span>(@(cat.Products.Count()))</span>
+            {                
                 <li @(topCategory ? "class=\"has-children expanded\"" : "class=\"has-children\"")>
-                    @renderCategoryMenu(cat.SubCategories, false)
+                    <ul>
+                        <li><a href="shop/?c=@cat.Id">@cat.DisplayName()</a><span>(@(cat.Products.Count()))</span></li>
+                        @renderCategoryMenu(cat.SubCategories, false)
+                    </ul>
                 </li>
             }
             else
